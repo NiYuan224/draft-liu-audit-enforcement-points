@@ -9,19 +9,19 @@ number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: "Security"
+workgroup: "Agent Use of Delegation and Interaction Traceability"
 keyword:
  - next generation
  - unicorn
  - AI-native
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Agent Use of Delegation and Interaction Traceability"
+  type: "Working Group"
+  mail: "audit@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/audit"
+  github: "NiYuan224/draft-liu-audit-enforcement-points"
+  latest: "https://NiYuan224.github.io/draft-liu-audit-enforcement-points/draft-liu-audit-enforcement-points.html"
 
 author:
  -
