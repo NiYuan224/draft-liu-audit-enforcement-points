@@ -1,5 +1,5 @@
 ---
-title: "draft-liu-audit-enforcement-points"
+title: "Audit Enforcement Points for Agents"
 abbrev: "draft-liu-audit-enforcement-points"
 category: info
 
@@ -37,14 +37,16 @@ informative:
 
 --- abstract
 
-TODO Abstract
+This document identifies key audit enforcement points for agents, specifying the calls they cover and the audit records they provide. It also describes the hooks used to capture these records and how hook failures are handled.
 
 
 --- middle
 
 # Introduction {#intro}
 
-TODO Introduction
+Agents are increasingly acting on behalf of users across multiple services and administrative domains. Their activities may involve the original user, other agents, models, tools, and hosts. Information about these activities is distributed across participants, with no single party observing the entire interaction chain. AUDIT therefore aims to enable the collection and correlation of this information to provide visibility across the chain.
+
+
 
 
 # Conventions and Definitions
