@@ -2,10 +2,10 @@
 
 
 
-Agent Use of Delegation and Interaction Traceability           NiYuan224
-Internet-Draft                                    Your Organization Here
-Intended status: Informational                           28 October 2026
-Expires: 1 May 2027
+Agent Use of Delegation and Interaction Traceability           C. P. Liu
+Internet-Draft                                                     Y. Ni
+Intended status: Informational                                    Huawei
+Expires: 1 May 2027                                      28 October 2026
 
 
                      Enforcement Points for Agents
@@ -93,7 +93,7 @@ Table of Contents
    8.  IANA Considerations
    9.  Normative References
    Acknowledgments
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
@@ -449,8 +449,13 @@ Acknowledgments
 
    TODO acknowledge.
 
-Author's Address
+Authors' Addresses
 
-   NiYuan224
-   Your Organization Here
+   Chunchi Peter Liu
+   Huawei
+   Email: liuchunchi@huawei.com
+
+
+   Yuan Ni
+   Huawei
    Email: niyuan1@huawei.com
