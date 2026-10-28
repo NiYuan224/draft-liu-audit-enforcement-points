@@ -35,7 +35,7 @@ RFC8174：
 
 informative:
 
-...
+
 
 --- abstract
 
