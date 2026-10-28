@@ -102,8 +102,8 @@ Table of Contents
    the user, other agents, models, tools, and hosts.  Information about
    these activities is distributed across participants.  Therefore, it
    is essential to collect and correlate audit information across these
-   participants to audit and trace agent activities across the entire
-   interaction chain.
+   participants to trace agent activities across the entire interaction
+   chain.
 
    Security products and components deployed along the interaction chain
    can observe agent activities, enforce security controls, and provide
