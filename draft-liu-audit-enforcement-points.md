@@ -134,13 +134,13 @@ Some hooks provide observation only, while others support both observation and i
 
 # User Interaction Enforcement Point
 
-User Interaction Enforcement Points cover activities at the interaction boundary between users or upstream systems and agents, including session lifecycle management, input reception and processing, and response handling. This section describes the trigger stages of relevant hooks, the information they expose, and the intervention capabilities they provide to EPs.
+User Interaction Enforcement Points cover activities at the interaction boundary between users or upstream systems and agents, including session lifecycle management, input reception and processing, and response handling. This section describes the trigger stages of relevant hooks, the information they expose, and the intervention capabilities they provide to User Interaction EPs.
 
 ## Session Lifecycle Management
 
 Session lifecycle management activities include the following stages:
 
-* Session start: Hooks triggered at session start provide session-related information, such as the session source. They may also allow an EP to set session-specific environment variables or add initial context, such as security constraints applicable to the session.
+* Session start: Hooks triggered at session start can expose session-related information, such as the session source. Some hooks also allow an EP to set session-specific environment variables or add initial context, such as security constraints applicable to the session.
 
 * Session termination: Hooks triggered at session termination provide information about the termination reason, session status, and elapsed time. EPs can use this information to audit session termination and investigate abnormal session behavior.
 
@@ -164,7 +164,7 @@ Response handling activities include the following stages:
 
 # Model and Tool Invocation Enforcement Point
 
-Model and Tool Invocation Enforcement Points cover interactions between agents and models or tools, including model invocation, tool invocation,   . This section describes the trigger stages, audit information, and intervention capabilities of hooks associated with these activities.
+Model and Tool Invocation Enforcement Points cover interactions between agents and models or tools, including model invocation, tool invocation, and context management. This section describes the trigger stages, audit information, and intervention capabilities of hooks associated with these activities.
 
 ## Model Invocation
 
@@ -196,7 +196,7 @@ Context management activities include the following stages:
 
 * Before context compaction: Hooks at this stage can expose the context state before compaction. They provide information for tracing context changes.
 
-* After context compaction: Hooks at this stage can expose the resulting context, allowing an EP to compare it with the pre-compaction context and identify changes introduced during compaction.
+* After context compaction: Hooks at this stage can expose the resulting context. When both pre-compaction and post-compaction information are available, an EP can compare them to investigate changes in the retained context.
 
 # Host-level Enforcement Point
 
