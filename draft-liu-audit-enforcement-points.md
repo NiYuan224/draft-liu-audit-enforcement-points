@@ -51,7 +51,7 @@ This document identifies key enforcement points (EPs) for agents, specifying the
 
 # Introduction {#intro}
 
-Agents are increasingly acting on behalf of users across multiple services and administrative domains. Their activities may involve the user, other agents, models, tools, and hosts. Information about these activities is distributed across participants. Therefore, it is essential to collect and correlate audit information across these participants to audit and trace agent activities across the entire interaction chain.
+Agents are increasingly acting on behalf of users across multiple services and administrative domains. Their activities may involve the user, other agents, models, tools, and hosts. Information about these activities is distributed across participants. Therefore, it is essential to collect and correlate audit information across these participants to trace agent activities across the entire interaction chain.
 
 
 Security products and components deployed along the interaction chain can observe agent activities, enforce security controls, and provide audit information. For example, agent gateways can inspect requests and responses and enforce access policies; model gateways can inspect model requests and responses; MCP proxies can inspect tool calls and results; and EDR systems and sandbox monitoring components can monitor host operations and restrict unauthorized operations. In this document, these products and components are represented as enforcement points (EPs), each covering a different set of agent activities and providing corresponding audit records.
