@@ -63,21 +63,21 @@ Enforcement Point (EP): A logical entity that observes a defined set of agent ac
 
 Hook: A mechanism exposed by an agent implementation at a defined stage of an agent activity, through which an EP can observe the activity and, where supported, intervene in it or its subsequent processing.  For example, a hook for a tool invocation may expose the invocation arguments before execution, allowing an EP to record them or block the invocation, and expose the result after execution for audit recording.
 
-# Audit Enforcement Point Model
+# Enforcement Point Model
 
 Agent activities span interactions among users, agents, models, tools, and hosts. Security products act as EPs along the interaction chain. Leveraging hooks exposed by agent implementations, EPs observe agent activities, intervene where supported, and generate corresponding audit records. 
 
 This section classifies audit enforcement points according to the agent activities they cover and describes the observation and intervention capabilities of hooks.
 
-## Audit Enforcement Point Categories
+## Enforcement Point Categories
 
-Audit enforcement points are classified into three categories according to the activities they cover:
+EPs are classified into three categories according to the activities they cover:
 
-* Agent Interaction Enforcement Point: Covers interactions between users or upstream systems and agents, including incoming requests and outgoing responses.
+* Agent Interaction EP: Covers interactions between users or upstream systems and agents, including incoming requests and outgoing responses.
 
-* Model and Tool Invocation Enforcement Point: Covers interactions between agents and models or tools, including invocation requests and returned results.
+* Model and Tool Invocation EP: Covers interactions between agents and models or tools, including invocation requests and returned results.
 
-* Host-level Operation Enforcement Point: Covers activities performed by agents or their tools on the host, including process creation, file access, and network connections, etc., as well as corresponding results.
+* Host-level Operation EP: Covers activities performed by agents or their tools on the host, including process creation, file access, and network connections, etc., as well as corresponding results.
 
 Figure 1 illustrates the three categories and their positions in the agent interaction chain.
 
@@ -129,35 +129,33 @@ Some hooks provide observation only, while others support both observation and i
 
 # User Interaction Enforcement Point
 
-User Interaction Enforcement Points cover activities at the interaction boundary between users or upstream systems and agents, including session lifecycle management, input reception and processing, and response handling. This section describes the trigger stages, audit information, and intervention capabilities of hooks associated with these activities.
+User Interaction Enforcement Points cover activities at the interaction boundary between users or upstream systems and agents, including session lifecycle management, input reception and processing, and response handling. This section describes the trigger stages of relevant hooks, the information they expose, and the intervention capabilities they provide to EPs.
 
 ## Session Lifecycle Management
 
 Session lifecycle management activities include the following stages:
 
-* Session start: Hooks at this stage provide session-related information, such as the session source. They may also allow session-specific environment variables to be set or initial context to be added, such as security constraints applicable to the session.
+* Session start: Hooks triggered at session start provide session-related information, such as the session source. They may also allow an EP to set session-specific environment variables or add initial context, such as security constraints applicable to the session.
 
-* Session termination: Hooks at this stage provide information about the termination reason, session status, and elapsed time. These records support the investigation of session termination and abnormal session behavior.
+* Session termination: Hooks triggered at session termination provide information about the termination reason, session status, and elapsed time. EPs can use this information to audit session termination and investigate abnormal session behavior.
 
 ## Input Reception and Processing
 
-Input Reception and Processing activities include the following stages:
+Input reception and processing activities include the following stages:
 
-* Input reception and submission: Hooks at message reception or before agent processing can record the message source and content. They may allow the message to be inspected, modified, or discarded, additional context to be added, or input processing to be taken over by a plugin. These hooks provide integration points for security products and components to inspect incoming messages and, where supported, modify or discard them based on the inspection results.
-  
-* Command expansion: Hooks during command expansion provide information about the expanded prompt and may allow the expansion to be blocked or additional context to be added. They allow external components to inspect the expanded prompt and, where supported, intervene before the resulting input is processed by the agent.
+* Input reception and submission: Hooks triggered when a message is received or before it is processed by the agent can expose the message source and content. They may allow an EP to inspect, modify, or discard the message, add context, or take over input processing through a plugin.
+
+* Command expansion: Hooks triggered during command expansion expose information about the expanded prompt. They may allow an EP to block the expansion or add context before the resulting input is processed by the agent.
 
 ## Response Handling
 
-Response Handling activities include the following stages:
+Response handling activities include the following stages:
 
-* Response generation completion: Hooks after response generation can inspect the generated response and may request further processing, including response regeneration. They provide an integration point for components to review generated responses and, where supported, request further processing based on the review results.
+* Response generation completion: Hooks triggered after response generation expose the generated response and may allow an EP to request further processing, including response regeneration.
 
-* Before response sending: Hooks before a response is sent to a user or upstream system can inspect the outgoing message and may allow its content to be modified or the send operation to be cancelled. These hooks can provide an integration point for external components to inspect outgoing messages and, where supported, modify or cancel their delivery based on the results of security checks. They provide an integration point for external components to inspect outgoing messages and, where supported, modify the message or cancel sending based on the results of security checks.
+* Before response sending: Hooks triggered before a response is sent to a user or upstream system expose the outgoing message. They may allow an EP to modify the message or cancel the send operation.
 
-* After response sending: Hooks after a send attempt can record whether sending succeeded or failed.
-
-  
+* After response sending: Hooks triggered after a send attempt can expose whether sending succeeded or failed, allowing an EP to record the send outcome.
 
 # Security Considerations {#security}
 
