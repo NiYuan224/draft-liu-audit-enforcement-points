@@ -65,7 +65,7 @@ Hook: A mechanism exposed by an agent implementation at a defined stage of an ag
 
 # Enforcement Point Model
 
-Agent activities span interactions among users, agents, models, tools, and hosts. Security products act as EPs along the interaction chain. Leveraging hooks exposed by agent implementations, EPs observe agent activities, intervene where supported, and generate corresponding audit records. 
+Agent activities span interactions among users, agents, models, tools, and hosts. Security products act as EPs along the interaction chain. Leveraging hooks exposed by agent implementations, EPs observe agent activities, intervene where supported, and generate corresponding audit records.
 
 This section classifies audit enforcement points according to the agent activities they cover and describes the observation and intervention capabilities of hooks.
 
@@ -110,12 +110,12 @@ Figure 1 illustrates the interactions among the User or System, AI Agent, LLM, T
 2. The AI Agent provides context to the LLM.
 3. The LLM returns output to the AI Agent to support the selection of subsequent actions.
 4. The AI Agent invokes one or more Tools.
-5. The invoked endpoints return results to the AI Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2–5 until the task is completed.
+5. The invoked endpoints return results to the AI Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2-5 until the task is completed.
 6. (Optional) The AI Agent or its Tools perform operations on the Host.
 7. (Optional) The Host provides corresponding results, status, or errors where available.
 8. (Optional) The AI Agent returns a response to the User or System, or requests additional input.
 
-The three EP categories cover different parts of this interaction chain. The Agent Interaction EP covers the user-agent interactions in steps 1 and 8. The Model and Tool Invocation EP covers the model and tool interactions in steps 2–5. The Host-level Operation EP covers the host-level operations and their corresponding results in steps 6 and 7.
+The three EP categories cover different parts of this interaction chain. The Agent Interaction EP covers the user-agent interactions in steps 1 and 8. The Model and Tool Invocation EP covers the model and tool interactions in steps 2-5. The Host-level Operation EP covers the host-level operations and their corresponding results in steps 6 and 7.
 
 ## Hook Capabilities
 
