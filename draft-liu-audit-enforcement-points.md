@@ -30,8 +30,8 @@ author:
     email: "niyuan1@huawei.com"
 
 normative:
-RFC2119:
-RFC8174:
+ RFC2119:
+ RFC8174:
 
 informative:
 
