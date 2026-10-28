@@ -77,7 +77,7 @@ EPs are classified into three categories according to the activities they cover:
 
 * Model and Tool Invocation EP: Covers interactions between agents and models or tools, including invocation requests and returned results.
 
-* Host-level Operation EP: Covers activities performed by agents or their tools on the host, including process creation, file access, and network connections, etc., as well as corresponding results.
+* Host-level Operation EP: Covers host operations performed by agents or their tools, including process execution, file access, and network connections, as well as related security controls and audit activities.
 
 Figure 1 illustrates the three categories and their positions in the agent interaction chain.
 
@@ -156,6 +156,70 @@ Response handling activities include the following stages:
 * Before response sending: Hooks triggered before a response is sent to a user or upstream system expose the outgoing message. They may allow an EP to modify the message or cancel the send operation.
 
 * After response sending: Hooks triggered after a send attempt can expose whether sending succeeded or failed, allowing an EP to record the send outcome.
+
+# Model and Tool Invocation Enforcement Point
+
+Model and Tool Invocation Enforcement Points cover interactions between agents and models or tools, including model invocation, tool invocation,   . This section describes the trigger stages, audit information, and intervention capabilities of hooks associated with these activities.
+
+## Model Invocation
+
+Model invocation activities include the following stages:
+
+* Model selection and prompt construction: Hooks before model invocation can provide information about the selected model, model provider, prompt, and associated context. They may allow an EP to select or restrict the model, modify the prompt or context, or restrict the tools available to the model for the current turn.
+
+* Model request: Hooks at this stage can expose the input submitted to the model, including the prompt and associated context. Some hooks also allow the request to be modified or blocked, or a predefined response to be supplied instead of invoking the model.
+
+* Model response: Hooks at this stage can expose the generated content and available token usage information. Some hooks allow an EP to modify or block the response before it is passed to subsequent processing.
+
+* Invocation completion and failure: Hooks at this stage can expose invocation status, duration, usage information, and error details. These hooks provide observational information for investigating failed or repeated requests and abnormal resource consumption.
+
+## Tool Invocation
+
+Tool invocation activities include the following stages:
+
+* Before tool invocation: Hooks at this stage can expose the selected tool and invocation arguments. They may allow an EP to restrict the available tools, modify invocation arguments, or block the invocation.
+
+* Permission request: Hooks at this stage can expose the requested operation and associated permission information. Some hooks allow an EP to approve or deny the request.
+
+* After tool invocation: Hooks at this stage can expose the execution result, status, errors, and available timing information. These hooks are primarily observational.
+
+* Tool result processing: Hooks at this stage expose tool results before they are passed to the model or persisted in the conversation. Some hooks also allow an EP to modify, replace, or withhold the results.
+
+## Context Management
+
+Context management activities include the following stages:
+
+* Before context compaction: Hooks at this stage can expose the context state before compaction. They provide information for tracing context changes.
+
+* After context compaction: Hooks at this stage can expose the resulting context, allowing an EP to compare it with the pre-compaction context and identify changes introduced during compaction.
+  
+# Host-level Enforcement Point
+
+Host-level Enforcement Points cover operations performed by agents or their tools on the host, including command execution, file operations, and extension installation. This section describes the trigger stages, audit information, and intervention capabilities of hooks associated with these operations.
+
+## Extension Installation
+
+Extension installation activities include the following stages:
+
+* Before extension installation: Hooks at this stage expose installation requests for tools, skills and plugins, allowing an EP to perform security checks and block installation based on the results.
+
+## Command Execution
+
+Command execution activities include the following stages:
+
+* Before command execution: Hooks at this stage expose the command and execution directory. They allow an EP to allow or block execution, or request user confirmation.
+
+* After command execution: Hooks at this stage expose the executed command, captured output, and execution duration. These records support auditing of command execution and analysis of command output.
+
+## File Operations
+
+File operation activities include the following stages:
+
+* Before file content is provided to the agent: Hooks at this stage can expose the file path and content and may allow the content to be withheld from the agent.
+
+* After file modification: Hooks at this stage can expose the modified file and available information about changes, such as the text before and after modification. These records support auditing of file modifications.
+
+
 
 # Security Considerations {#security}
 
