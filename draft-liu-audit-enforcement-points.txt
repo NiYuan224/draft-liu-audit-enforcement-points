@@ -265,17 +265,17 @@ Table of Contents
    including session lifecycle management, input reception and
    processing, and response handling.  This section describes the
    trigger stages of relevant hooks, the information they expose, and
-   the intervention capabilities they provide to EPs.
+   the intervention capabilities they provide to User Interaction EPs.
 
 4.1.  Session Lifecycle Management
 
    Session lifecycle management activities include the following stages:
 
-   *  Session start: Hooks triggered at session start provide session-
-      related information, such as the session source.  They may also
-      allow an EP to set session-specific environment variables or add
-      initial context, such as security constraints applicable to the
-      session.
+   *  Session start: Hooks triggered at session start can expose
+      session-related information, such as the session source.  Some
+      hooks also allow an EP to set session-specific environment
+      variables or add initial context, such as security constraints
+      applicable to the session.
 
    *  Session termination: Hooks triggered at session termination
       provide information about the termination reason, session status,
@@ -319,9 +319,9 @@ Table of Contents
 
    Model and Tool Invocation Enforcement Points cover interactions
    between agents and models or tools, including model invocation, tool
-   invocation, . This section describes the trigger stages, audit
-   information, and intervention capabilities of hooks associated with
-   these activities.
+   invocation, and context management.  This section describes the
+   trigger stages, audit information, and intervention capabilities of
+   hooks associated with these activities.
 
 5.1.  Model Invocation
 
@@ -379,9 +379,9 @@ Table of Contents
       tracing context changes.
 
    *  After context compaction: Hooks at this stage can expose the
-      resulting context, allowing an EP to compare it with the pre-
-      compaction context and identify changes introduced during
-      compaction.
+      resulting context.  When both pre-compaction and post-compaction
+      information are available, an EP can compare them to investigate
+      changes in the retained context.
 
 6.  Host-level Enforcement Point
 
