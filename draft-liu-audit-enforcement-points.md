@@ -25,9 +25,14 @@ venue:
 
 author:
  -
-    fullname: "NiYuan224"
-    organization: Your Organization Here
-    email: "niyuan1@huawei.com"
+  name: Chunchi Peter Liu
+  organization: Huawei
+  email: liuchunchi@huawei.com
+
+ -
+  name: Yuan Ni
+  organization: Huawei
+  email: niyuan1@huawei.com
 
 normative:
  RFC2119:
