@@ -218,7 +218,19 @@ File operation activities include the following stages:
 
 * After file modification: Hooks at this stage can expose the modified file and available information about changes, such as the text before and after modification, supporting auditing of file modifications.
 
+# Hook Failure Handling
 
+Hook failures can affect security enforcement and audit coverage. Two common handling policies are:
+
+* Fail-open: Allow the operation or subsequent processing to continue when a hook fails. This preserves availability but may bypass security checks.
+
+* Fail-closed: Block the operation or subsequent processing when a hook fails. This prevents unchecked operations but may interrupt legitimate workflows.
+
+Based on existing implementation practices, such as OpenClaw, Cursor, and Claude Code, the choice depends on the hook's purpose and the consequences of failure:
+
+* Security-critical hooks SHOULD fail closed: These include hooks enforcing input security checks, model request inspection, tool invocation, permission decisions, sensitive file access, and extension installation. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure.
+
+* Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection, and file modification auditing. Failure to collect audit information should not normally interrupt legitimate operations.
 
 # Security Considerations {#security}
 
