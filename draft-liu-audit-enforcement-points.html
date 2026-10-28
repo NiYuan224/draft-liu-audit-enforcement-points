@@ -7,7 +7,7 @@
 <title>Audit Enforcement Points for Agents</title>
 <meta content="NiYuan224" name="author">
 <meta content="
-       This document identifies key audit enforcement points for agents, specifying the calls they cover and the audit records they provide. It also describes the hooks used to capture these records and how hook failures are handled. 
+       This document identifies key audit enforcement points for agents, specifying the activities they cover and the audit records they provide. It also describes the hooks used to capture these records and how hook failures are handled. 
     " name="description">
 <meta content="xml2rfc 3.34.1" name="generator">
 <meta content="next generation" name="keyword">
@@ -1047,7 +1047,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">NiYuan224</td>
-<td class="center">Expires 30 April 2027</td>
+<td class="center">Expires 1 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1060,12 +1060,12 @@ svg {
 <dd class="internet-draft">draft-liu-audit-enforcement-points-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-27" class="published">27 October 2026</time>
+<time datetime="2026-10-28" class="published">28 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-30">30 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1078,7 +1078,7 @@ svg {
 <h1 id="title">Audit Enforcement Points for Agents</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document identifies key audit enforcement points for agents, specifying the calls they cover and the audit records they provide. It also describes the hooks used to capture these records and how hook failures are handled.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document identifies key audit enforcement points for agents, specifying the activities they cover and the audit records they provide. It also describes the hooks used to capture these records and how hook failures are handled.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1115,7 +1115,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1151,19 +1151,38 @@ svg {
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-audit-enforcement-point-mod" class="internal xref">Audit Enforcement Point Model</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-audit-enforcement-point-cat" class="internal xref">Audit Enforcement Point Categories</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-hook-classification" class="internal xref">Hook Classification</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-trigger-stage" class="internal xref">Trigger Stage</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.2">
+                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-hook-capabilities" class="internal xref">Hook Capabilities</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1174,9 +1193,9 @@ svg {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Agents are increasingly acting on behalf of users across multiple services and administrative domains. Their activities may involve the original user, other agents, models, tools, and hosts. Information about these activities is distributed across participants, with no single party observing the entire interaction chain. AUDIT therefore aims to enable the collection and correlation of this information to provide visibility across the chain.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Security products and components deployed along the interaction chain can provide audit information by inspecting requests, enforcing access decisions, and monitoring execution. For example, agent gateways can observe requests from users, applications, or other agents and the corresponding responses; model gateways can inspect model requests, context, and responses; MCP proxies can inspect tool calls and results; and EDR systems and sandbox monitoring components can capture host operations such as process creation, file access, and network connections. These products and components serve as audit enforcement points, each covering a different part of agent activity.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">To use this information for auditing, it is necessary to understand which calls and operations each enforcement point covers and what audit information it can provide. This document classifies audit enforcement points into three categories based on the calls they cover: agent interaction, model and tool invocation, and host-level operation. For each category, It describes the audit information available through hooks at each enforcement point and how hook failures are handled. This analysis provides a basis for identifying a minimum necessary set of audit records.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-1">Agents are increasingly acting on behalf of users across multiple services and administrative domains. Their activities may involve the user, other agents, models, tools, and hosts. Information about these activities is distributed across participants, with no single party having complete visibility into the entire interaction chain. AUDIT therefore aims to enable the collection and correlation of audit information across participants to provide visibility across the chain.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Security products and components deployed along the interaction chain can provide audit information by inspecting requests, enforcing access decisions, and monitoring execution. For example, agent gateways can observe requests from users, applications, or other agents and the corresponding responses; model gateways can inspect model requests, context, and responses; MCP proxies can inspect tool calls and results; and EDR systems and sandbox monitoring components can capture host operations such as process creation, file access, and network connections. These products and components serve as audit enforcement points, each covering a different set of agent activities.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">To use this information for auditing, it is necessary to understand which activities each enforcement point covers and what audit records it can provide. This document classifies audit enforcement points into three categories based on the activities they cover: agent interaction, model and tool invocation, and host-level operation. For each category, it describes the audit records available through hooks, the intervention capabilities of the corresponding hooks, and how hook failures are handled. This analysis is a prerequisite for identifying the audit records needed across participating domains and understanding the coverage and limitations of the available evidence.<a href="#section-1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1188,28 +1207,144 @@ svg {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>", "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">Audit Enforcement Point: A logical entity that observes a defined set of agent activities and provides audit records for them. It may also intervene in these activities or their subsequent processing, including by blocking or modifying them. For example, an audit enforcement point at the interaction boundary between agents and tools may observe the tool invocation activity and provide corresponding audit records.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Hook: A mechanism associated with a specific stage of an agent activity that enables observation of information at that stage and may enable intervention in the activity or its subsequent processing. For example, for a tool invocation activity, a hook may be triggered before the invocation to record its arguments or block it, or after the invocation to record its result.<a href="#section-2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="audit-enforcement-point-model">
+<section id="section-3">
+      <h2 id="name-audit-enforcement-point-mod">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-audit-enforcement-point-mod" class="section-name selfRef">Audit Enforcement Point Model</a>
+      </h2>
+<p id="section-3-1">This section classifies audit enforcement points according to the agent activities they cover and categorizes hooks by trigger stage and capability.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div id="audit-enforcement-point-categories">
+<section id="section-3.1">
+        <h3 id="name-audit-enforcement-point-cat">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-audit-enforcement-point-cat" class="section-name selfRef">Audit Enforcement Point Categories</a>
+        </h3>
+<p id="section-3.1-1">Audit enforcement points are classified into three categories according to the activities they cover:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.1">
+            <p id="section-3.1-2.1.1">Agent Interaction Enforcement Point: Cover interactions between users or upstream systems and agents, including incoming requests and outgoing responses.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1">Model and Tool Invocation Enforcement Point: Cover interactions between agents and models or tools, including invocation requests and returned results.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-2.3">
+            <p id="section-3.1-2.3.1">Host-level Operation Enforcement Point: Cover activities performed by agents or their tools on the host, including process creation, file access, and network connections, etc., and responses.<a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.1-3">Figure 1 illustrates the three categories and their positions in the agent interaction chain.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-4">
+<pre>
+      +----------------+       +----------------+       +----------------+
+      |                |       |                |       |                |
+      |                |       |                | (2)   | Large Language |
+      |                | (1)   |                |------&gt;| Model (LLM)    |
+      |                |------&gt;|                |&lt;------|                |
+      │   User/System  │       |                | (3)   +----------------+
+      │                │       |    AI Agent    |
+      │                │       |                | (4)   +----------------+
+      │                │&lt;------|                |------&gt;|                |
+      │                │  (8)  |                |&lt;------|     Tools      |
+      |                |       |                | (5)   |                |
+      +----------------+       +----------------+       +----------------+
+                                       │                       |
+                                       │                       |
+                                       +-------+--------^------+
+                                            (6)│        │(7)
+      +----------------------------------------v--------+----------------+
+      |                               Host                               |
+      +------------------------------------------------------------------+
+</pre><a href="#section-3.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-5">Figure 1 illustrates the interactions among the User or System, AI Agent, LLM, Tools, and Host.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.1-6">
+<li id="section-3.1-6.1">
+            <p id="section-3.1-6.1.1">(Optional) The User or System provides an request or instruction to the AI Agent.<a href="#section-3.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.2">
+            <p id="section-3.1-6.2.1">The AI Agent provides context to the LLM.<a href="#section-3.1-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.3">
+            <p id="section-3.1-6.3.1">The LLM returns output to the AI Agent to support the selection of subsequent actions.<a href="#section-3.1-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.4">
+            <p id="section-3.1-6.4.1">The AI Agent invokes one or more Tools.<a href="#section-3.1-6.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.5">
+            <p id="section-3.1-6.5.1">The invoked endpoints return results to the AI Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2–5 until the task is completed.<a href="#section-3.1-6.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.6">
+            <p id="section-3.1-6.6.1">(Optional) The AI Agent or its Tools perform operations on the Host.<a href="#section-3.1-6.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.7">
+            <p id="section-3.1-6.7.1">(Optional) The Host provides corresponding results, status, or errors where available.<a href="#section-3.1-6.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.8">
+            <p id="section-3.1-6.8.1">(Optional) The AI Agent returns a response to the User or System, or requests additional input.<a href="#section-3.1-6.8.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-3.1-7">The three categories of audit enforcement points cover different parts of this interaction chain. The Agent Interaction Enforcement Point covers the user-agent interactions in steps 1 and 8. The Model and Tool Invocation Enforcement Point covers the model and tool interactions in steps 2–5. The Host-level Operation Enforcement Point covers the host-level operations and their corresponding results in steps 6 and 7.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="hook-classification">
+<section id="section-3.2">
+        <h3 id="name-hook-classification">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-hook-classification" class="section-name selfRef">Hook Classification</a>
+        </h3>
+<p id="section-3.2-1">Hooks are classified along two independent dimensions: trigger stage and capabilities. Trigger stage describes when a hook is triggered during an agent activity, while capabilities describe whether a hook provides information only or can also intervene in the activity or its subsequent processing.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<div id="trigger-stage">
+<section id="section-3.2.1">
+          <h4 id="name-trigger-stage">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-trigger-stage" class="section-name selfRef">Trigger Stage</a>
+          </h4>
+<p id="section-3.2.1-1">According to their trigger stage, hooks are classified as pre-operation hooks and post-operation hooks.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-2">Pre-operation hooks are triggered before the associated activity is performed. Post-operation hooks are triggered after the associated activity has been performed. Typical examples include hooks triggered before or after session establishment, tool invocation, and context compaction.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="hook-capabilities">
+<section id="section-3.2.2">
+          <h4 id="name-hook-capabilities">
+<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-hook-capabilities" class="section-name selfRef">Hook Capabilities</a>
+          </h4>
+<p id="section-3.2.2-1">Hooks provide the following capabilities:<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2.2-2.1">
+              <p id="section-3.2.2-2.1.1">Observation: A hook provides information about an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.<a href="#section-3.2.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.2-2.2">
+              <p id="section-3.2.2-2.2.1">Intervention: A hook allows an agent activity or its subsequent processing to be affected, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.<a href="#section-3.2.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.2.2-3">Some hooks provide observation only, while others support both observation and intervention.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="security">
-<section id="section-3">
+<section id="section-4">
       <h2 id="name-security-considerations">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-3-1">TODO Security<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">TODO Security<a href="#section-4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
-<section id="section-4">
+<section id="section-5">
       <h2 id="name-iana-considerations">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-4-1">This document has no IANA actions.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">This document has no IANA actions.<a href="#section-5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-normative-references">
-<section id="section-5">
+<section id="section-6">
       <h2 id="name-normative-references">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
