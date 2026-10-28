@@ -158,7 +158,7 @@ Response handling activities include the following stages:
 
 # Model and Tool Invocation Enforcement Point
 
-Model and Tool Invocation Enforcement Points cover interactions between agents and models or tools, including model invocation, tool invocation, and context management. 
+Model and Tool Invocation Enforcement Points cover interactions between agents and models or tools, including model invocation, tool invocation, and context management.
 
 ## Model Invocation
 
