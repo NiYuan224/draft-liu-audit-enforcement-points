@@ -192,7 +192,7 @@ Context management activities include the following stages:
 * Before context compaction: Hooks at this stage can expose the context state before compaction. They provide information for tracing context changes.
 
 * After context compaction: Hooks at this stage can expose the resulting context, allowing an EP to compare it with the pre-compaction context and identify changes introduced during compaction.
-  
+
 # Host-level Enforcement Point
 
 Host-level Enforcement Points cover operations performed by agents or their tools on the host, including command execution, file operations, and extension installation. This section describes the trigger stages, audit information, and intervention capabilities of hooks associated with these operations.
