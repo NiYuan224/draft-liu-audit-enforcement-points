@@ -1,5 +1,5 @@
 ---
-title: "Audit Enforcement Points for Agents"
+title: "Enforcement Points for Agents"
 abbrev: "draft-liu-audit-enforcement-points"
 category: info
 
@@ -39,42 +39,45 @@ informative:
 
 --- abstract
 
-This document identifies key audit enforcement points for agents, specifying the activities they cover and the audit records they provide. It also describes the hooks used to capture these records and how hook failures are handled.
+This document identifies key enforcement points (EPs) for agents, specifying the agent activities they cover and the audit records they provide. It describes how hooks exposed by agent implementations enable EPs to observe agent activities, intervene in these activities or their subsequent processing, and generate corresponding audit records.
 
 
 --- middle
 
 # Introduction {#intro}
 
-Agents are increasingly acting on behalf of users across multiple services and administrative domains. Their activities may involve the user, other agents, models, tools, and hosts. Information about these activities is distributed across participants, with no single party having complete visibility into the entire interaction chain. AUDIT therefore aims to enable the collection and correlation of audit information across participants to provide visibility across the chain.
+Agents are increasingly acting on behalf of users across multiple services and administrative domains. Their activities may involve the user, other agents, models, tools, and hosts. Information about these activities is distributed across participants. Therefore, it is essential to collect and correlate audit information across these participants to audit and trace agent activities across the entire interaction chain.
 
-Security products and components deployed along the interaction chain can provide audit information by inspecting requests, enforcing access decisions, and monitoring execution. For example, agent gateways can observe requests from users, applications, or other agents and the corresponding responses; model gateways can inspect model requests, context, and responses; MCP proxies can inspect tool calls and results; and EDR systems and sandbox monitoring components can capture host operations such as process creation, file access, and network connections. These products and components serve as audit enforcement points, each covering a different set of agent activities.
 
-To use this information for auditing, it is necessary to understand which activities each enforcement point covers and what audit records it can provide. This document classifies audit enforcement points into three categories based on the activities they cover: agent interaction, model and tool invocation, and host-level operation. For each category, it describes the audit records available through hooks, the intervention capabilities of the corresponding hooks, and how hook failures are handled. This analysis is a prerequisite for identifying the audit records needed across participating domains and understanding the coverage and limitations of the available evidence.
+Security products and components deployed along the interaction chain can observe agent activities, enforce security controls, and provide audit information. For example, agent gateways can inspect requests and responses and enforce access policies; model gateways can inspect model requests and responses; MCP proxies can inspect tool calls and results; and EDR systems and sandbox monitoring components can monitor host operations and restrict unauthorized operations. In this document, these products and components are represented as enforcement points (EPs), each covering a different set of agent activities and providing corresponding audit records.
+
+Some agent activities may not be directly visible to an EP. To expose information about these activities, agent implementations can provide hooks at different stages. An EP can use these hooks to observe activities, intervene in them where supported, and generate corresponding audit records.
+
+This document classifies EPs into three categories based on the activities they cover: agent interaction, model and tool invocation, and host-level operation. For each category, it describes how hooks enable EPs to observe and, where supported, intervene in agent activities, as well as the corresponding audit records provided by EPs. This analysis is a prerequisite for identifying the audit records needed across participating domains and understanding the coverage and limitations of the available evidence.
 
 # Conventions and Definitions
 
-{::boilerplate bcp14-tagged}
-
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-Audit Enforcement Point: A logical entity that observes a defined set of agent activities and provides audit records for them. It may also intervene in these activities or their subsequent processing, including by blocking or modifying them. For example, an audit enforcement point at the interaction boundary between agents and tools may observe the tool invocation activity and provide corresponding audit records.
+Enforcement Point (EP): A logical entity that observes a defined set of agent activities and may intervene in these activities or their subsequent processing, including by blocking or modifying them. It generates corresponding audit records based on the observed activities and interventions. For example, an EP at the interaction boundary between agents and tools may observe tool invocation activities, block them where supported, and generate corresponding audit records.
 
-Hook: A mechanism associated with a specific stage of an agent activity that enables observation of information at that stage and may enable intervention in the activity or its subsequent processing. For example, for a tool invocation activity, a hook may be triggered before the invocation to record its arguments or block it, or after the invocation to record its result.
+Hook: A mechanism exposed by an agent implementation at a defined stage of an agent activity, through which an EP can observe the activity and, where supported, intervene in it or its subsequent processing.  For example, a hook for a tool invocation may expose the invocation arguments before execution, allowing an EP to record them or block the invocation, and expose the result after execution for audit recording.
 
 # Audit Enforcement Point Model
 
-This section classifies audit enforcement points according to the agent activities they cover and categorizes hooks by trigger stage and capability.
+Agent activities span interactions among users, agents, models, tools, and hosts. Security products act as EPs along the interaction chain. Leveraging hooks exposed by agent implementations, EPs observe agent activities, intervene where supported, and generate corresponding audit records. 
+
+This section classifies audit enforcement points according to the agent activities they cover and describes the observation and intervention capabilities of hooks.
 
 ## Audit Enforcement Point Categories
 
 Audit enforcement points are classified into three categories according to the activities they cover:
 
-* Agent Interaction Enforcement Point: Cover interactions between users or upstream systems and agents, including incoming requests and outgoing responses.
+* Agent Interaction Enforcement Point: Covers interactions between users or upstream systems and agents, including incoming requests and outgoing responses.
 
-* Model and Tool Invocation Enforcement Point: Cover interactions between agents and models or tools, including invocation requests and returned results.
+* Model and Tool Invocation Enforcement Point: Covers interactions between agents and models or tools, including invocation requests and returned results.
 
-* Host-level Operation Enforcement Point: Cover activities performed by agents or their tools on the host, including process creation, file access, and network connections, etc., and responses.
+* Host-level Operation Enforcement Point: Covers activities performed by agents or their tools on the host, including process creation, file access, and network connections, etc., as well as corresponding results.
 
 Figure 1 illustrates the three categories and their positions in the agent interaction chain.
 
@@ -103,7 +106,7 @@ Figure 1 illustrates the three categories and their positions in the agent inter
 
 Figure 1 illustrates the interactions among the User or System, AI Agent, LLM, Tools, and Host.
 
-1. (Optional) The User or System provides an request or instruction to the AI Agent.
+1. (Optional) The User or System provides a request or instruction to the AI Agent.
 2. The AI Agent provides context to the LLM.
 3. The LLM returns output to the AI Agent to support the selection of subsequent actions.
 4. The AI Agent invokes one or more Tools.
@@ -112,21 +115,11 @@ Figure 1 illustrates the interactions among the User or System, AI Agent, LLM, T
 7. (Optional) The Host provides corresponding results, status, or errors where available.
 8. (Optional) The AI Agent returns a response to the User or System, or requests additional input.
 
-The three categories of audit enforcement points cover different parts of this interaction chain. The Agent Interaction Enforcement Point covers the user-agent interactions in steps 1 and 8. The Model and Tool Invocation Enforcement Point covers the model and tool interactions in steps 2–5. The Host-level Operation Enforcement Point covers the host-level operations and their corresponding results in steps 6 and 7.
+The three EP categories cover different parts of this interaction chain. The Agent Interaction EP covers the user-agent interactions in steps 1 and 8. The Model and Tool Invocation EP covers the model and tool interactions in steps 2–5. The Host-level Operation EP covers the host-level operations and their corresponding results in steps 6 and 7.
 
-## Hook Classification
+## Hook Capabilities
 
-Hooks are classified along two independent dimensions: trigger stage and capabilities. Trigger stage describes when a hook is triggered during an agent activity, while capabilities describe whether a hook provides information only or can also intervene in the activity or its subsequent processing.
-
-### Trigger Stage
-
-According to their trigger stage, hooks are classified as pre-operation hooks and post-operation hooks.
-
-Pre-operation hooks are triggered before the associated activity is performed. Post-operation hooks are triggered after the associated activity has been performed. Typical examples include hooks triggered before or after session establishment, tool invocation, and context compaction.
-
-### Hook Capabilities
-
-Hooks provide the following capabilities:
+Hooks support two capabilities:
 
 * Observation: A hook provides information about an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
 
@@ -134,6 +127,37 @@ Hooks provide the following capabilities:
 
 Some hooks provide observation only, while others support both observation and intervention.
 
+# User Interaction Enforcement Point
+
+User Interaction Enforcement Points cover activities at the interaction boundary between users or upstream systems and agents, including session lifecycle management, input reception and processing, and response handling. This section describes the trigger stages, audit information, and intervention capabilities of hooks associated with these activities.
+
+## Session Lifecycle Management
+
+Session lifecycle management activities include the following stages:
+
+* Session start: Hooks at this stage provide session-related information, such as the session source. They may also allow session-specific environment variables to be set or initial context to be added, such as security constraints applicable to the session.
+
+* Session termination: Hooks at this stage provide information about the termination reason, session status, and elapsed time. These records support the investigation of session termination and abnormal session behavior.
+
+## Input Reception and Processing
+
+Input Reception and Processing activities include the following stages:
+
+* Input reception and submission: Hooks at message reception or before agent processing can record the message source and content. They may allow the message to be inspected, modified, or discarded, additional context to be added, or input processing to be taken over by a plugin. These hooks provide integration points for security products and components to inspect incoming messages and, where supported, modify or discard them based on the inspection results.
+  
+* Command expansion: Hooks during command expansion provide information about the expanded prompt and may allow the expansion to be blocked or additional context to be added. They allow external components to inspect the expanded prompt and, where supported, intervene before the resulting input is processed by the agent.
+
+## Response Handling
+
+Response Handling activities include the following stages:
+
+* Response generation completion: Hooks after response generation can inspect the generated response and may request further processing, including response regeneration. They provide an integration point for components to review generated responses and, where supported, request further processing based on the review results.
+
+* Before response sending: Hooks before a response is sent to a user or upstream system can inspect the outgoing message and may allow its content to be modified or the send operation to be cancelled. These hooks can provide an integration point for external components to inspect outgoing messages and, where supported, modify or cancel their delivery based on the results of security checks. They provide an integration point for external components to inspect outgoing messages and, where supported, modify the message or cancel sending based on the results of security checks.
+
+* After response sending: Hooks after a send attempt can record whether sending succeeded or failed.
+
+  
 
 # Security Considerations {#security}
 
