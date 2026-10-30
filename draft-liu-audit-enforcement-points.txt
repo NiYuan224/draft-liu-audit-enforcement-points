@@ -78,23 +78,29 @@ Table of Contents
      3.1.  Enforcement Point Categories
      3.2.  Hook Capabilities
    4.  Agent Client EP
-     4.1.  Summary of Agent Client Hooks
-   5.  User Interaction Enforcement Point
-     5.1.  Session Lifecycle Management
-     5.2.  Input Reception and Processing
-     5.3.  Response Handling
-   6.  Model and Tool Invocation Enforcement Point
-     6.1.  Model Invocation
-     6.2.  Tool Invocation
-     6.3.  Context Management
-   7.  Host-level Enforcement Point
-     7.1.  Extension Installation
-     7.2.  Command Execution
-     7.3.  File Operations
-   8.  Hook Failure Handling
-   9.  Security Considerations
-   10. IANA Considerations
-   11. Normative References
+     4.1.  Summary of Agent Client EP Hooks
+     4.2.  Observability and Interventability
+   5.  Gateway EP
+     5.1.  Summary of Gateway EP Hooks
+     5.2.  Observability and Interventability
+   6.  User Interaction Enforcement Point
+     6.1.  Session Lifecycle Management
+     6.2.  Input Reception and Processing
+     6.3.  Response Handling
+   7.  Model and Tool Invocation Enforcement Point
+     7.1.  Model Invocation
+     7.2.  Tool Invocation
+     7.3.  Context Management
+   8.  Host-level Enforcement Point
+     8.1.  Extension Installation
+     8.2.  Command Execution
+     8.3.  File Operations
+   9.  Hook Failure Handling
+   10. Security Considerations
+   11. IANA Considerations
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -224,13 +230,13 @@ Table of Contents
 
    Hooks support two capabilities:
 
-   *  Observation: A hook provides information about a specific stage of
-      an agent activity for audit recording, such as tool invocation
+   *  Observability: A hook provides information about a specific stage
+      of an agent activity for audit recording, such as tool invocation
       arguments, execution results, error information, or execution
       status.
 
-   *  Intervention: A hook allows EP to affect an agent activity or its
-      subsequent processing, including by blocking or cancelling the
+   *  Interventability: A hook allows EP to affect an agent activity or
+      its subsequent processing, including by blocking or cancelling the
       activity, modifying its parameters or content, or changing
       information passed to subsequent processing.
 
@@ -239,7 +245,7 @@ Table of Contents
 
 4.  Agent Client EP
 
-4.1.  Summary of Agent Client Hooks
+4.1.  Summary of Agent Client EP Hooks
 
    This section summarizes Agent Client hooks along the agent execution
    workflow.
@@ -247,57 +253,57 @@ Table of Contents
 +---------------------------+---------------------------------------------+
 | Name                      | Examples                                    |
 +---------------------------+---------------------------------------------+
-| Session start             | Claude Code: `SessionStart`                 |
+| Session Start             | Claude Code: `SessionStart`                 |
 |                           | Cursor: `sessionStart`                      |
 |                           | GitHub Copilot: `sessionStart`              |
 |                           | Hermes Agent: `on_session_start`            |
 |                           | OpenClaw: `session_start`                   |
 |                           | Qwen Code: `SessionStart`                   |
 +---------------------------+---------------------------------------------+
-| Prompt submission         | Claude Code: `UserPromptSubmit`             |
+| Before Prompt Submit      | Claude Code: `UserPromptSubmit`             |
 |                           | Cursor: `beforeSubmitPrompt`                |
 |                           | Gemini CLI: `BeforeAgent`                   |
 |                           | GitHub Copilot: `userPromptSubmitted`       |
 |                           | Qwen Code: `UserPromptSubmit`               |
 +---------------------------+---------------------------------------------+
-| Prompt expansion          | Claude Code: `UserPromptExpansion`          |
+| Prompt Expansion          | Claude Code: `UserPromptExpansion`          |
 |                           | Qwen Code: `UserPromptExpansion`            |
 +---------------------------+---------------------------------------------+
-| Before model request      | Gemini CLI: `BeforeModel`                   |
+| Before Model Request      | Gemini CLI: `BeforeModel`                   |
 |                           | Hermes Agent: `pre_api_request`             |
 |                           | OpenClaw: `llm_input`                       |
 +---------------------------+---------------------------------------------+
-| After model response      | Gemini CLI: `AfterModel`                    |
+| After Model Response      | Gemini CLI: `AfterModel`                    |
 |                           | Hermes Agent: `post_api_request`            |
 |                           | OpenClaw: `llm_output`                      |
 +---------------------------+---------------------------------------------+
-| Before context compaction | Claude Code: `PreCompact`                   |
+| Before Context Compaction | Claude Code: `PreCompact`                   |
 |                           | Cursor: `preCompact`                        |
 |                           | Gemini CLI: `PreCompress`                   |
 |                           | GitHub Copilot: `preCompact`                |
 |                           | OpenClaw: `before_compaction`               |
 |                           | Qwen Code: `PreCompact`                     |
 +---------------------------+---------------------------------------------+
-| After context compaction  | Claude Code: `PostCompact`                  |
+| After Context Compaction  | Claude Code: `PostCompact`                  |
 |                           | Gemini CLI: `PostCompress`                  |
 |                           | OpenClaw: `after_compaction`                |
 |                           | Qwen Code: `PostCompact`                    |
 +---------------------------+---------------------------------------------+
-| Subagent start            | Claude Code: `SubagentStart`                |
+| Subagent Start            | Claude Code: `SubagentStart`                |
 |                           | Cursor: `subagentStart`                     |
 |                           | GitHub Copilot: `subagentStart`             |
 |                           | Hermes Agent: `subagent_start`              |
 |                           | OpenClaw: `subagent_spawned`                |
 |                           | Qwen Code: `SubagentStart`                  |
 +---------------------------+---------------------------------------------+
-| Subagent completion       | Claude Code: `SubagentStop`                 |
+| Subagent Completion       | Claude Code: `SubagentStop`                 |
 |                           | Cursor: `subagentStop`                      |
 |                           | GitHub Copilot: `subagentStop`              |
 |                           | Hermes Agent: `subagent_stop`               |
 |                           | OpenClaw: `subagent_ended`                  |
 |                           | Qwen Code: `SubagentStop`                   |
 +---------------------------+---------------------------------------------+
-| Before tool use           | Claude Code: `PreToolUse`                   |
+| Before Tool Use           | Claude Code: `PreToolUse`                   |
 |                           | Cursor: `preToolUse`                        |
 |                           | Gemini CLI: `BeforeTool`                    |
 |                           | GitHub Copilot: `preToolUse`                |
@@ -305,15 +311,15 @@ Table of Contents
 |                           | OpenClaw: `before_tool_call`                |
 |                           | Qwen Code: `PreToolUse`                     |
 +---------------------------+---------------------------------------------+
-| Permission request        | Claude Code: `PermissionRequest`            |
+| Permission Request        | Claude Code: `PermissionRequest`            |
 |                           | Hermes Agent: `pre_approval_request`        |
 |                           | Hermes Agent: `post_approval_response`      |
 |                           | Qwen Code: `PermissionRequest`              |
 +---------------------------+---------------------------------------------+
-| Permission denied         | Claude Code: `PermissionDenied`             |
+| Permission Denied         | Claude Code: `PermissionDenied`             |
 |                           | Qwen Code: `PermissionDenied`               |
 +---------------------------+---------------------------------------------+
-| After tool use            | Claude Code: `PostToolUse`                  |
+| After tool Use            | Claude Code: `PostToolUse`                  |
 |                           | Cursor: `postToolUse`                       |
 |                           | Gemini CLI: `AfterTool`                     |
 |                           | GitHub Copilot: `postToolUse`               |
@@ -321,42 +327,42 @@ Table of Contents
 |                           | OpenClaw: `after_tool_call`                 |
 |                           | Qwen Code: `PostToolUse`                    |
 +---------------------------+---------------------------------------------+
-| Tool batch completion     | Claude Code: `PostToolBatch`                |
+| Tool Batch Completion     | Claude Code: `PostToolBatch`                |
 |                           | Qwen Code: `PostToolBatch`                  |
 +---------------------------+---------------------------------------------+
-| Post tool use failure     | Claude Code: `PostToolUseFailure`           |
+| Post Tool Use Failure     | Claude Code: `PostToolUseFailure`           |
 |                           | Cursor: `postToolUseFailure`                |
 |                           | GitHub Copilot: `postToolUseFailure`        |
 |                           | Qwen Code: `PostToolUseFailure`             |
 +---------------------------+---------------------------------------------+
-| Before MCP execution      | Claude Code: `PreToolUse` (MCP tools)       |
+| Before MCP Execution      | Claude Code: `PreToolUse` (MCP tools)       |
 |                           | Cursor: `beforeMCPExecution`                |
 +---------------------------+---------------------------------------------+
-| After MCP execution       | Claude Code: `PostToolUse` (MCP tools)      |
+| After MCP Execution       | Claude Code: `PostToolUse` (MCP tools)      |
 |                           | Cursor: `afterMCPExecution`                 |
 +---------------------------+---------------------------------------------+
-| Before command execution  | Claude Code: `PreToolUse` (Bash)            |
+| Before Command Execution  | Claude Code: `PreToolUse` (Bash)            |
 |                           | Cursor: `beforeShellExecution`              |
 +---------------------------+---------------------------------------------+
-| After command execution   | Claude Code: `PostToolUse` (Bash)           |
+| After Command Execution   | Claude Code: `PostToolUse` (Bash)           |
 |                           | Cursor: `afterShellExecution`               |
 +---------------------------+---------------------------------------------+
-| Before file access        | Claude Code: `PreToolUse` (Read)            |
+| Before File Access        | Claude Code: `PreToolUse` (Read)            |
 |                           | Cursor: `beforeReadFile`                    |
 |                           | Cursor: `beforeTabFileRead`                 |
 +---------------------------+---------------------------------------------+
-| After file modification   | Claude Code: `PostToolUse` (Write/Edit)     |
+| After File Modification   | Claude Code: `PostToolUse` (Write/Edit)     |
 |                           | Cursor: `afterFileEdit`                     |
 |                           | Cursor: `afterTabFileEdit`                  |
 +---------------------------+---------------------------------------------+
-| Agent completion          | Claude Code: `Stop`                         |
+| Agent Completion          | Claude Code: `Stop`                         |
 |                           | Cursor: `stop`                              |
 |                           | Gemini CLI: `AfterAgent`                    |
 |                           | GitHub Copilot: `agentStop`                 |
 |                           | Hermes Agent: `post_llm_call`               |
 |                           | OpenClaw: `agent_end`                       |
 +---------------------------+---------------------------------------------+
-| Session end               | Claude Code: `SessionEnd`                   |
+| Session End               | Claude Code: `SessionEnd`                   |
 |                           | Cursor: `sessionEnd`                        |
 |                           | GitHub Copilot: `sessionEnd`                |
 |                           | Hermes Agent: `on_session_finalize`         |
@@ -364,7 +370,150 @@ Table of Contents
 |                           | Qwen Code: `SessionEnd`                     |
 +---------------------------+---------------------------------------------+
 
-5.  User Interaction Enforcement Point
+4.2.  Observability and Interventability
+
+   The following sections summarize the observable information and
+   intervention capabilities provided by representative Agent Client
+   hooks.  The specific observable information and supported
+   interventions vary across implementations.
+
+   *  *Session Start:* Expose session information, including the session
+      identifier and source.  Allow EPs to set session-specific
+      environment variables or inject initial security context.
+
+   *  *Prompt Submission:* Expose the submitted prompt and associated
+      session information.  Allow EPs to inspect, modify, or block the
+      prompt before agent processing.
+
+   *  *Prompt Expansion:* Expose the expanded prompt and associated
+      command information, including the command name and arguments.
+      Allow EPs to inject additional context or block the expanded
+      prompt before model invocation.
+
+   *  *Before Model Request:* Expose model request information,
+      including the selected model, provider, and request messages.
+      Allow EPs to modify or block model requests before invocation.
+
+   *  *After Model Response:* Expose generated content, response
+      metadata, and token usage.  Allow EPs to modify, replace, or block
+      the response before subsequent processing.
+
+   *  *Before Context Compaction:* Expose compaction-related
+      information, including the compaction trigger, context token
+      count, and messages subject to compaction.  Allow EPs to provide
+      additional context or instructions for compaction, or block
+      compaction.
+
+   *  *After Context Compaction:* Expose compaction results, including
+      the generated summary and available message or token counts.
+
+   *  *Subagent Start:* Expose subagent information, including the agent
+      identifier, agent type, and delegated task.  Allow EPs to inject
+      additional context or instructions into the subagent, or control
+      its initialization.
+
+   *  *Subagent Completion:* Expose subagent completion information,
+      including its identifier, execution status, and returned summary.
+      Allow EPs to modify the subagent response or request continued
+      execution.
+
+   *  *Before Tool Use:* Expose tool invocation information, including
+      the tool name, invocation arguments, and tool call identifier.
+      Allow EPs to approve, deny, or modify tool invocations before
+      execution.
+
+   *  *Permission Request:* Expose permission request information,
+      including the requested tool, invocation arguments, and permission
+      context.  Allow EPs to approve or deny the requested operation.
+
+   *  *Permission Denied:* Expose information about denied operations,
+      including the tool name, invocation arguments, and denial reason.
+
+   *  *After Tool Use:* Expose tool execution information, including the
+      tool name, invocation arguments, execution results, and execution
+      status.  Allow EPs to modify or withhold results before subsequent
+      model processing.
+
+   *  *Tool Batch Completion:* Expose batch execution information,
+      including the individual tool calls, their arguments, and
+      execution results.
+
+   *  *Post Tool Use Failure:* Expose failed tool invocation
+      information, including the tool name, invocation arguments, error
+      details, and failure status.
+
+   *  *Before MCP Execution:* Expose MCP invocation information,
+      including the MCP server, tool name, and invocation arguments.
+      Allow EPs to approve or deny MCP tool execution before invocation.
+
+   *  *After MCP Execution:* Expose MCP execution information, including
+      the MCP server, tool name, and execution results.  Allow EPs to
+      modify or replace MCP results before subsequent processing.
+
+   *  *Before Command Execution:* Expose command execution information,
+      including the command and working directory.  Allow EPs to permit,
+      deny, or request user confirmation before command execution.
+
+   *  *After Command Execution:* Expose command execution results,
+      including the executed command, captured output, exit status, and
+      execution duration.
+
+   *  *Before File Access:* Expose file access information, including
+      the file path and requested file content.  Allow EPs to permit or
+      deny file access before the content is provided to the agent.
+
+   *  *After File Modification:* Expose file modification information,
+      including the file path and changes made, such as the original and
+      modified text.
+
+   *  *Agent Completion:* Expose agent completion information, including
+      the completion status, stop reason, and final assistant response.
+      Allow EPs to request additional processing or continued execution
+      before the agent terminates.
+
+   *  *Session End:* Expose session termination information, including
+      the session identifier, termination reason, and session duration.
+
+5.  Gateway EP
+
+5.1.  Summary of Gateway EP Hooks
+
++-----------------------------+--------------------------------------------------+
+| Name                        | Examples                                         |
++-----------------------------+--------------------------------------------------+
+| Model Listing               | LiteLLM: `async_filter_listed_models`            |
++-----------------------------+--------------------------------------------------+
+| Before Model Request        | LiteLLM: `async_pre_call_hook`                   |
+|                             | Portkey: `beforeRequestHook`                     |
+|                             | TrueFoundry: `LLM Input`                         |
+|                             | Bifrost: `onCanonicalRequest`                    |
++-----------------------------+--------------------------------------------------+
+| During Model Request        | LiteLLM: `async_moderation_hook`                 |
++-----------------------------+--------------------------------------------------+
+| After Model Response        | LiteLLM: `async_post_call_success_hook`          |
+|                             | LiteLLM: `async_post_call_streaming_hook`        |
+|                             | LiteLLM: `async_post_call_streaming_iterator_    |
+|                             |           hook`                                  |
+|                             | Portkey: `afterRequestHook`                      |
+|                             | TrueFoundry: `LLM Output`                        |
+|                             | Bifrost: `onCanonicalResponse`                   |
+|                             | Bifrost: `onStreamEvent`                         |
++-----------------------------+--------------------------------------------------+
+| During Streaming Response   |                                                  |
++-----------------------------+--------------------------------------------------+
+| Response Headers            | LiteLLM: `async_post_call_response_headers_hook` |
++-----------------------------+--------------------------------------------------+
+| Request Failure             | LiteLLM: `async_post_call_failure_hook`          |
+|                             | Bifrost: `onError`                               |
++-----------------------------+--------------------------------------------------+
+| Before MCP Tool Invocation  | TrueFoundry: `MCP Tool Pre-Invoke`               |
++-----------------------------+--------------------------------------------------+
+| After MCP Tool Invocation   | TrueFoundry: `MCP Tool Post-Invoke`              |
++-----------------------------+--------------------------------------------------+
+
+5.2.  Observability and Interventability
+
+6.  User Interaction Enforcement Point
 
    User Interaction Enforcement Points cover activities at the
    interaction boundary between users or upstream systems and agents,
@@ -373,7 +522,7 @@ Table of Contents
    trigger stages of relevant hooks, the information they expose, and
    the intervention capabilities they provide to User Interaction EPs.
 
-5.1.  Session Lifecycle Management
+6.1.  Session Lifecycle Management
 
    Session lifecycle management activities include the following stages:
 
@@ -387,7 +536,7 @@ Table of Contents
       use this information to audit session termination and investigate
       abnormal session behavior.
 
-5.2.  Input Reception and Processing
+6.2.  Input Reception and Processing
 
    Input reception and processing activities include the following
    stages:
@@ -402,7 +551,7 @@ Table of Contents
       block the expansion or add context before the resulting input is
       processed by the agent.
 
-5.3.  Response Handling
+6.3.  Response Handling
 
    Response handling activities include the following stages:
 
@@ -418,13 +567,13 @@ Table of Contents
       whether sending succeeded or failed, allowing an EP to record the
       send outcome.
 
-6.  Model and Tool Invocation Enforcement Point
+7.  Model and Tool Invocation Enforcement Point
 
    Model and Tool Invocation Enforcement Points cover interactions
    between agents and models or tools, including model invocation, tool
    invocation, and context management.
 
-6.1.  Model Invocation
+7.1.  Model Invocation
 
    Model invocation activities include the following stages:
 
@@ -449,7 +598,7 @@ Table of Contents
       providing observational information for investigating failed
       requests and abnormal resource consumption.
 
-6.2.  Tool Invocation
+7.2.  Tool Invocation
 
    Tool invocation activities include the following stages:
 
@@ -471,7 +620,7 @@ Table of Contents
       conversation.  Some hooks also allow an EP to modify, replace, or
       withhold the results.
 
-6.3.  Context Management
+7.3.  Context Management
 
    Context management activities include the following stages:
 
@@ -484,13 +633,13 @@ Table of Contents
       information are available, an EP can compare them to investigate
       changes in the retained context.
 
-7.  Host-level Enforcement Point
+8.  Host-level Enforcement Point
 
    Host-level Enforcement Points cover operations performed by agents or
    their tools on the host, including command execution, file
    operations, and extension installation.
 
-7.1.  Extension Installation
+8.1.  Extension Installation
 
    Extension installation activities include the following stages:
 
@@ -499,7 +648,7 @@ Table of Contents
       EP to perform security checks and block installation based on the
       results.
 
-7.2.  Command Execution
+8.2.  Command Execution
 
    Command execution activities include the following stages:
 
@@ -512,7 +661,7 @@ Table of Contents
       support auditing of command execution and analysis of command
       output.
 
-7.3.  File Operations
+8.3.  File Operations
 
    File operation activities include the following stages:
 
@@ -525,7 +674,7 @@ Table of Contents
       text before and after modification, supporting auditing of file
       modifications.
 
-8.  Hook Failure Handling
+9.  Hook Failure Handling
 
    Hook failures can affect security enforcement and audit coverage.
    Two common handling policies are:
@@ -555,15 +704,17 @@ Table of Contents
       Failure to collect audit information should not normally interrupt
       legitimate operations.
 
-9.  Security Considerations
+10.  Security Considerations
 
    TODO Security
 
-10.  IANA Considerations
+11.  IANA Considerations
 
    This document has no IANA actions.
 
-11.  Normative References
+12.  References
+
+12.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -573,6 +724,54 @@ Table of Contents
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+12.2.  Informative References
+
+   [BifrostHooks]
+              "Bifrost Runtime Extensions", n.d.,
+              <https://bifrost.boelabs.com/docs/extensions>.
+
+   [ClaudeCodeHooks]
+              "Claude Code Hooks", n.d.,
+              <https://code.claude.com/docs/en/hooks>.
+
+   [CopilotHooks]
+              "GitHub Copilot Hooks Reference", n.d.,
+              <https://docs.github.com/en/copilot/reference/hooks-
+              reference>.
+
+   [CursorHooks]
+              "Cursor Hooks", n.d., <https://cursor.com/docs/hooks>.
+
+   [GeminiCLIHooks]
+              "Gemini CLI Hooks Reference", n.d.,
+              <https://geminicli.com/docs/hooks/reference/>.
+
+   [HermesHooks]
+              "Hermes Agent Hooks", n.d., <https://hermes-
+              agent.nousresearch.com/docs/user-guide/features/hooks/>.
+
+   [LiteLLMHooks]
+              "LiteLLM Proxy Call Hooks", n.d.,
+              <https://docs.litellm.ai/docs/proxy/call_hooks>.
+
+   [OpenClawHooks]
+              "OpenClaw Plugin Hooks", n.d.,
+              <https://docs.openclaw.ai/plugins/hooks>.
+
+   [PortkeyHooks]
+              "Portkey Guardrail Checks", n.d.,
+              <https://docs.portkey.ai/docs/product/guardrails/list-of-
+              guardrail-checks>.
+
+   [QwenCodeHooks]
+              "Qwen Code Hooks", n.d., <https://github.com/QwenLM/qwen-
+              code/blob/main/docs/users/features/hooks.md>.
+
+   [TrueFoundryHooks]
+              "Configure Guardrails on the TrueFoundry AI Gateway",
+              n.d., <https://www.truefoundry.com/blog/configure-
+              guardrails-ai-gateway>.
 
 Acknowledgments
 
