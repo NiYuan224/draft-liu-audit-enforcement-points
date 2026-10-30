@@ -39,6 +39,50 @@ normative:
  RFC8174:
 
 informative:
+informative:
+  ClaudeCodeHooks:
+    title: "Claude Code Hooks"
+    target: https://code.claude.com/docs/en/hooks
+
+  CursorHooks:
+    title: "Cursor Hooks"
+    target: https://cursor.com/docs/hooks
+
+  CopilotHooks:
+    title: "GitHub Copilot Hooks Reference"
+    target: https://docs.github.com/en/copilot/reference/hooks-reference
+
+  QwenCodeHooks:
+    title: "Qwen Code Hooks"
+    target: https://github.com/QwenLM/qwen-code/blob/main/docs/users/features/hooks.md
+
+  GeminiCLIHooks:
+    title: "Gemini CLI Hooks Reference"
+    target: https://geminicli.com/docs/hooks/reference/
+
+  HermesHooks:
+    title: "Hermes Agent Hooks"
+    target: https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks/
+
+  OpenClawHooks:
+    title: "OpenClaw Plugin Hooks"
+    target: https://docs.openclaw.ai/plugins/hooks
+
+  LiteLLMHooks:
+    title: "LiteLLM Proxy Call Hooks"
+    target: https://docs.litellm.ai/docs/proxy/call_hooks
+
+  PortkeyHooks:
+    title: "Portkey Guardrail Checks"
+    target: https://docs.portkey.ai/docs/product/guardrails/list-of-guardrail-checks
+
+  TrueFoundryHooks:
+    title: "Configure Guardrails on the TrueFoundry AI Gateway"
+    target: https://www.truefoundry.com/blog/configure-guardrails-ai-gateway
+
+  BifrostHooks:
+    title: "Bifrost Runtime Extensions"
+    target: https://bifrost.boelabs.com/docs/extensions
 
 
 
@@ -309,6 +353,7 @@ The following sections summarize the observable information and intervention cap
 
 ## Summary of Gateway EP Hooks
 
+~~~
 +-----------------------------+--------------------------------------------------+
 | Name                        | Examples                                         |
 +-----------------------------+--------------------------------------------------+
@@ -324,11 +369,13 @@ The following sections summarize the observable information and intervention cap
 | After Model Response        | LiteLLM: `async_post_call_success_hook`          |
 |                             | LiteLLM: `async_post_call_streaming_hook`        |
 |                             | LiteLLM: `async_post_call_streaming_iterator_    |
-|                             |         hook`                                    |
+|                             |           hook`                                  |
 |                             | Portkey: `afterRequestHook`                      |
 |                             | TrueFoundry: `LLM Output`                        |
 |                             | Bifrost: `onCanonicalResponse`                   |
 |                             | Bifrost: `onStreamEvent`                         |
++-----------------------------+--------------------------------------------------+
+| During Streaming Response   |                                                  |
 +-----------------------------+--------------------------------------------------+
 | Response Headers            | LiteLLM: `async_post_call_response_headers_hook` |
 +-----------------------------+--------------------------------------------------+
@@ -339,7 +386,13 @@ The following sections summarize the observable information and intervention cap
 +-----------------------------+--------------------------------------------------+
 | After MCP Tool Invocation   | TrueFoundry: `MCP Tool Post-Invoke`              |
 +-----------------------------+--------------------------------------------------+
- 
+~~~
+
+## Observability and Interventability
+
+
+
+
 
 # User Interaction Enforcement Point
 
