@@ -120,9 +120,9 @@ The three EP categories cover different parts of this interaction chain. The Age
 
 Hooks support two capabilities:
 
-* Observation: A hook provides information about a specific stage of an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
+* Observability: A hook provides information about a specific stage of an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
 
-* Intervention: A hook allows EP to affect an agent activity or its subsequent processing, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.
+* Interventability: A hook allows EP to affect an agent activity or its subsequent processing, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.
 
 Some hooks provide observation only, while others support both observation and intervention.
 
@@ -144,7 +144,7 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 |                           | OpenClaw: `session_start`                   |
 |                           | Qwen Code: `SessionStart`                   |
 +---------------------------+---------------------------------------------+
-| Prompt submission         | Claude Code: `UserPromptSubmit`             |
+| Before Prompt submit      | Claude Code: `UserPromptSubmit`             |
 |                           | Cursor: `beforeSubmitPrompt`                |
 |                           | Gemini CLI: `BeforeAgent`                   |
 |                           | GitHub Copilot: `userPromptSubmitted`       |
@@ -254,6 +254,98 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 |                           | Qwen Code: `SessionEnd`                     |
 +---------------------------+---------------------------------------------+
 ~~~
+
+## Observability and Interventability
+
+The following sections summarize the observable information and intervention capabilities provided by representative Agent Client hooks. The specific observable information and supported interventions vary across implementations.
+
+* **Session Start**
+  * **Observability:** Expose session information, such as `session_id` / `sessionId`, `source`, `model`, and `agent_type` / `agentType`.
+  * **Interventability:** Set session-specific environment variables or inject initial security context, such as `additionalContext`.
+
+* **Prompt Submission**
+  * **Observability:** Expose submitted prompt information, such as `prompt`, `submitted_prompt`, and `session_id` / `sessionId`.
+  * **Interventability:** Validate or block the submitted prompt, or append additional context before agent processing.
+
+* **Prompt Expansion**
+  * **Observability:** Expose prompt expansion information, such as `command_name`, `command_args`, `command_source`, `expansion_type`, and the expanded `prompt`.
+  * **Interventability:** Add supplementary context or modify the expanded prompt before it is submitted to the model.
+
+* **Before Model Request**
+  * **Observability:** Expose model request information, such as `provider`, `model`, `request`, `api_request_id`, `api_call_count`, and `runId`.
+  * **Interventability:** Modify the selected model, provider, or fallback configuration before model invocation.
+
+* **After Model Response**
+  * **Observability:** Expose model response information, such as `response`, `assistantTexts`, `finish_reason`, `response_model`, and `usage`.
+  * **Interventability:** Modify, replace, or block model response content before subsequent processing.
+
+* **Before Context Compaction**
+  * **Observability:** Expose compaction-related information, such as `trigger`, `custom_instructions`, `context_tokens`, `context_window_size`, `message_count`, and `messages_to_compact`.
+
+* **After Context Compaction**
+  * **Observability:** Expose compaction results, such as `compact_summary`, `compactedCount`, `messageCount`, and `tokenCount`.
+
+* **Subagent Start**
+  * **Observability:** Expose subagent initialization information, such as `agent_id`, `agent_type`, `agentName`, `agentDescription`, `parent_session_id`, `child_session_id`, and `task`.
+  * **Interventability:** Inject additional context or instructions into the subagent's initial prompt, or control subagent initialization.
+
+* **Subagent Completion**
+  * **Observability:** Expose subagent completion information, such as `agent_id`, `agent_type`, `agent_transcript_path`, `last_assistant_message`, `child_summary`, and `child_status`.
+  * **Interventability:** Modify the subagent's response or request continued execution.
+
+* **Before Tool Use**
+  * **Observability:** Expose tool invocation information, such as `tool_name`, `tool_input` / `params`, `tool_use_id` / `tool_call_id`, and `run_id`.
+  * **Interventability:** Allow, deny, or modify tool invocation requests before execution, or require additional approval.
+
+* **Permission Request**
+  * **Observability:** Expose permission request information, such as `tool_name`, `tool_input`, `permission_mode`, and `permission_suggestions`.
+  * **Interventability:** Approve or deny requested operations, or modify the permission decision.
+
+* **Permission Denied**
+  * **Observability:** Expose permission denial information, such as `tool_name`, `tool_input`, `tool_use_id`, and `reason`.
+
+* **After Tool Use**
+  * **Observability:** Expose tool execution information, such as `tool_name`, `tool_input`, `tool_response` / `result`, `tool_use_id`, `status`, and `duration_ms`.
+  * **Interventability:** Modify or replace tool results, or inject additional context before subsequent model processing.
+
+* **Tool Batch Completion**
+  * **Observability:** Expose batch execution information, such as `tool_calls`, including each tool's `tool_name`, `tool_input`, `tool_use_id`, and `tool_response`.
+
+* **Post Tool Use Failure**
+  * **Observability:** Expose failed tool invocation information, such as `tool_name`, `tool_input`, `tool_use_id`, `error`, `failure_type`, and `is_interrupt`.
+
+* **Before MCP Execution**
+  * **Observability:** Expose MCP invocation information, such as `tool_name`, `tool_input`, `mcp_server_name`, `mcp_server_url`, and `command`.
+  * **Interventability:** Allow or deny MCP tool execution before invocation, or request user confirmation.
+
+* **After MCP Execution**
+  * **Observability:** Expose MCP execution information, such as `tool_name`, `tool_input`, `mcp_server_name`, `result_json`, and `duration`.
+  * **Interventability:** Modify or replace MCP execution results before subsequent processing.
+
+* **Before Command Execution**
+  * **Observability:** Expose command execution information, such as `command`, `cwd`, and `sandbox`.
+  * **Interventability:** Allow, deny, or request user confirmation before command execution.
+
+* **After Command Execution**
+  * **Observability:** Expose command execution results, such as `command`, `output`, `returncode`, and `duration`.
+  * **Interventability:** Modify command output before it is passed to subsequent processing.
+
+* **Before File Access**
+  * **Observability:** Expose file access information, such as `file_path`, `content`, and `attachments`.
+  * **Interventability:** Allow or deny file access before the content is provided to the agent.
+
+* **After File Modification**
+  * **Observability:** Expose file modification information, such as `file_path`, `edits`, `old_string`, and `new_string`.
+
+* **Agent Completion**
+  * **Observability:** Expose agent completion information, such as `status`, `stop_reason`, `last_assistant_message`, `stop_hook_active`, and `loop_count`.
+  * **Interventability:** Request additional processing or continued execution before the agent execution loop terminates.
+
+* **Session End**
+  * **Observability:** Expose session termination information, such as `session_id` / `sessionId`, `reason`, `durationMs`, `duration_ms`, and `nextSessionId`.
+
+# GW EP
+ 
 
 # User Interaction Enforcement Point
 
