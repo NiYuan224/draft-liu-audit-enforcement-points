@@ -133,6 +133,7 @@ Some hooks provide observation only, while others support both observation and i
 
 This section summarizes Agent Client hooks along the agent execution workflow.
 
+~~~
 +---------------------------+---------------------------------------------+
 | Name                      | Examples                                    |
 +---------------------------+---------------------------------------------+
@@ -252,6 +253,7 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 |                           | OpenClaw: `session_end`                     |
 |                           | Qwen Code: `SessionEnd`                     |
 +---------------------------+---------------------------------------------+
+~~~
 
 # User Interaction Enforcement Point
 
