@@ -129,7 +129,7 @@ Some hooks provide observation only, while others support both observation and i
 
 # Agent Client EP
 
-## Summary of Agent Client Hooks
+## Summary of Agent Client EP Hooks
 
 This section summarizes Agent Client hooks along the agent execution workflow.
 
@@ -137,57 +137,57 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 +---------------------------+---------------------------------------------+
 | Name                      | Examples                                    |
 +---------------------------+---------------------------------------------+
-| Session start             | Claude Code: `SessionStart`                 |
+| Session Start             | Claude Code: `SessionStart`                 |
 |                           | Cursor: `sessionStart`                      |
 |                           | GitHub Copilot: `sessionStart`              |
 |                           | Hermes Agent: `on_session_start`            |
 |                           | OpenClaw: `session_start`                   |
 |                           | Qwen Code: `SessionStart`                   |
 +---------------------------+---------------------------------------------+
-| Before Prompt submit      | Claude Code: `UserPromptSubmit`             |
+| Before Prompt Submit      | Claude Code: `UserPromptSubmit`             |
 |                           | Cursor: `beforeSubmitPrompt`                |
 |                           | Gemini CLI: `BeforeAgent`                   |
 |                           | GitHub Copilot: `userPromptSubmitted`       |
 |                           | Qwen Code: `UserPromptSubmit`               |
 +---------------------------+---------------------------------------------+
-| Prompt expansion          | Claude Code: `UserPromptExpansion`          |
+| Prompt Expansion          | Claude Code: `UserPromptExpansion`          |
 |                           | Qwen Code: `UserPromptExpansion`            |
 +---------------------------+---------------------------------------------+
-| Before model request      | Gemini CLI: `BeforeModel`                   |
+| Before Model Request      | Gemini CLI: `BeforeModel`                   |
 |                           | Hermes Agent: `pre_api_request`             |
 |                           | OpenClaw: `llm_input`                       |
 +---------------------------+---------------------------------------------+
-| After model response      | Gemini CLI: `AfterModel`                    |
+| After Model Response      | Gemini CLI: `AfterModel`                    |
 |                           | Hermes Agent: `post_api_request`            |
 |                           | OpenClaw: `llm_output`                      |
 +---------------------------+---------------------------------------------+
-| Before context compaction | Claude Code: `PreCompact`                   |
+| Before Context Compaction | Claude Code: `PreCompact`                   |
 |                           | Cursor: `preCompact`                        |
 |                           | Gemini CLI: `PreCompress`                   |
 |                           | GitHub Copilot: `preCompact`                |
 |                           | OpenClaw: `before_compaction`               |
 |                           | Qwen Code: `PreCompact`                     |
 +---------------------------+---------------------------------------------+
-| After context compaction  | Claude Code: `PostCompact`                  |
+| After Context Compaction  | Claude Code: `PostCompact`                  |
 |                           | Gemini CLI: `PostCompress`                  |
 |                           | OpenClaw: `after_compaction`                |
 |                           | Qwen Code: `PostCompact`                    |
 +---------------------------+---------------------------------------------+
-| Subagent start            | Claude Code: `SubagentStart`                |
+| Subagent Start            | Claude Code: `SubagentStart`                |
 |                           | Cursor: `subagentStart`                     |
 |                           | GitHub Copilot: `subagentStart`             |
 |                           | Hermes Agent: `subagent_start`              |
 |                           | OpenClaw: `subagent_spawned`                |
 |                           | Qwen Code: `SubagentStart`                  |
 +---------------------------+---------------------------------------------+
-| Subagent completion       | Claude Code: `SubagentStop`                 |
+| Subagent Completion       | Claude Code: `SubagentStop`                 |
 |                           | Cursor: `subagentStop`                      |
 |                           | GitHub Copilot: `subagentStop`              |
 |                           | Hermes Agent: `subagent_stop`               |
 |                           | OpenClaw: `subagent_ended`                  |
 |                           | Qwen Code: `SubagentStop`                   |
 +---------------------------+---------------------------------------------+
-| Before tool use           | Claude Code: `PreToolUse`                   |
+| Before Tool Use           | Claude Code: `PreToolUse`                   |
 |                           | Cursor: `preToolUse`                        |
 |                           | Gemini CLI: `BeforeTool`                    |
 |                           | GitHub Copilot: `preToolUse`                |
@@ -195,15 +195,15 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 |                           | OpenClaw: `before_tool_call`                |
 |                           | Qwen Code: `PreToolUse`                     |
 +---------------------------+---------------------------------------------+
-| Permission request        | Claude Code: `PermissionRequest`            |
+| Permission Request        | Claude Code: `PermissionRequest`            |
 |                           | Hermes Agent: `pre_approval_request`        |
 |                           | Hermes Agent: `post_approval_response`      |
 |                           | Qwen Code: `PermissionRequest`              |
 +---------------------------+---------------------------------------------+
-| Permission denied         | Claude Code: `PermissionDenied`             |
+| Permission Denied         | Claude Code: `PermissionDenied`             |
 |                           | Qwen Code: `PermissionDenied`               |
 +---------------------------+---------------------------------------------+
-| After tool use            | Claude Code: `PostToolUse`                  |
+| After tool Use            | Claude Code: `PostToolUse`                  |
 |                           | Cursor: `postToolUse`                       |
 |                           | Gemini CLI: `AfterTool`                     |
 |                           | GitHub Copilot: `postToolUse`               |
@@ -211,42 +211,42 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 |                           | OpenClaw: `after_tool_call`                 |
 |                           | Qwen Code: `PostToolUse`                    |
 +---------------------------+---------------------------------------------+
-| Tool batch completion     | Claude Code: `PostToolBatch`                |
+| Tool Batch Completion     | Claude Code: `PostToolBatch`                |
 |                           | Qwen Code: `PostToolBatch`                  |
 +---------------------------+---------------------------------------------+
-| Post tool use failure     | Claude Code: `PostToolUseFailure`           |
+| Post Tool Use Failure     | Claude Code: `PostToolUseFailure`           |
 |                           | Cursor: `postToolUseFailure`                |
 |                           | GitHub Copilot: `postToolUseFailure`        |
 |                           | Qwen Code: `PostToolUseFailure`             |
 +---------------------------+---------------------------------------------+
-| Before MCP execution      | Claude Code: `PreToolUse` (MCP tools)       |
+| Before MCP Execution      | Claude Code: `PreToolUse` (MCP tools)       |
 |                           | Cursor: `beforeMCPExecution`                |
 +---------------------------+---------------------------------------------+
-| After MCP execution       | Claude Code: `PostToolUse` (MCP tools)      |
+| After MCP Execution       | Claude Code: `PostToolUse` (MCP tools)      |
 |                           | Cursor: `afterMCPExecution`                 |
 +---------------------------+---------------------------------------------+
-| Before command execution  | Claude Code: `PreToolUse` (Bash)            |
+| Before Command Execution  | Claude Code: `PreToolUse` (Bash)            |
 |                           | Cursor: `beforeShellExecution`              |
 +---------------------------+---------------------------------------------+
-| After command execution   | Claude Code: `PostToolUse` (Bash)           |
+| After Command Execution   | Claude Code: `PostToolUse` (Bash)           |
 |                           | Cursor: `afterShellExecution`               |
 +---------------------------+---------------------------------------------+
-| Before file access        | Claude Code: `PreToolUse` (Read)            |
+| Before File Access        | Claude Code: `PreToolUse` (Read)            |
 |                           | Cursor: `beforeReadFile`                    |
 |                           | Cursor: `beforeTabFileRead`                 |
 +---------------------------+---------------------------------------------+
-| After file modification   | Claude Code: `PostToolUse` (Write/Edit)     |
+| After File Modification   | Claude Code: `PostToolUse` (Write/Edit)     |
 |                           | Cursor: `afterFileEdit`                     |
 |                           | Cursor: `afterTabFileEdit`                  |
 +---------------------------+---------------------------------------------+
-| Agent completion          | Claude Code: `Stop`                         |
+| Agent Completion          | Claude Code: `Stop`                         |
 |                           | Cursor: `stop`                              |
 |                           | Gemini CLI: `AfterAgent`                    |
 |                           | GitHub Copilot: `agentStop`                 |
 |                           | Hermes Agent: `post_llm_call`               |
 |                           | OpenClaw: `agent_end`                       |
 +---------------------------+---------------------------------------------+
-| Session end               | Claude Code: `SessionEnd`                   |
+| Session End               | Claude Code: `SessionEnd`                   |
 |                           | Cursor: `sessionEnd`                        |
 |                           | GitHub Copilot: `sessionEnd`                |
 |                           | Hermes Agent: `on_session_finalize`         |
@@ -304,7 +304,41 @@ The following sections summarize the observable information and intervention cap
 * **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow EPs to request additional processing or continued execution before the agent terminates.
 
 * **Session End:** Expose session termination information, including the session identifier, termination reason, and session duration.
-# GW EP
+
+# Gateway EP
+
+## Summary of Gateway EP Hooks
+
++-----------------------------+--------------------------------------------------+
+| Name                        | Examples                                         |
++-----------------------------+--------------------------------------------------+
+| Model Listing               | LiteLLM: `async_filter_listed_models`            |
++-----------------------------+--------------------------------------------------+
+| Before Model Request        | LiteLLM: `async_pre_call_hook`                   |
+|                             | Portkey: `beforeRequestHook`                     |
+|                             | TrueFoundry: `LLM Input`                         |
+|                             | Bifrost: `onCanonicalRequest`                    |
++-----------------------------+--------------------------------------------------+
+| During Model Request        | LiteLLM: `async_moderation_hook`                 |
++-----------------------------+--------------------------------------------------+
+| After Model Response        | LiteLLM: `async_post_call_success_hook`          |
+|                             | LiteLLM: `async_post_call_streaming_hook`        |
+|                             | LiteLLM: `async_post_call_streaming_iterator_    |
+|                             |         hook`                                    |
+|                             | Portkey: `afterRequestHook`                      |
+|                             | TrueFoundry: `LLM Output`                        |
+|                             | Bifrost: `onCanonicalResponse`                   |
+|                             | Bifrost: `onStreamEvent`                         |
++-----------------------------+--------------------------------------------------+
+| Response Headers            | LiteLLM: `async_post_call_response_headers_hook` |
++-----------------------------+--------------------------------------------------+
+| Request Failure             | LiteLLM: `async_post_call_failure_hook`          |
+|                             | Bifrost: `onError`                               |
++-----------------------------+--------------------------------------------------+
+| Before MCP Tool Invocation  | TrueFoundry: `MCP Tool Pre-Invoke`               |
++-----------------------------+--------------------------------------------------+
+| After MCP Tool Invocation   | TrueFoundry: `MCP Tool Post-Invoke`              |
++-----------------------------+--------------------------------------------------+
  
 
 # User Interaction Enforcement Point
