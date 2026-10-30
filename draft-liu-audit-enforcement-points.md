@@ -259,91 +259,51 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 
 The following sections summarize the observable information and intervention capabilities provided by representative Agent Client hooks. The specific observable information and supported interventions vary across implementations.
 
-* **Session Start**
-  * **Observability:** Expose session information, such as `session_id` / `sessionId`, `source`, `model`, and `agent_type` / `agentType`.
-  * **Interventability:** Set session-specific environment variables or inject initial security context, such as `additionalContext`.
+* **Session Start:** Expose session information, including the session identifier and source. Allow EPs to set session-specific environment variables or inject initial security context.
 
-* **Prompt Submission**
-  * **Observability:** Expose submitted prompt information, such as `prompt`, `submitted_prompt`, and `session_id` / `sessionId`.
-  * **Interventability:** Validate or block the submitted prompt, or append additional context before agent processing.
+* **Prompt Submission:** Expose the submitted prompt and associated session information. Allow EPs to inspect, modify, or block the prompt before agent processing.
 
-* **Prompt Expansion**
-  * **Observability:** Expose prompt expansion information, such as `command_name`, `command_args`, `command_source`, `expansion_type`, and the expanded `prompt`.
-  * **Interventability:** Add supplementary context or modify the expanded prompt before it is submitted to the model.
+* **Prompt Expansion:** Expose the expanded prompt and associated command information, including the command name and arguments. Allow EPs to inject additional context or block the expanded prompt before model invocation.
 
-* **Before Model Request**
-  * **Observability:** Expose model request information, such as `provider`, `model`, `request`, `api_request_id`, `api_call_count`, and `runId`.
-  * **Interventability:** Modify the selected model, provider, or fallback configuration before model invocation.
+* **Before Model Request:** Expose model request information, including the selected model, provider, and request messages. Allow EPs to modify or block model requests before invocation.
 
-* **After Model Response**
-  * **Observability:** Expose model response information, such as `response`, `assistantTexts`, `finish_reason`, `response_model`, and `usage`.
-  * **Interventability:** Modify, replace, or block model response content before subsequent processing.
+* **After Model Response:** Expose generated content, response metadata, and token usage. Allow EPs to modify, replace, or block the response before subsequent processing.
 
-* **Before Context Compaction**
-  * **Observability:** Expose compaction-related information, such as `trigger`, `custom_instructions`, `context_tokens`, `context_window_size`, `message_count`, and `messages_to_compact`.
+* **Before Context Compaction:** Expose compaction-related information, including the compaction trigger, context token count, and messages subject to compaction. Allow EPs to provide additional context or instructions for compaction, or block compaction.
 
-* **After Context Compaction**
-  * **Observability:** Expose compaction results, such as `compact_summary`, `compactedCount`, `messageCount`, and `tokenCount`.
+* **After Context Compaction:** Expose compaction results, including the generated summary and available message or token counts.
 
-* **Subagent Start**
-  * **Observability:** Expose subagent initialization information, such as `agent_id`, `agent_type`, `agentName`, `agentDescription`, `parent_session_id`, `child_session_id`, and `task`.
-  * **Interventability:** Inject additional context or instructions into the subagent's initial prompt, or control subagent initialization.
+* **Subagent Start:** Expose subagent information, including the agent identifier, agent type, and delegated task. Allow EPs to inject additional context or instructions into the subagent, or control its initialization.
 
-* **Subagent Completion**
-  * **Observability:** Expose subagent completion information, such as `agent_id`, `agent_type`, `agent_transcript_path`, `last_assistant_message`, `child_summary`, and `child_status`.
-  * **Interventability:** Modify the subagent's response or request continued execution.
+* **Subagent Completion:** Expose subagent completion information, including its identifier, execution status, and returned summary. Allow EPs to modify the subagent response or request continued execution.
 
-* **Before Tool Use**
-  * **Observability:** Expose tool invocation information, such as `tool_name`, `tool_input` / `params`, `tool_use_id` / `tool_call_id`, and `run_id`.
-  * **Interventability:** Allow, deny, or modify tool invocation requests before execution, or require additional approval.
+* **Before Tool Use:** Expose tool invocation information, including the tool name, invocation arguments, and tool call identifier. Allow EPs to approve, deny, or modify tool invocations before execution.
 
-* **Permission Request**
-  * **Observability:** Expose permission request information, such as `tool_name`, `tool_input`, `permission_mode`, and `permission_suggestions`.
-  * **Interventability:** Approve or deny requested operations, or modify the permission decision.
+* **Permission Request:** Expose permission request information, including the requested tool, invocation arguments, and permission context. Allow EPs to approve or deny the requested operation.
 
-* **Permission Denied**
-  * **Observability:** Expose permission denial information, such as `tool_name`, `tool_input`, `tool_use_id`, and `reason`.
+* **Permission Denied:** Expose information about denied operations, including the tool name, invocation arguments, and denial reason.
 
-* **After Tool Use**
-  * **Observability:** Expose tool execution information, such as `tool_name`, `tool_input`, `tool_response` / `result`, `tool_use_id`, `status`, and `duration_ms`.
-  * **Interventability:** Modify or replace tool results, or inject additional context before subsequent model processing.
+* **After Tool Use:** Expose tool execution information, including the tool name, invocation arguments, execution results, and execution status. Allow EPs to modify or withhold results before subsequent model processing.
 
-* **Tool Batch Completion**
-  * **Observability:** Expose batch execution information, such as `tool_calls`, including each tool's `tool_name`, `tool_input`, `tool_use_id`, and `tool_response`.
+* **Tool Batch Completion:** Expose batch execution information, including the individual tool calls, their arguments, and execution results.
 
-* **Post Tool Use Failure**
-  * **Observability:** Expose failed tool invocation information, such as `tool_name`, `tool_input`, `tool_use_id`, `error`, `failure_type`, and `is_interrupt`.
+* **Post Tool Use Failure:** Expose failed tool invocation information, including the tool name, invocation arguments, error details, and failure status.
 
-* **Before MCP Execution**
-  * **Observability:** Expose MCP invocation information, such as `tool_name`, `tool_input`, `mcp_server_name`, `mcp_server_url`, and `command`.
-  * **Interventability:** Allow or deny MCP tool execution before invocation, or request user confirmation.
+* **Before MCP Execution:** Expose MCP invocation information, including the MCP server, tool name, and invocation arguments. Allow EPs to approve or deny MCP tool execution before invocation.
 
-* **After MCP Execution**
-  * **Observability:** Expose MCP execution information, such as `tool_name`, `tool_input`, `mcp_server_name`, `result_json`, and `duration`.
-  * **Interventability:** Modify or replace MCP execution results before subsequent processing.
+* **After MCP Execution:** Expose MCP execution information, including the MCP server, tool name, and execution results. Allow EPs to modify or replace MCP results before subsequent processing.
 
-* **Before Command Execution**
-  * **Observability:** Expose command execution information, such as `command`, `cwd`, and `sandbox`.
-  * **Interventability:** Allow, deny, or request user confirmation before command execution.
+* **Before Command Execution:** Expose command execution information, including the command and working directory. Allow EPs to permit, deny, or request user confirmation before command execution.
 
-* **After Command Execution**
-  * **Observability:** Expose command execution results, such as `command`, `output`, `returncode`, and `duration`.
-  * **Interventability:** Modify command output before it is passed to subsequent processing.
+* **After Command Execution:** Expose command execution results, including the executed command, captured output, exit status, and execution duration.
 
-* **Before File Access**
-  * **Observability:** Expose file access information, such as `file_path`, `content`, and `attachments`.
-  * **Interventability:** Allow or deny file access before the content is provided to the agent.
+* **Before File Access:** Expose file access information, including the file path and requested file content. Allow EPs to permit or deny file access before the content is provided to the agent.
 
-* **After File Modification**
-  * **Observability:** Expose file modification information, such as `file_path`, `edits`, `old_string`, and `new_string`.
+* **After File Modification:** Expose file modification information, including the file path and changes made, such as the original and modified text.
 
-* **Agent Completion**
-  * **Observability:** Expose agent completion information, such as `status`, `stop_reason`, `last_assistant_message`, `stop_hook_active`, and `loop_count`.
-  * **Interventability:** Request additional processing or continued execution before the agent execution loop terminates.
+* **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow EPs to request additional processing or continued execution before the agent terminates.
 
-* **Session End**
-  * **Observability:** Expose session termination information, such as `session_id` / `sessionId`, `reason`, `durationMs`, `duration_ms`, and `nextSessionId`.
-
+* **Session End:** Expose session termination information, including the session identifier, termination reason, and session duration.
 # GW EP
  
 
