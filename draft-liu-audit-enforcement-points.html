@@ -1364,125 +1364,129 @@ svg {
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-summary-of-agent-client-hoo" class="section-name selfRef">Summary of Agent Client Hooks</a>
         </h3>
 <p id="section-4.1-1">This section summarizes Agent Client hooks along the agent execution workflow.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">+---------------------------+---------------------------------------------+
+<div class="alignLeft art-text artwork" id="section-4.1-2">
+<pre>
++---------------------------+---------------------------------------------+
 | Name                      | Examples                                    |
 +---------------------------+---------------------------------------------+
-| Session start             | Claude Code: <code>SessionStart</code>                 |
-|                           | Cursor: <code>sessionStart</code>                      |
-|                           | GitHub Copilot: <code>sessionStart</code>              |
-|                           | Hermes Agent: <code>on_session_start</code>            |
-|                           | OpenClaw: <code>session_start</code>                   |
-|                           | Qwen Code: <code>SessionStart</code>                   |
+| Session start             | Claude Code: `SessionStart`                 |
+|                           | Cursor: `sessionStart`                      |
+|                           | GitHub Copilot: `sessionStart`              |
+|                           | Hermes Agent: `on_session_start`            |
+|                           | OpenClaw: `session_start`                   |
+|                           | Qwen Code: `SessionStart`                   |
 +---------------------------+---------------------------------------------+
-| Prompt submission         | Claude Code: <code>UserPromptSubmit</code>             |
-|                           | Cursor: <code>beforeSubmitPrompt</code>                |
-|                           | Gemini CLI: <code>BeforeAgent</code>                   |
-|                           | GitHub Copilot: <code>userPromptSubmitted</code>       |
-|                           | Qwen Code: <code>UserPromptSubmit</code>               |
+| Prompt submission         | Claude Code: `UserPromptSubmit`             |
+|                           | Cursor: `beforeSubmitPrompt`                |
+|                           | Gemini CLI: `BeforeAgent`                   |
+|                           | GitHub Copilot: `userPromptSubmitted`       |
+|                           | Qwen Code: `UserPromptSubmit`               |
 +---------------------------+---------------------------------------------+
-| Prompt expansion          | Claude Code: <code>UserPromptExpansion</code>          |
-|                           | Qwen Code: <code>UserPromptExpansion</code>            |
+| Prompt expansion          | Claude Code: `UserPromptExpansion`          |
+|                           | Qwen Code: `UserPromptExpansion`            |
 +---------------------------+---------------------------------------------+
-| Before model request      | Gemini CLI: <code>BeforeModel</code>                   |
-|                           | Hermes Agent: <code>pre_api_request</code>             |
-|                           | OpenClaw: <code>llm_input</code>                       |
+| Before model request      | Gemini CLI: `BeforeModel`                   |
+|                           | Hermes Agent: `pre_api_request`             |
+|                           | OpenClaw: `llm_input`                       |
 +---------------------------+---------------------------------------------+
-| After model response      | Gemini CLI: <code>AfterModel</code>                    |
-|                           | Hermes Agent: <code>post_api_request</code>            |
-|                           | OpenClaw: <code>llm_output</code>                      |
+| After model response      | Gemini CLI: `AfterModel`                    |
+|                           | Hermes Agent: `post_api_request`            |
+|                           | OpenClaw: `llm_output`                      |
 +---------------------------+---------------------------------------------+
-| Before context compaction | Claude Code: <code>PreCompact</code>                   |
-|                           | Cursor: <code>preCompact</code>                        |
-|                           | Gemini CLI: <code>PreCompress</code>                   |
-|                           | GitHub Copilot: <code>preCompact</code>                |
-|                           | OpenClaw: <code>before_compaction</code>               |
-|                           | Qwen Code: <code>PreCompact</code>                     |
+| Before context compaction | Claude Code: `PreCompact`                   |
+|                           | Cursor: `preCompact`                        |
+|                           | Gemini CLI: `PreCompress`                   |
+|                           | GitHub Copilot: `preCompact`                |
+|                           | OpenClaw: `before_compaction`               |
+|                           | Qwen Code: `PreCompact`                     |
 +---------------------------+---------------------------------------------+
-| After context compaction  | Claude Code: <code>PostCompact</code>                  |
-|                           | Gemini CLI: <code>PostCompress</code>                  |
-|                           | OpenClaw: <code>after_compaction</code>                |
-|                           | Qwen Code: <code>PostCompact</code>                    |
+| After context compaction  | Claude Code: `PostCompact`                  |
+|                           | Gemini CLI: `PostCompress`                  |
+|                           | OpenClaw: `after_compaction`                |
+|                           | Qwen Code: `PostCompact`                    |
 +---------------------------+---------------------------------------------+
-| Subagent start            | Claude Code: <code>SubagentStart</code>                |
-|                           | Cursor: <code>subagentStart</code>                     |
-|                           | GitHub Copilot: <code>subagentStart</code>             |
-|                           | Hermes Agent: <code>subagent_start</code>              |
-|                           | OpenClaw: <code>subagent_spawned</code>                |
-|                           | Qwen Code: <code>SubagentStart</code>                  |
+| Subagent start            | Claude Code: `SubagentStart`                |
+|                           | Cursor: `subagentStart`                     |
+|                           | GitHub Copilot: `subagentStart`             |
+|                           | Hermes Agent: `subagent_start`              |
+|                           | OpenClaw: `subagent_spawned`                |
+|                           | Qwen Code: `SubagentStart`                  |
 +---------------------------+---------------------------------------------+
-| Subagent completion       | Claude Code: <code>SubagentStop</code>                 |
-|                           | Cursor: <code>subagentStop</code>                      |
-|                           | GitHub Copilot: <code>subagentStop</code>              |
-|                           | Hermes Agent: <code>subagent_stop</code>               |
-|                           | OpenClaw: <code>subagent_ended</code>                  |
-|                           | Qwen Code: <code>SubagentStop</code>                   |
+| Subagent completion       | Claude Code: `SubagentStop`                 |
+|                           | Cursor: `subagentStop`                      |
+|                           | GitHub Copilot: `subagentStop`              |
+|                           | Hermes Agent: `subagent_stop`               |
+|                           | OpenClaw: `subagent_ended`                  |
+|                           | Qwen Code: `SubagentStop`                   |
 +---------------------------+---------------------------------------------+
-| Before tool use           | Claude Code: <code>PreToolUse</code>                   |
-|                           | Cursor: <code>preToolUse</code>                        |
-|                           | Gemini CLI: <code>BeforeTool</code>                    |
-|                           | GitHub Copilot: <code>preToolUse</code>                |
-|                           | Hermes Agent: <code>pre_tool_call</code>               |
-|                           | OpenClaw: <code>before_tool_call</code>                |
-|                           | Qwen Code: <code>PreToolUse</code>                     |
+| Before tool use           | Claude Code: `PreToolUse`                   |
+|                           | Cursor: `preToolUse`                        |
+|                           | Gemini CLI: `BeforeTool`                    |
+|                           | GitHub Copilot: `preToolUse`                |
+|                           | Hermes Agent: `pre_tool_call`               |
+|                           | OpenClaw: `before_tool_call`                |
+|                           | Qwen Code: `PreToolUse`                     |
 +---------------------------+---------------------------------------------+
-| Permission request        | Claude Code: <code>PermissionRequest</code>            |
-|                           | Hermes Agent: <code>pre_approval_request</code>        |
-|                           | Hermes Agent: <code>post_approval_response</code>      |
-|                           | Qwen Code: <code>PermissionRequest</code>              |
+| Permission request        | Claude Code: `PermissionRequest`            |
+|                           | Hermes Agent: `pre_approval_request`        |
+|                           | Hermes Agent: `post_approval_response`      |
+|                           | Qwen Code: `PermissionRequest`              |
 +---------------------------+---------------------------------------------+
-| Permission denied         | Claude Code: <code>PermissionDenied</code>             |
-|                           | Qwen Code: <code>PermissionDenied</code>               |
+| Permission denied         | Claude Code: `PermissionDenied`             |
+|                           | Qwen Code: `PermissionDenied`               |
 +---------------------------+---------------------------------------------+
-| After tool use            | Claude Code: <code>PostToolUse</code>                  |
-|                           | Cursor: <code>postToolUse</code>                       |
-|                           | Gemini CLI: <code>AfterTool</code>                     |
-|                           | GitHub Copilot: <code>postToolUse</code>               |
-|                           | Hermes Agent: <code>post_tool_call</code>              |
-|                           | OpenClaw: <code>after_tool_call</code>                 |
-|                           | Qwen Code: <code>PostToolUse</code>                    |
+| After tool use            | Claude Code: `PostToolUse`                  |
+|                           | Cursor: `postToolUse`                       |
+|                           | Gemini CLI: `AfterTool`                     |
+|                           | GitHub Copilot: `postToolUse`               |
+|                           | Hermes Agent: `post_tool_call`              |
+|                           | OpenClaw: `after_tool_call`                 |
+|                           | Qwen Code: `PostToolUse`                    |
 +---------------------------+---------------------------------------------+
-| Tool batch completion     | Claude Code: <code>PostToolBatch</code>                |
-|                           | Qwen Code: <code>PostToolBatch</code>                  |
+| Tool batch completion     | Claude Code: `PostToolBatch`                |
+|                           | Qwen Code: `PostToolBatch`                  |
 +---------------------------+---------------------------------------------+
-| Post tool use failure     | Claude Code: <code>PostToolUseFailure</code>           |
-|                           | Cursor: <code>postToolUseFailure</code>                |
-|                           | GitHub Copilot: <code>postToolUseFailure</code>        |
-|                           | Qwen Code: <code>PostToolUseFailure</code>             |
+| Post tool use failure     | Claude Code: `PostToolUseFailure`           |
+|                           | Cursor: `postToolUseFailure`                |
+|                           | GitHub Copilot: `postToolUseFailure`        |
+|                           | Qwen Code: `PostToolUseFailure`             |
 +---------------------------+---------------------------------------------+
-| Before MCP execution      | Claude Code: <code>PreToolUse</code> (MCP tools)       |
-|                           | Cursor: <code>beforeMCPExecution</code>                |
+| Before MCP execution      | Claude Code: `PreToolUse` (MCP tools)       |
+|                           | Cursor: `beforeMCPExecution`                |
 +---------------------------+---------------------------------------------+
-| After MCP execution       | Claude Code: <code>PostToolUse</code> (MCP tools)      |
-|                           | Cursor: <code>afterMCPExecution</code>                 |
+| After MCP execution       | Claude Code: `PostToolUse` (MCP tools)      |
+|                           | Cursor: `afterMCPExecution`                 |
 +---------------------------+---------------------------------------------+
-| Before command execution  | Claude Code: <code>PreToolUse</code> (Bash)            |
-|                           | Cursor: <code>beforeShellExecution</code>              |
+| Before command execution  | Claude Code: `PreToolUse` (Bash)            |
+|                           | Cursor: `beforeShellExecution`              |
 +---------------------------+---------------------------------------------+
-| After command execution   | Claude Code: <code>PostToolUse</code> (Bash)           |
-|                           | Cursor: <code>afterShellExecution</code>               |
+| After command execution   | Claude Code: `PostToolUse` (Bash)           |
+|                           | Cursor: `afterShellExecution`               |
 +---------------------------+---------------------------------------------+
-| Before file access        | Claude Code: <code>PreToolUse</code> (Read)            |
-|                           | Cursor: <code>beforeReadFile</code>                    |
-|                           | Cursor: <code>beforeTabFileRead</code>                 |
+| Before file access        | Claude Code: `PreToolUse` (Read)            |
+|                           | Cursor: `beforeReadFile`                    |
+|                           | Cursor: `beforeTabFileRead`                 |
 +---------------------------+---------------------------------------------+
-| After file modification   | Claude Code: <code>PostToolUse</code> (Write/Edit)     |
-|                           | Cursor: <code>afterFileEdit</code>                     |
-|                           | Cursor: <code>afterTabFileEdit</code>                  |
+| After file modification   | Claude Code: `PostToolUse` (Write/Edit)     |
+|                           | Cursor: `afterFileEdit`                     |
+|                           | Cursor: `afterTabFileEdit`                  |
 +---------------------------+---------------------------------------------+
-| Agent completion          | Claude Code: <code>Stop</code>                         |
-|                           | Cursor: <code>stop</code>                              |
-|                           | Gemini CLI: <code>AfterAgent</code>                    |
-|                           | GitHub Copilot: <code>agentStop</code>                 |
-|                           | Hermes Agent: <code>post_llm_call</code>               |
-|                           | OpenClaw: <code>agent_end</code>                       |
+| Agent completion          | Claude Code: `Stop`                         |
+|                           | Cursor: `stop`                              |
+|                           | Gemini CLI: `AfterAgent`                    |
+|                           | GitHub Copilot: `agentStop`                 |
+|                           | Hermes Agent: `post_llm_call`               |
+|                           | OpenClaw: `agent_end`                       |
 +---------------------------+---------------------------------------------+
-| Session end               | Claude Code: <code>SessionEnd</code>                   |
-|                           | Cursor: <code>sessionEnd</code>                        |
-|                           | GitHub Copilot: <code>sessionEnd</code>                |
-|                           | Hermes Agent: <code>on_session_finalize</code>         |
-|                           | OpenClaw: <code>session_end</code>                     |
-|                           | Qwen Code: <code>SessionEnd</code>                     |
-+---------------------------+---------------------------------------------+<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+| Session end               | Claude Code: `SessionEnd`                   |
+|                           | Cursor: `sessionEnd`                        |
+|                           | GitHub Copilot: `sessionEnd`                |
+|                           | Hermes Agent: `on_session_finalize`         |
+|                           | OpenClaw: `session_end`                     |
+|                           | Qwen Code: `SessionEnd`                     |
++---------------------------+---------------------------------------------+
+</pre><a href="#section-4.1-2" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 </section>
