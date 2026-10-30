@@ -83,24 +83,12 @@ Table of Contents
    5.  Gateway EP
      5.1.  Summary of Gateway EP Hooks
      5.2.  Observability and Interventability
-   6.  User Interaction Enforcement Point
-     6.1.  Session Lifecycle Management
-     6.2.  Input Reception and Processing
-     6.3.  Response Handling
-   7.  Model and Tool Invocation Enforcement Point
-     7.1.  Model Invocation
-     7.2.  Tool Invocation
-     7.3.  Context Management
-   8.  Host-level Enforcement Point
-     8.1.  Extension Installation
-     8.2.  Command Execution
-     8.3.  File Operations
-   9.  Hook Failure Handling
-   10. Security Considerations
-   11. IANA Considerations
-   12. References
-     12.1.  Normative References
-     12.2.  Informative References
+   6.  Hook Failure Handling
+   7.  Security Considerations
+   8.  IANA Considerations
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -513,168 +501,7 @@ Table of Contents
 
 5.2.  Observability and Interventability
 
-6.  User Interaction Enforcement Point
-
-   User Interaction Enforcement Points cover activities at the
-   interaction boundary between users or upstream systems and agents,
-   including session lifecycle management, input reception and
-   processing, and response handling.  This section describes the
-   trigger stages of relevant hooks, the information they expose, and
-   the intervention capabilities they provide to User Interaction EPs.
-
-6.1.  Session Lifecycle Management
-
-   Session lifecycle management activities include the following stages:
-
-   *  Session start: Hooks at this stage can expose session-related
-      information, such as the session source.  Some hooks also allow
-      EPs to set session-specific environment variables or add initial
-      context, such as security constraints applicable to the session.
-
-   *  Session termination: Hooks at this stage provide information about
-      the termination reason, session status, and elapsed time.  EPs can
-      use this information to audit session termination and investigate
-      abnormal session behavior.
-
-6.2.  Input Reception and Processing
-
-   Input reception and processing activities include the following
-   stages:
-
-   *  Input reception and submission: Hooks at message reception or
-      before agent processing can expose the message source and content.
-      They may allow EPs to inspect, modify, or discard the message, or
-      take over input processing through a plugin.
-
-   *  Command expansion: Hooks triggered during command expansion expose
-      information about the expanded prompt.  They may allow an EP to
-      block the expansion or add context before the resulting input is
-      processed by the agent.
-
-6.3.  Response Handling
-
-   Response handling activities include the following stages:
-
-   *  After Response generation: Hooks at this stage expose the
-      generated response and may allow an EP to request further
-      processing, including response regeneration.
-
-   *  Before response sending: Hooks before a response is sent to a user
-      or upstream system expose the outgoing message.  They may allow an
-      EP to modify the message or cancel the send operation.
-
-   *  After response sending: Hooks after a send attempt can expose
-      whether sending succeeded or failed, allowing an EP to record the
-      send outcome.
-
-7.  Model and Tool Invocation Enforcement Point
-
-   Model and Tool Invocation Enforcement Points cover interactions
-   between agents and models or tools, including model invocation, tool
-   invocation, and context management.
-
-7.1.  Model Invocation
-
-   Model invocation activities include the following stages:
-
-   *  Model selection and prompt construction: Hooks before model
-      invocation can provide information about the selected model, model
-      provider, prompt, and associated context.  They may allow an EP to
-      select or restrict the model, modify the prompt or context, or
-      restrict the tools available to the model for the current turn.
-
-   *  Model request: Hooks at this stage can expose the input submitted
-      to the model, including the prompt and associated context.  Some
-      hooks also allow the request to be modified or blocked, or a
-      predefined response to be supplied instead of invoking the model.
-
-   *  Model response: Hooks at this stage can expose the generated
-      content and available token usage information.  Some hooks allow
-      an EP to modify or block the response before it is passed to
-      subsequent processing.
-
-   *  Invocation completion and failure: Hooks at this stage can expose
-      invocation status, duration, usage information, and error details,
-      providing observational information for investigating failed
-      requests and abnormal resource consumption.
-
-7.2.  Tool Invocation
-
-   Tool invocation activities include the following stages:
-
-   *  Before tool invocation: Hooks at this stage can expose the
-      information of selected tool and invocation arguments.  They may
-      allow an EP to restrict the available tools, modify invocation
-      arguments, or block the invocation.
-
-   *  Permission request: Hooks at this stage can expose the requested
-      operation and associated permission information.  Some hooks allow
-      an EP to approve or deny the request.
-
-   *  After tool invocation: Hooks at this stage can expose the
-      execution result, status, errors, and available timing
-      information.  These hooks are primarily observational.
-
-   *  Tool result processing: Hooks at this stage expose tool results
-      before they are passed to the model or persisted in the
-      conversation.  Some hooks also allow an EP to modify, replace, or
-      withhold the results.
-
-7.3.  Context Management
-
-   Context management activities include the following stages:
-
-   *  Before context compaction: Hooks at this stage can expose the
-      context state before compaction.  They provide information for
-      tracing context changes.
-
-   *  After context compaction: Hooks at this stage can expose the
-      resulting context.  When both pre-compaction and post-compaction
-      information are available, an EP can compare them to investigate
-      changes in the retained context.
-
-8.  Host-level Enforcement Point
-
-   Host-level Enforcement Points cover operations performed by agents or
-   their tools on the host, including command execution, file
-   operations, and extension installation.
-
-8.1.  Extension Installation
-
-   Extension installation activities include the following stages:
-
-   *  Before extension installation: Hooks at this stage expose
-      installation requests for tools, skills and plugins, allowing an
-      EP to perform security checks and block installation based on the
-      results.
-
-8.2.  Command Execution
-
-   Command execution activities include the following stages:
-
-   *  Before command execution: Hooks at this stage expose the command
-      and execution directory.  They allow an EP to allow or block
-      execution, or request user confirmation.
-
-   *  After command execution: Hooks at this stage expose the executed
-      command, captured output, and execution duration.  These records
-      support auditing of command execution and analysis of command
-      output.
-
-8.3.  File Operations
-
-   File operation activities include the following stages:
-
-   *  Before file content is provided to the agent: Hooks at this stage
-      can expose the file path and content and may allow an EP to block
-      the content from being provided to the agent.
-
-   *  After file modification: Hooks at this stage can expose the
-      modified file and available information about changes, such as the
-      text before and after modification, supporting auditing of file
-      modifications.
-
-9.  Hook Failure Handling
+6.  Hook Failure Handling
 
    Hook failures can affect security enforcement and audit coverage.
    Two common handling policies are:
@@ -704,17 +531,17 @@ Table of Contents
       Failure to collect audit information should not normally interrupt
       legitimate operations.
 
-10.  Security Considerations
+7.  Security Considerations
 
    TODO Security
 
-11.  IANA Considerations
+8.  IANA Considerations
 
    This document has no IANA actions.
 
-12.  References
+9.  References
 
-12.1.  Normative References
+9.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -725,7 +552,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-12.2.  Informative References
+9.2.  Informative References
 
    [BifrostHooks]
               "Bifrost Runtime Extensions", n.d.,
