@@ -171,9 +171,9 @@ Hooks support two capabilities:
 Some hooks provide observation only, while others support both observation and intervention.
 
 
-# Agent Client EP
+# Agent Client
 
-## Summary of Agent Client EP Hooks
+## Summary of Agent Client Hooks
 
 This section summarizes Agent Client hooks along the agent execution workflow.
 
