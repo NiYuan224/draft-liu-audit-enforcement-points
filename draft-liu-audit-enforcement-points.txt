@@ -5,7 +5,7 @@
 Agent Use of Delegation and Interaction Traceability           C. P. Liu
 Internet-Draft                                                     Y. Ni
 Intended status: Informational                                    Huawei
-Expires: 1 May 2027                                      28 October 2026
+Expires: 3 May 2027                                      30 October 2026
 
 
                      Enforcement Points for Agents
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 May 2027.
+   This Internet-Draft will expire on 3 May 2027.
 
 Copyright Notice
 
@@ -77,22 +77,24 @@ Table of Contents
    3.  Enforcement Point Model
      3.1.  Enforcement Point Categories
      3.2.  Hook Capabilities
-   4.  User Interaction Enforcement Point
-     4.1.  Session Lifecycle Management
-     4.2.  Input Reception and Processing
-     4.3.  Response Handling
-   5.  Model and Tool Invocation Enforcement Point
-     5.1.  Model Invocation
-     5.2.  Tool Invocation
-     5.3.  Context Management
-   6.  Host-level Enforcement Point
-     6.1.  Extension Installation
-     6.2.  Command Execution
-     6.3.  File Operations
-   7.  Hook Failure Handling
-   8.  Security Considerations
-   9.  IANA Considerations
-   10. Normative References
+   4.  Agent Client EP
+     4.1.  Summary of Agent Client Hooks
+   5.  User Interaction Enforcement Point
+     5.1.  Session Lifecycle Management
+     5.2.  Input Reception and Processing
+     5.3.  Response Handling
+   6.  Model and Tool Invocation Enforcement Point
+     6.1.  Model Invocation
+     6.2.  Tool Invocation
+     6.3.  Context Management
+   7.  Host-level Enforcement Point
+     7.1.  Extension Installation
+     7.2.  Command Execution
+     7.3.  File Operations
+   8.  Hook Failure Handling
+   9.  Security Considerations
+   10. IANA Considerations
+   11. Normative References
    Acknowledgments
    Authors' Addresses
 
@@ -235,7 +237,106 @@ Table of Contents
    Some hooks provide observation only, while others support both
    observation and intervention.
 
-4.  User Interaction Enforcement Point
+4.  Agent Client EP
+
+4.1.  Summary of Agent Client Hooks
+
+   This section summarizes Agent Client hooks along the agent execution
+   workflow.
+
+   +---------------------------+---------------------------------------------+ |
+   Name | Examples |
+   +---------------------------+---------------------------------------------+ |
+   Session start | Claude Code: SessionStart | | | Cursor:
+   sessionStart | | | GitHub Copilot: sessionStart | | | Hermes Agent:
+   on_session_start | | | OpenClaw: session_start | | | Qwen Code:
+   SessionStart |
+   +---------------------------+---------------------------------------------+ |
+   Prompt submission | Claude Code: UserPromptSubmit | | | Cursor:
+   beforeSubmitPrompt | | | Gemini CLI: BeforeAgent | | | GitHub
+   Copilot: userPromptSubmitted | | | Qwen Code: UserPromptSubmit |
+   +---------------------------+---------------------------------------------+ |
+   Prompt expansion | Claude Code: UserPromptExpansion | | | Qwen Code:
+   UserPromptExpansion |
+   +---------------------------+---------------------------------------------+ |
+   Before model request | Gemini CLI: BeforeModel | | | Hermes Agent:
+   pre_api_request | | | OpenClaw: llm_input |
+   +---------------------------+---------------------------------------------+ |
+   After model response | Gemini CLI: AfterModel | | | Hermes Agent:
+   post_api_request | | | OpenClaw: llm_output |
+   +---------------------------+---------------------------------------------+ |
+   Before context compaction | Claude Code: PreCompact | | | Cursor:
+   preCompact | | | Gemini CLI: PreCompress | | | GitHub Copilot:
+   preCompact | | | OpenClaw: before_compaction | | | Qwen Code:
+   PreCompact |
+   +---------------------------+---------------------------------------------+ |
+   After context compaction | Claude Code: PostCompact | | | Gemini CLI:
+   PostCompress | | | OpenClaw: after_compaction | | | Qwen Code:
+   PostCompact |
+   +---------------------------+---------------------------------------------+ |
+   Subagent start | Claude Code: SubagentStart | | | Cursor:
+   subagentStart | | | GitHub Copilot: subagentStart | | | Hermes Agent:
+   subagent_start | | | OpenClaw: subagent_spawned | | | Qwen Code:
+   SubagentStart |
+   +---------------------------+---------------------------------------------+ |
+   Subagent completion | Claude Code: SubagentStop | | | Cursor:
+   subagentStop | | | GitHub Copilot: subagentStop | | | Hermes Agent:
+   subagent_stop | | | OpenClaw: subagent_ended | | | Qwen Code:
+   SubagentStop |
+   +---------------------------+---------------------------------------------+ |
+   Before tool use | Claude Code: PreToolUse | | | Cursor:
+   preToolUse | | | Gemini CLI: BeforeTool | | | GitHub Copilot:
+   preToolUse | | | Hermes Agent: pre_tool_call | | | OpenClaw:
+   before_tool_call | | | Qwen Code: PreToolUse |
+   +---------------------------+---------------------------------------------+ |
+   Permission request | Claude Code: PermissionRequest | | | Hermes
+   Agent: pre_approval_request | | | Hermes Agent:
+   post_approval_response | | | Qwen Code: PermissionRequest |
+   +---------------------------+---------------------------------------------+ |
+   Permission denied | Claude Code: PermissionDenied | | | Qwen Code:
+   PermissionDenied |
+   +---------------------------+---------------------------------------------+ |
+   After tool use | Claude Code: PostToolUse | | | Cursor:
+   postToolUse | | | Gemini CLI: AfterTool | | | GitHub Copilot:
+   postToolUse | | | Hermes Agent: post_tool_call | | | OpenClaw:
+   after_tool_call | | | Qwen Code: PostToolUse |
+   +---------------------------+---------------------------------------------+ |
+   Tool batch completion | Claude Code: PostToolBatch | | | Qwen Code:
+   PostToolBatch |
+   +---------------------------+---------------------------------------------+ |
+   Post tool use failure | Claude Code: PostToolUseFailure | | | Cursor:
+   postToolUseFailure | | | GitHub Copilot: postToolUseFailure | | |
+   Qwen Code: PostToolUseFailure |
+   +---------------------------+---------------------------------------------+ |
+   Before MCP execution | Claude Code: PreToolUse (MCP tools) | | |
+   Cursor: beforeMCPExecution |
+   +---------------------------+---------------------------------------------+ |
+   After MCP execution | Claude Code: PostToolUse (MCP tools) | | |
+   Cursor: afterMCPExecution |
+   +---------------------------+---------------------------------------------+ |
+   Before command execution | Claude Code: PreToolUse (Bash) | | |
+   Cursor: beforeShellExecution |
+   +---------------------------+---------------------------------------------+ |
+   After command execution | Claude Code: PostToolUse (Bash) | | |
+   Cursor: afterShellExecution |
+   +---------------------------+---------------------------------------------+ |
+   Before file access | Claude Code: PreToolUse (Read) | | | Cursor:
+   beforeReadFile | | | Cursor: beforeTabFileRead |
+   +---------------------------+---------------------------------------------+ |
+   After file modification | Claude Code: PostToolUse (Write/Edit) | | |
+   Cursor: afterFileEdit | | | Cursor: afterTabFileEdit |
+   +---------------------------+---------------------------------------------+ |
+   Agent completion | Claude Code: Stop | | | Cursor: stop | | | Gemini
+   CLI: AfterAgent | | | GitHub Copilot: agentStop | | | Hermes Agent:
+   post_llm_call | | | OpenClaw: agent_end |
+   +---------------------------+---------------------------------------------+ |
+   Session end | Claude Code: SessionEnd | | | Cursor: sessionEnd | | |
+   GitHub Copilot: sessionEnd | | | Hermes Agent:
+   on_session_finalize | | | OpenClaw: session_end | | | Qwen Code:
+   SessionEnd |
+   +---------------------------+---------------------------------------------+
+
+5.  User Interaction Enforcement Point
 
    User Interaction Enforcement Points cover activities at the
    interaction boundary between users or upstream systems and agents,
@@ -244,7 +345,7 @@ Table of Contents
    trigger stages of relevant hooks, the information they expose, and
    the intervention capabilities they provide to User Interaction EPs.
 
-4.1.  Session Lifecycle Management
+5.1.  Session Lifecycle Management
 
    Session lifecycle management activities include the following stages:
 
@@ -258,7 +359,7 @@ Table of Contents
       use this information to audit session termination and investigate
       abnormal session behavior.
 
-4.2.  Input Reception and Processing
+5.2.  Input Reception and Processing
 
    Input reception and processing activities include the following
    stages:
@@ -273,7 +374,7 @@ Table of Contents
       block the expansion or add context before the resulting input is
       processed by the agent.
 
-4.3.  Response Handling
+5.3.  Response Handling
 
    Response handling activities include the following stages:
 
@@ -289,13 +390,13 @@ Table of Contents
       whether sending succeeded or failed, allowing an EP to record the
       send outcome.
 
-5.  Model and Tool Invocation Enforcement Point
+6.  Model and Tool Invocation Enforcement Point
 
    Model and Tool Invocation Enforcement Points cover interactions
    between agents and models or tools, including model invocation, tool
    invocation, and context management.
 
-5.1.  Model Invocation
+6.1.  Model Invocation
 
    Model invocation activities include the following stages:
 
@@ -320,7 +421,7 @@ Table of Contents
       providing observational information for investigating failed
       requests and abnormal resource consumption.
 
-5.2.  Tool Invocation
+6.2.  Tool Invocation
 
    Tool invocation activities include the following stages:
 
@@ -342,7 +443,7 @@ Table of Contents
       conversation.  Some hooks also allow an EP to modify, replace, or
       withhold the results.
 
-5.3.  Context Management
+6.3.  Context Management
 
    Context management activities include the following stages:
 
@@ -355,13 +456,13 @@ Table of Contents
       information are available, an EP can compare them to investigate
       changes in the retained context.
 
-6.  Host-level Enforcement Point
+7.  Host-level Enforcement Point
 
    Host-level Enforcement Points cover operations performed by agents or
    their tools on the host, including command execution, file
    operations, and extension installation.
 
-6.1.  Extension Installation
+7.1.  Extension Installation
 
    Extension installation activities include the following stages:
 
@@ -370,7 +471,7 @@ Table of Contents
       EP to perform security checks and block installation based on the
       results.
 
-6.2.  Command Execution
+7.2.  Command Execution
 
    Command execution activities include the following stages:
 
@@ -383,7 +484,7 @@ Table of Contents
       support auditing of command execution and analysis of command
       output.
 
-6.3.  File Operations
+7.3.  File Operations
 
    File operation activities include the following stages:
 
@@ -396,7 +497,7 @@ Table of Contents
       text before and after modification, supporting auditing of file
       modifications.
 
-7.  Hook Failure Handling
+8.  Hook Failure Handling
 
    Hook failures can affect security enforcement and audit coverage.
    Two common handling policies are:
@@ -426,15 +527,15 @@ Table of Contents
       Failure to collect audit information should not normally interrupt
       legitimate operations.
 
-8.  Security Considerations
+9.  Security Considerations
 
    TODO Security
 
-9.  IANA Considerations
+10.  IANA Considerations
 
    This document has no IANA actions.
 
-10.  Normative References
+11.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
