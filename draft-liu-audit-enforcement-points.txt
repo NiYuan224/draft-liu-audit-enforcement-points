@@ -77,8 +77,8 @@ Table of Contents
    3.  Enforcement Point Model
      3.1.  Enforcement Point Categories
      3.2.  Hook Capabilities
-   4.  Agent Client EP
-     4.1.  Summary of Agent Client EP Hooks
+   4.  Agent Client
+     4.1.  Summary of Agent Client Hooks
      4.2.  Observability and Interventability
    5.  Gateway EP
      5.1.  Summary of Gateway EP Hooks
@@ -231,9 +231,9 @@ Table of Contents
    Some hooks provide observation only, while others support both
    observation and intervention.
 
-4.  Agent Client EP
+4.  Agent Client
 
-4.1.  Summary of Agent Client EP Hooks
+4.1.  Summary of Agent Client Hooks
 
    This section summarizes Agent Client hooks along the agent execution
    workflow.
