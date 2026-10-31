@@ -177,15 +177,7 @@ Enforcement Points (EPs) provide visibility into and control over agent activiti
 |Other Agents|  |User/System| |   LLM     | |   Tools   | |    Host    |
 +------------+  +-----------+ +-----------+ +-----------+ +------------+
 ~~~
-
-
-* Agent Interaction EP: Covers interactions between users or upstream systems and agents, including incoming requests and outgoing responses.
-
-* Model and Tool Invocation EP: Covers interactions between agents and models or tools, including invocation requests and returned results.
-
-* Host-level Operation EP: Covers host operations performed by agents or their tools, including process execution, file access, etc.
-
-Figure 1 illustrates the three categories and their positions in the agent interaction chain.
+*Figure 2. Enforcement Points for Agents*
 
 
 
