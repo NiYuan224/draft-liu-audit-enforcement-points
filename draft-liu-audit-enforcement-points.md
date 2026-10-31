@@ -331,6 +331,15 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 +---------------------------+---------------------------------------------+
 ~~~
 
+## Hook Capabilities
+Hooks support two capabilities:
+
+* Observability: A hook provides information about a specific stage of an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
+
+* Interventability: A hook allows EP to affect an agent activity or its subsequent processing, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.
+
+Some hooks provide observation only, while others support both observation and intervention.
+
 ## Observability and Interventability
 
 The following sections summarize the observable information and intervention capabilities provided by representative Agent Client hooks. The specific observable information and supported interventions vary across implementations.
