@@ -12,9 +12,7 @@ v: 3
 area: "Security"
 workgroup: "Agent Use of Delegation and Interaction Traceability"
 keyword:
- - next generation
- - unicorn
- - AI-native
+
 venue:
   group: "Agent Use of Delegation and Interaction Traceability"
   type: "Working Group"
@@ -101,13 +99,23 @@ Security products and components deployed along the interaction chain can observ
 
 This document classifies EPs into three categories based on the activities they cover: agent interaction, model and tool invocation, and host-level operation. For each category, it describes how hooks enable EPs to observe and, where supported, intervene in agent activities, as well as the corresponding audit records EP provide. This analysis is a prerequisite for identifying the audit records needed across participating domains and understanding the coverage and limitations of the available evidence.
 
+智能体审计需要获取运行过程中的信息，而这些信息主要由不同类型的执行点（EP）通过可观测性提供。
+
+部分执行点还具备干预能力，其干预行为和执行结果同样需要纳入审计。
+
+由于不同执行点覆盖的活动范围不同，需要识别各类 EP 的观测和干预能力，明确它们能够提供哪些审计信息，以及各自的局限性。
+
 # Conventions and Definitions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
 Enforcement Point (EP): A logical entity that observes a defined set of agent activities and may intervene in these activities or their subsequent processing, including by blocking or modifying them, and generates corresponding audit records.
 
-Hook: A mechanism exposed by an agent implementation at a defined stage of an agent activity, enabling an EP to access activity information and, where supported, intervene.
+Observability: A hook provides information about a specific stage of an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
+
+Interventability: A hook allows EP to affect an agent activity or its subsequent processing, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.
+
+Audit Record:
 
 # Agent Workflows and Enforcement Points
 
@@ -120,18 +128,18 @@ Figure 1 illustrates a typical agent workflow.
 |                |       |                |------>| Large Language |
 |                |       |                |<------| Model (LLM)    |
 |                | (1)   |                | (3)   +----------------+
-|                |------>|                |                         
+|                |------>|                |
 |                |       |                | (4)   +----------------+
 |  User/System   |       |      Agent     |------>|     Tools      |
 |                |       |                |<------|                |
 |                |<------|                | (5)   +----------------+
-|                |  (10) |                |                         
+|                |  (10) |                |
 |                |       |                | (6)   +----------------+
 |                |       |                |------>|  Other Agents  |
 |                |       |                |<------|                |
 +----------------+       +---|--------^---+ (7)   +----------------+
-                             |        |                             
-                          (8)|        |(9)                          
+                             |        |
+                          (8)|        |(9)
 +----------------------------v--------+----------------------------+
 |                               Host                               |
 +------------------------------------------------------------------+
@@ -164,15 +172,15 @@ Enforcement Points (EPs) provide visibility into and control over agent activiti
 +----------------------------------------------------------------------+
 |                               Agent                                  |
 +------^--------------^-------------^-------------^-------------^------+
-       |              |             |             |             |       
+       |              |             |             |             |
        |        +-----+-------------+-------------+-------------+------+
        |        |                    Agent-native EP                   |
        |        +-----+-------------+-------------+-------------+------+
-       |              |             |             |             |       
+       |              |             |             |             |
 +------+--------------+-------------+-------------+-----+ +-----+------+
 |                        Gateway EP                     | |  EDR EP    |
 +------+--------------+-------------+-------------+-----+ +-----+------+
-       |              |             |             |             |       
+       |              |             |             |             |
 +------v-----+  +-----v-----+ +-----v-----+ +-----v-----+ +-----v------+
 |Other Agents|  |User/System| |   LLM     | |   Tools   | |    Host    |
 +------------+  +-----------+ +-----------+ +-----------+ +------------+
@@ -192,21 +200,12 @@ Enforcement Points (EPs) provide visibility into and control over agent activiti
 
 The three EP categories cover different parts of this interaction chain. The Agent Interaction EP covers the user/system-agent interactions in steps 1 and 8. The Model and Tool Invocation EP covers the model and tool interactions in steps 2-5. The Host-level Operation EP covers the host-level operations and their corresponding results in steps 6 and 7.
 
-## Hook Capabilities
-
-Hooks support two capabilities:
-
-* Observability: A hook provides information about a specific stage of an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
-
-* Interventability: A hook allows EP to affect an agent activity or its subsequent processing, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.
-
-Some hooks provide observation only, while others support both observation and intervention.
-
 
 # Agent Client
 
 ## Summary of Agent Client Hooks
 
+Hook is....  Hook: A mechanism exposed by an agent implementation at a defined stage of an agent activity, enabling an EP to access activity information and, where supported, intervene.
 This section summarizes Agent Client hooks along the agent execution workflow.
 
 ~~~
@@ -331,14 +330,6 @@ This section summarizes Agent Client hooks along the agent execution workflow.
 +---------------------------+---------------------------------------------+
 ~~~
 
-## Hook Capabilities
-Hooks support two capabilities:
-
-* Observability: A hook provides information about a specific stage of an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
-
-* Interventability: A hook allows EP to affect an agent activity or its subsequent processing, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.
-
-Some hooks provide observation only, while others support both observation and intervention.
 
 ## Observability and Interventability
 
