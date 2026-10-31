@@ -109,13 +109,59 @@ Enforcement Point (EP): A logical entity that observes a defined set of agent ac
 
 Hook: A mechanism exposed by an agent implementation at a defined stage of an agent activity, enabling an EP to access activity information and, where supported, intervene.
 
-# Enforcement Point Model
+# Agent Workflows and Enforcement Points
 
-This section classifies audit enforcement points according to the agent activities they cover and describes the observation and intervention capabilities of hooks.
+## Agent Workflow
+
+Figure 1 illustrates a typical agent workflow.
+
+~~~
++----------------+       +----------------+ (2)   +----------------+
+|                |       |                |------>| Large Language |
+|                |       |                |<------| Model (LLM)    |
+|                | (1)   |                | (3)   +----------------+
+|                |------>|                |                         
+|                |       |                | (4)   +----------------+
+|  User/System   |       |    AI Agent    |------>|     Tools      |
+|                |       |                |<------|                |
+|                |<------|                | (5)   +----------------+
+|                |  (10) |                |                         
+|                |       |                | (6)   +----------------+
+|                |       |                |------>|  Other Agents  |
+|                |       |                |<------|                |
++----------------+       +---|--------^---+ (7)   +----------------+
+                             |        |                             
+                          (8)|        |(9)                          
++----------------------------v--------+----------------------------+
+|                               Host                               |
++------------------------------------------------------------------+
+~~~
+*Figure 1. Agent Workflow*
+
+1. (Optional) The User or System provides a request or instruction to the AI Agent.
+2. The AI Agent provides context to the LLM.
+3. The LLM returns output to the AI Agent to support the selection of subsequent actions.
+4. The AI Agent invokes one or more Tools.
+5. The invoked endpoints return results to the AI Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2-5 until the task is completed.
+6. (Optional) The AI Agent delegates tasks to or exchanges requests with other agents.
+7. (Optional) Other agents return responses or task execution results to the AI Agent.
+8. (Optional) The AI Agent perform operations on the Host.
+8. (Optional) The Host provides corresponding results, status, or errors.
+9. (Optional) The AI Agent returns a response to the User or System, or requests additional input.
+
 
 ## Enforcement Point Categories
 
-EPs are classified into three categories according to the activities they cover:
+Enforcement Points (EPs) provide visibility into and control over agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent-native EPs, Gateway EPs, and EDR EPs.
+
+* Agent-native EPs：EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
+
+* Gateway EPs: EPs deployed in the inbound communication paths between users/systems and agents, and the outbound communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.
+
+* EDR EPs: EPs running on the hosts or endpoints where agents execute. They monitor and control agent-related processes, command execution, file access, and other system operations.
+
+
+
 
 * Agent Interaction EP: Covers interactions between users or upstream systems and agents, including incoming requests and outgoing responses.
 
@@ -125,28 +171,6 @@ EPs are classified into three categories according to the activities they cover:
 
 Figure 1 illustrates the three categories and their positions in the agent interaction chain.
 
-~~~
-
-      +----------------+       +----------------+       +----------------+
-      |                |       |                |       |                |
-      |                |       |                | (2)   | Large Language |
-      |                | (1)   |                |------>| Model (LLM)    |
-      |                |------>|                |<------|                |
-      │   User/System  │       |                | (3)   +----------------+
-      │                │       |    AI Agent    |
-      │                │       |                | (4)   +----------------+
-      │                │<------|                |------>|                |
-      │                │  (8)  |                |<------|     Tools      |
-      |                |       |                | (5)   |                |
-      +----------------+       +----------------+       +----------------+
-                                       │                       |
-                                       │                       |
-                                       +-------+--------^------+
-                                            (6)│        │(7)
-      +----------------------------------------v--------+----------------+
-      |                               Host                               |
-      +------------------------------------------------------------------+
-~~~
 
 
 1. (Optional) The User or System provides a request or instruction to the AI Agent.
