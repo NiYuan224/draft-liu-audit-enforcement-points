@@ -77,8 +77,8 @@ Table of Contents
    3.  Agent Workflows and Enforcement Points
      3.1.  Agent Workflow
      3.2.  Enforcement Point Categories
-   4.  Agent Client
-     4.1.  Summary of Agent Client Hooks
+   4.  Agent Client EP
+     4.1.  Summary of Agent Client EP Hooks
      4.2.  Observability and Interventability
    5.  Gateway EP
      5.1.  Summary of Gateway EP Hooks
@@ -277,9 +277,9 @@ Table of Contents
    Operation EP covers the host-level operations and their corresponding
    results in steps 6 and 7.
 
-4.  Agent Client
+4.  Agent Client EP
 
-4.1.  Summary of Agent Client Hooks
+4.1.  Summary of Agent Client EP Hooks
 
    Hook is....  Hook: A mechanism exposed by an agent implementation at
    a defined stage of an agent activity, enabling an EP to access
