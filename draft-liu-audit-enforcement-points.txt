@@ -5,7 +5,7 @@
 Agent Use of Delegation and Interaction Traceability           C. P. Liu
 Internet-Draft                                                     Y. Ni
 Intended status: Informational                                    Huawei
-Expires: 3 May 2027                                      30 October 2026
+Expires: 4 May 2027                                      31 October 2026
 
 
                      Enforcement Points for Agents
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 May 2027.
+   This Internet-Draft will expire on 4 May 2027.
 
 Copyright Notice
 
@@ -74,9 +74,9 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions and Definitions
-   3.  Enforcement Point Model
-     3.1.  Enforcement Point Categories
-     3.2.  Hook Capabilities
+   3.  Agent Workflows and Enforcement Points
+     3.1.  Agent Workflow
+     3.2.  Enforcement Point Categories
    4.  Agent Client
      4.1.  Summary of Agent Client Hooks
      4.2.  Observability and Interventability
@@ -121,6 +121,12 @@ Table of Contents
    needed across participating domains and understanding the coverage
    and limitations of the available evidence.
 
+   智能体审计需要获取运行过程中的信息，而这些信息主要由不同类型的执行点（EP）通过可观测性提供。
+
+   部分执行点还具备干预能力，其干预行为和执行结果同样需要纳入审计。
+
+   由于不同执行点覆盖的活动范围不同，需要识别各类 EP 的观测和干预能力，明确它们能够提供哪些审计信息，以及各自的局限性。
+
 2.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -134,55 +140,112 @@ Table of Contents
    subsequent processing, including by blocking or modifying them, and
    generates corresponding audit records.
 
-   Hook: A mechanism exposed by an agent implementation at a defined
-   stage of an agent activity, enabling an EP to access activity
-   information and, where supported, intervene.
+   Observability: A hook provides information about a specific stage of
+   an agent activity for audit recording, such as tool invocation
+   arguments, execution results, error information, or execution status.
 
-3.  Enforcement Point Model
+   Interventability: A hook allows EP to affect an agent activity or its
+   subsequent processing, including by blocking or cancelling the
+   activity, modifying its parameters or content, or changing
+   information passed to subsequent processing.
 
-   This section classifies audit enforcement points according to the
-   agent activities they cover and describes the observation and
-   intervention capabilities of hooks.
+   Audit Record:
 
-3.1.  Enforcement Point Categories
+3.  Agent Workflows and Enforcement Points
 
-   EPs are classified into three categories according to the activities
-   they cover:
+3.1.  Agent Workflow
 
-   *  Agent Interaction EP: Covers interactions between users or
-      upstream systems and agents, including incoming requests and
-      outgoing responses.
+   Figure 1 illustrates a typical agent workflow.
 
-   *  Model and Tool Invocation EP: Covers interactions between agents
-      and models or tools, including invocation requests and returned
-      results.
+   +----------------+       +----------------+ (2)   +----------------+
+   |                |       |                |------>| Large Language |
+   |                |       |                |<------| Model (LLM)    |
+   |                | (1)   |                | (3)   +----------------+
+   |                |------>|                |
+   |                |       |                | (4)   +----------------+
+   |  User/System   |       |      Agent     |------>|     Tools      |
+   |                |       |                |<------|                |
+   |                |<------|                | (5)   +----------------+
+   |                |  (10) |                |
+   |                |       |                | (6)   +----------------+
+   |                |       |                |------>|  Other Agents  |
+   |                |       |                |<------|                |
+   +----------------+       +---|--------^---+ (7)   +----------------+
+                                |        |
+                             (8)|        |(9)
+   +----------------------------v--------+----------------------------+
+   |                               Host                               |
+   +------------------------------------------------------------------+
 
-   *  Host-level Operation EP: Covers host operations performed by
-      agents or their tools, including process execution, file access,
-      etc.
+   _Figure 1.  Agent Workflow_
 
-   Figure 1 illustrates the three categories and their positions in the
-   agent interaction chain.
+   1.   (Optional) The User or System provides a request or instruction
+        to the AI Agent.
 
-      +----------------+       +----------------+       +----------------+
-      |                |       |                |       |                |
-      |                |       |                | (2)   | Large Language |
-      |                | (1)   |                |------>| Model (LLM)    |
-      |                |------>|                |<------|                |
-      │   User/System  │       |                | (3)   +----------------+
-      │                │       |    AI Agent    |
-      │                │       |                | (4)   +----------------+
-      │                │<------|                |------>|                |
-      │                │  (8)  |                |<------|     Tools      |
-      |                |       |                | (5)   |                |
-      +----------------+       +----------------+       +----------------+
-                                       │                       |
-                                       │                       |
-                                       +-------+--------^------+
-                                            (6)│        │(7)
-      +----------------------------------------v--------+----------------+
-      |                               Host                               |
-      +------------------------------------------------------------------+
+   2.   The AI Agent provides context to the LLM.
+
+   3.   The LLM returns output to the AI Agent to support the selection
+        of subsequent actions.
+
+   4.   The AI Agent invokes one or more Tools.
+
+   5.   The invoked endpoints return results to the AI Agent.  The Agent
+        may provide these results as additional context to the LLM and
+        repeat steps 2-5 until the task is completed.
+
+   6.   (Optional) The AI Agent delegates tasks to or exchanges requests
+        with other agents.
+
+   7.   (Optional) Other agents return responses or task execution
+        results to the AI Agent.
+
+   8.   (Optional) The AI Agent perform operations on the Host.
+
+   9.   (Optional) The Host provides corresponding results, status, or
+        errors.
+
+   10.  (Optional) The AI Agent returns a response to the User or
+        System, or requests additional input.
+
+3.2.  Enforcement Point Categories
+
+   Enforcement Points (EPs) provide visibility into and control over
+   agent activities.  They may be located within the agent, at
+   communication gateways, or on the host where the agent runs.
+   Accordingly, EPs are classified into three categories: Agent Client
+   EPs, Gateway EPs, and EDR EPs.
+
+   *  Agent Client EPs：EPs integrated into the agent client, using hooks
+      to observe and control agent activities, such as user
+      interactions, model requests, tool calls, and host operations.
+
+   *  Gateway EPs: EPs deployed in the inbound communication paths
+      between users/systems and agents, and the outbound communication
+      paths between agents and models, tools, and other agents.  They
+      inspect and control requests and responses passing through the
+      gateway.
+
+   *  EDR EPs: EPs running on the hosts or endpoints where agents
+      execute.  They monitor and control agent-related processes,
+      command execution, file access, and other system operations.
+
++----------------------------------------------------------------------+
+|                               Agent                                  |
++------^--------------^-------------^-------------^-------------^------+
+       |              |             |             |             |
+       |        +-----+-------------+-------------+-------------+------+
+       |        |                    Agent-native EP                   |
+       |        +-----+-------------+-------------+-------------+------+
+       |              |             |             |             |
++------+--------------+-------------+-------------+-----+ +-----+------+
+|                        Gateway EP                     | |  EDR EP    |
++------+--------------+-------------+-------------+-----+ +-----+------+
+       |              |             |             |             |
++------v-----+  +-----v-----+ +-----v-----+ +-----v-----+ +-----v------+
+|Other Agents|  |User/System| |   LLM     | |   Tools   | |    Host    |
++------------+  +-----------+ +-----------+ +-----------+ +------------+
+
+   _Figure 2.  Enforcement Points for Agents_
 
    1.  (Optional) The User or System provides a request or instruction
        to the AI Agent.
@@ -214,29 +277,14 @@ Table of Contents
    Operation EP covers the host-level operations and their corresponding
    results in steps 6 and 7.
 
-3.2.  Hook Capabilities
-
-   Hooks support two capabilities:
-
-   *  Observability: A hook provides information about a specific stage
-      of an agent activity for audit recording, such as tool invocation
-      arguments, execution results, error information, or execution
-      status.
-
-   *  Interventability: A hook allows EP to affect an agent activity or
-      its subsequent processing, including by blocking or cancelling the
-      activity, modifying its parameters or content, or changing
-      information passed to subsequent processing.
-
-   Some hooks provide observation only, while others support both
-   observation and intervention.
-
 4.  Agent Client
 
 4.1.  Summary of Agent Client Hooks
 
-   This section summarizes Agent Client hooks along the agent execution
-   workflow.
+   Hook is....  Hook: A mechanism exposed by an agent implementation at
+   a defined stage of an agent activity, enabling an EP to access
+   activity information and, where supported, intervene.  This section
+   summarizes Agent Client hooks along the agent execution workflow.
 
 +---------------------------+---------------------------------------------+
 | Name                      | Examples                                    |
