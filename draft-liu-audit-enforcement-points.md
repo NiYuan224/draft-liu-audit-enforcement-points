@@ -122,7 +122,7 @@ Figure 1 illustrates a typical agent workflow.
 |                | (1)   |                | (3)   +----------------+
 |                |------>|                |                         
 |                |       |                | (4)   +----------------+
-|  User/System   |       |    AI Agent    |------>|     Tools      |
+|  User/System   |       |      Agent     |------>|     Tools      |
 |                |       |                |<------|                |
 |                |<------|                | (5)   +----------------+
 |                |  (10) |                |                         
@@ -152,15 +152,31 @@ Figure 1 illustrates a typical agent workflow.
 
 ## Enforcement Point Categories
 
-Enforcement Points (EPs) provide visibility into and control over agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent-native EPs, Gateway EPs, and EDR EPs.
+Enforcement Points (EPs) provide visibility into and control over agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and EDR EPs.
 
-* Agent-native EPs：EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
+* Agent Client EPs：EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
 
 * Gateway EPs: EPs deployed in the inbound communication paths between users/systems and agents, and the outbound communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.
 
 * EDR EPs: EPs running on the hosts or endpoints where agents execute. They monitor and control agent-related processes, command execution, file access, and other system operations.
 
-
+~~~
++----------------------------------------------------------------------+
+|                               Agent                                  |
++------^--------------^-------------^-------------^-------------^------+
+       |              |             |             |             |       
+       |        +-----+-------------+-------------+-------------+------+
+       |        |                    Agent-native EP                   |
+       |        +-----+-------------+-------------+-------------+------+
+       |              |             |             |             |       
++------+--------------+-------------+-------------+-----+ +-----+------+
+|                        Gateway EP                     | |  EDR EP    |
++------+--------------+-------------+-------------+-----+ +-----+------+
+       |              |             |             |             |       
++------v-----+  +-----v-----+ +-----v-----+ +-----v-----+ +-----v------+
+|Other Agents|  |User/System| |   LLM     | |   Tools   | |    Host    |
++------------+  +-----------+ +-----------+ +-----------+ +------------+
+~~~
 
 
 * Agent Interaction EP: Covers interactions between users or upstream systems and agents, including incoming requests and outgoing responses.
