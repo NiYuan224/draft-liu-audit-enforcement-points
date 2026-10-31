@@ -201,9 +201,9 @@ Enforcement Points (EPs) provide visibility into and control over agent activiti
 The three EP categories cover different parts of this interaction chain. The Agent Interaction EP covers the user/system-agent interactions in steps 1 and 8. The Model and Tool Invocation EP covers the model and tool interactions in steps 2-5. The Host-level Operation EP covers the host-level operations and their corresponding results in steps 6 and 7.
 
 
-# Agent Client
+# Agent Client EP
 
-## Summary of Agent Client Hooks
+## Summary of Agent Client EP Hooks
 
 Hook is....  Hook: A mechanism exposed by an agent implementation at a defined stage of an agent activity, enabling an EP to access activity information and, where supported, intervene.
 This section summarizes Agent Client hooks along the agent execution workflow.
