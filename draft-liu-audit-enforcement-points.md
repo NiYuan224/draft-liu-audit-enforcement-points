@@ -452,45 +452,24 @@ Based on existing implementation practices listed in Table 1, the choice depends
 
 
 # Gateway EP
+Gateway EPs proxy requests and responses between clients and agents, and between agents and models, tools or other agents. They observe traffic passing through them, apply controls before forwarding, and generate
+audit records.
 
-## Summary of Gateway EP Hooks
+##  Critical Events and Corresponding Audit Record Claims
 
-~~~
-+-----------------------------+--------------------------------------------------+
-| Name                        | Examples                                         |
-+-----------------------------+--------------------------------------------------+
-| Model Listing               | LiteLLM: `async_filter_listed_models`            |
-+-----------------------------+--------------------------------------------------+
-| Before Model Request        | LiteLLM: `async_pre_call_hook`                   |
-|                             | Portkey: `beforeRequestHook`                     |
-|                             | TrueFoundry: `LLM Input`                         |
-|                             | Bifrost: `onCanonicalRequest`                    |
-+-----------------------------+--------------------------------------------------+
-| During Model Request        | LiteLLM: `async_moderation_hook`                 |
-+-----------------------------+--------------------------------------------------+
-| After Model Response        | LiteLLM: `async_post_call_success_hook`          |
-|                             | LiteLLM: `async_post_call_streaming_hook`        |
-|                             | LiteLLM: `async_post_call_streaming_iterator_    |
-|                             |           hook`                                  |
-|                             | Portkey: `afterRequestHook`                      |
-|                             | TrueFoundry: `LLM Output`                        |
-|                             | Bifrost: `onCanonicalResponse`                   |
-|                             | Bifrost: `onStreamEvent`                         |
-+-----------------------------+--------------------------------------------------+
-| During Streaming Response   |                                                  |
-+-----------------------------+--------------------------------------------------+
-| Response Headers            | LiteLLM: `async_post_call_response_headers_hook` |
-+-----------------------------+--------------------------------------------------+
-| Request Failure             | LiteLLM: `async_post_call_failure_hook`          |
-|                             | Bifrost: `onError`                               |
-+-----------------------------+--------------------------------------------------+
-| Before MCP Tool Invocation  | TrueFoundry: `MCP Tool Pre-Invoke`               |
-+-----------------------------+--------------------------------------------------+
-| After MCP Tool Invocation   | TrueFoundry: `MCP Tool Post-Invoke`              |
-+-----------------------------+--------------------------------------------------+
-~~~
+1. **Before Inbound Request Forwarding:** Expose the destination agent and the incoming request. Allow permitting or denying request forwarding and inspecting or modifying request content.
 
-## Observability and Interventability
+* `destination`: REQUIRED. A string identifying the destination agent endpoint by URL or configured backend name.
+* `caller_id`: REQUIRED for successfully authenticated requests. A string identifying the authenticated caller.
+* `decision`: REQUIRED. A string indicating "allow" or "deny".
+* `reason`: REQUIRED for the "deny" decision.
+* `request_body`: OPTIONAL. The incoming request content, represented as a string, object, or array.
+
+2. **Before Model Request Forwarding:** Expose the destination model service and the model request. Allow permitting or denying request forwarding and modifying or redacting request content where supported.
+
+* `destination`: REQUIRED. A string identifying the model service by URL or configured backend name.
+* `request_body`: OPTIONAL. The model request content, represented as a string, object, or array.
+* `decision`: OPTIONAL. A string indicating "allow" or "deny", when an enforcement decision is made.
 
 
 # Host EP
@@ -571,47 +550,33 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 
 ## Critical Event and Corresponding Audit Record Claims
 
-1. **Process Creation:** Expose the identifiers of the newly created
-process and its parent. Allow denying process creation.
+1. **Process Creation:** Expose the identifiers of the newly created process and its parent. Allow denying process creation.
 
-* `process_id`: REQUIRED. An integer identifying the newly created
-  process.
-* `parent_process_id`: REQUIRED. An integer identifying its parent
-  process.
+* `process_id`: REQUIRED. An integer identifying the newly created process.
+* `parent_process_id`: REQUIRED. An integer identifying its parent process.
 
-2. **Before Program Execution:** Expose the process identifier and
-the program to be executed. Allow permitting or denying program
-execution.
+2. **Before Program Execution:** Expose the process identifier and the program to be executed. Allow permitting or denying program execution.
 
-* `process_id`: REQUIRED. An integer identifying the process executing
-  the program or being created.
-* `executable_path`: OPTIONAL. A string specifying the executable
-  path.
+* `process_id`: REQUIRED. An integer identifying the process executing the program or being created.
+* `executable_path`: OPTIONAL. A string specifying the executable path.
 
-3. **Before File Access:** Expose the requested file operation and
-the target file. Allow permitting or denying the operation.
+3. **Before File Access:** Expose the requested file operation and the target file. Allow permitting or denying the operation.
 
 * `process_id`: REQUIRED. An integer identifying the current process.
 * `operation`: REQUIRED. A string with the value "open" or "read".
 * `file_path`: OPTIONAL. A string specifying the target file path.
 
-4. **Before File Modification:** Expose the requested file modification,
-such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation
+4. **Before File Modification:** Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation
 
 * `process_id`: REQUIRED. An integer identifying the current process.
-* `operation`: REQUIRED. A string identifying the requested operation,
-  such as "write", "unlink", or "rename".
-* `file_path`: OPTIONAL. A string specifying the target file path,
-  or the source file path for a rename operation.
-* `destination_path`: OPTIONAL. A string specifying the destination
-  path for a rename operation.
+* `operation`: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".
+* `file_path`: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.
+* `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
 
-5. **Before Access to Another Process:** Expose the identity of the
-process being accessed. Allow permitting or denying access.
+5. **Before Access to Another Process:** Expose the identity of the process being accessed. Allow permitting or denying access.
 
 * `process_id`: REQUIRED. An integer identifying the current process.
-* `target_process_id`: REQUIRED. An integer identifying the target
-  process, or the process owning the target thread.
+* `target_process_id`: REQUIRED. An integer identifying the target process, or the process owning the target thread.
 
 6. **Process Exit:** Expose the identifier of the exiting process.
 
