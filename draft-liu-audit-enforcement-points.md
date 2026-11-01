@@ -95,7 +95,7 @@ This document identifies key enforcement points (EPs) for agents, specifying the
 
 
 智能体审计需要获取运行过程中的信息，而这些信息主要由不同类型的执行点（EP）通过观测和干预提供。
-Agents increasingly act on behalf of users across multiple services and administrative domains. Auditing their activities requires runtime information, primarily provided by enforcement points (EPs) that observe and, where supported, intervene in agent activities. These EPs are distributed across the interaction chain, each covering a different set of activities and providing corresponding audit records. 
+Agents increasingly act on behalf of users across multiple services and administrative domains. Auditing their activities requires runtime information, primarily provided by enforcement points (EPs) that observe and, where supported, intervene in agent activities. These EPs are distributed across the interaction chain, each covering a different set of activities and providing corresponding audit records.
 
 案例
 
@@ -110,29 +110,29 @@ Enforcement Point (EP): A logical entity or network element that observe agent a
 
 Audit Record: A record of the observable behavior of agents, including user intent, agent or tool interactions, invoked or declined actions, exchanged data, and resulting outcomes across trust boundaries.
 
-Hook：A mechanism exposed by software or an operating system at a defined execution point to enable observation and, where supported, intervention.
+Hook: A mechanism exposed by software or an operating system at a defined execution point to enable observation and, where supported, intervention.
 
 # Agent Workflows and Enforcement Points
 
-Figure 1 illustrates a typical agent workflow and the and the locations of the three EP categories. 
+Figure 1 illustrates a typical agent workflow and the and the locations of the three EP categories.
 
 ~~~
-+---------+      +-------+     +------+-(2) +--------+    +------+ 
-|         |      |       |     |      |-----|        +--->| LLM  | 
-|         |      |       |     |      |<----|        +----|      | 
-|         | (1)  |       |     |      | (3) |        |    +------+ 
-|         |------+       +----->      |     |        |             
-|         |      |       |     |      | (4) |        |    +------+ 
-|   User  |      |Gateway|     | Agent|-----|Gateway +--->|Tools | 
-| /System |      |  EP   |     |(Agent|<----|   EP   +----|      | 
-|         |<-----+Inbound+-----|Client| (5) |Outbound|    +------+ 
-|         | (10) |       |     |  EP) |     |        |             
-|         |      |       |     |      | (6) |        |    +------+ 
-|         |      |       |     |      |-----|        +--->|Other | 
-|         |      |       |     |      |<----|        +----|Agents| 
-+---------+      +-------+     +--+-^-- (7) +--------+    +------+ 
-                                  | |                              
-                               (8)| |(9)                           
++---------+      +-------+     +------+-(2) +--------+    +------+
+|         |      |       |     |      |-----|        +--->| LLM  |
+|         |      |       |     |      |<----|        +----|      |
+|         | (1)  |       |     |      | (3) |        |    +------+
+|         |------+       +----->      |     |        |
+|         |      |       |     |      | (4) |        |    +------+
+|   User  |      |Gateway|     | Agent|-----|Gateway +--->|Tools |
+| /System |      |  EP   |     |(Agent|<----|   EP   +----|      |
+|         |<-----+Inbound+-----|Client| (5) |Outbound|    +------+
+|         | (10) |       |     |  EP) |     |        |
+|         |      |       |     |      | (6) |        |    +------+
+|         |      |       |     |      |-----|        +--->|Other |
+|         |      |       |     |      |<----|        +----|Agents|
++---------+      +-------+     +--+-^-- (7) +--------+    +------+
+                                  | |
+                               (8)| |(9)
 +---------------------------------v-------------------------------+
 |                           Host (Host EP)                        |
 +-----------------------------------------------------------------+
@@ -150,9 +150,9 @@ Figure 1 illustrates a typical agent workflow and the and the locations of the t
 8. (Optional) The host provides corresponding results, status, or errors.
 9. (Optional) The Agent returns a response to the User or System, or requests additional input.
 
-Enforcement Points (EPs) provide visibility into and control over the above agent activities. They may be located within the agent client, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and Host EPs.
+EPs provide visibility into and control over the above agent activities. They may be located within the agent client, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and Host EPs.
 
-* Agent Client EPs：EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
+* Agent Client EPs: EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
 
 * Gateway EPs: EPs deployed in the inbound communication paths between users/systems and agents, and the outbound communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.
 
