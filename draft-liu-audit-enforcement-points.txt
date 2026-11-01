@@ -101,11 +101,19 @@ Table of Contents
    a different set of activities and providing corresponding audit
    records.
 
+   To support runtime monitoring and auditing, industry solutions record
+   events at the client, gateway, and host layers: client hooks expose
+   agent lifecycle events and tool calls
+   [ClaudeCodeHooks][CursorHooks][HooksSecurity]; gateways inspect
+   requests and responses and record access decisions and content
+   filtering results[LiteLLMLogging]; host security tools monitor
+   process execution, file access, and network connections[DefenderEDR].
+
    This document considers three categories of EPs: Agent Client EPs,
    Gateway EPs, and Host EPs.  For each category, it describes the audit
-   information EPs can provide and their limitations, providing a basis
-   for identifying the records across participating domains and
-   understanding the coverage of the available evidence.
+   information EPs can provide, providing a basis for identifying the
+   records across participating domains and understanding the coverage
+   of the available evidence.
 
 2.  Conventions and Definitions
 
@@ -993,10 +1001,6 @@ Table of Contents
 
 9.2.  Informative References
 
-   [BifrostHooks]
-              "Bifrost Runtime Extensions", n.d.,
-              <https://bifrost.boelabs.com/docs/extensions>.
-
    [ClaudeCodeHooks]
               "Claude Code Hooks", n.d.,
               <https://code.claude.com/docs/en/hooks>.
@@ -1009,6 +1013,11 @@ Table of Contents
    [CursorHooks]
               "Cursor Hooks", n.d., <https://cursor.com/docs/hooks>.
 
+   [DefenderEDR]
+              "Overview of Endpoint Detection and Response", n.d.,
+              <https://learn.microsoft.com/en-us/defender-endpoint/
+              overview-endpoint-detection-response>.
+
    [GeminiCLIHooks]
               "Gemini CLI Hooks Reference", n.d.,
               <https://geminicli.com/docs/hooks/reference/>.
@@ -1020,27 +1029,17 @@ Table of Contents
    [HooksSecurity]
               "HooksSecurity", n.d., <https://hooks.security/>.
 
-   [LiteLLMHooks]
-              "LiteLLM Proxy Call Hooks", n.d.,
-              <https://docs.litellm.ai/docs/proxy/call_hooks>.
+   [LiteLLMLogging]
+              "LiteLLM StandardLoggingPayload Specification", n.d.,
+              <https://docs.litellm.ai/docs/proxy/logging_spec>.
 
    [OpenClawHooks]
               "OpenClaw Plugin Hooks", n.d.,
               <https://docs.openclaw.ai/plugins/hooks>.
 
-   [PortkeyHooks]
-              "Portkey Guardrail Checks", n.d.,
-              <https://docs.portkey.ai/docs/product/guardrails/list-of-
-              guardrail-checks>.
-
    [QwenCodeHooks]
               "Qwen Code Hooks", n.d., <https://github.com/QwenLM/qwen-
               code/blob/main/docs/users/features/hooks.md>.
-
-   [TrueFoundryHooks]
-              "Configure Guardrails on the TrueFoundry AI Gateway",
-              n.d., <https://www.truefoundry.com/blog/configure-
-              guardrails-ai-gateway>.
 
 Acknowledgments
 
