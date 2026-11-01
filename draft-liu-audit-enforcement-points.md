@@ -67,7 +67,7 @@ informative:
 
   HooksSecurity:
     title: "HooksSecurity"
-     target: https://hooks.security/
+    target: https://hooks.security/
 
   LiteLLMHooks:
     title: "LiteLLM Proxy Call Hooks"
