@@ -169,125 +169,125 @@ Agent Client EPs use client-provided hooks to observe critical agent events, enf
 The following table lists selected hook points and representative implementations, ordered by the agent's workflow sequence.
 
 ~~~
-+---------------------------+---------------------------------------------+
-| Name                      | Examples                                    |
-+---------------------------+---------------------------------------------+
-| Session Start             | Claude Code: `SessionStart`                 |
-|                           | Cursor: `sessionStart`                      |
-|                           | GitHub Copilot: `sessionStart`              |
-|                           | Hermes Agent: `on_session_start`            |
-|                           | OpenClaw: `session_start`                   |
-|                           | Qwen Code: `SessionStart`                   |
-+---------------------------+---------------------------------------------+
-| Before Prompt Submit      | Claude Code: `UserPromptSubmit`             |
-|                           | Cursor: `beforeSubmitPrompt`                |
-|                           | Gemini CLI: `BeforeAgent`                   |
-|                           | GitHub Copilot: `userPromptSubmitted`       |
-|                           | Qwen Code: `UserPromptSubmit`               |
-+---------------------------+---------------------------------------------+
-| Prompt Expansion          | Claude Code: `UserPromptExpansion`          |
-|                           | Qwen Code: `UserPromptExpansion`            |
-+---------------------------+---------------------------------------------+
-| Before Model Request      | Gemini CLI: `BeforeModel`                   |
-|                           | Hermes Agent: `pre_api_request`             |
-|                           | OpenClaw: `llm_input`                       |
-+---------------------------+---------------------------------------------+
-| After Model Response      | Gemini CLI: `AfterModel`                    |
-|                           | Hermes Agent: `post_api_request`            |
-|                           | OpenClaw: `llm_output`                      |
-+---------------------------+---------------------------------------------+
-| Before Context Compaction | Claude Code: `PreCompact`                   |
-|                           | Cursor: `preCompact`                        |
-|                           | Gemini CLI: `PreCompress`                   |
-|                           | GitHub Copilot: `preCompact`                |
-|                           | OpenClaw: `before_compaction`               |
-|                           | Qwen Code: `PreCompact`                     |
-+---------------------------+---------------------------------------------+
-| After Context Compaction  | Claude Code: `PostCompact`                  |
-|                           | Gemini CLI: `PostCompress`                  |
-|                           | OpenClaw: `after_compaction`                |
-|                           | Qwen Code: `PostCompact`                    |
-+---------------------------+---------------------------------------------+
-| Subagent Start            | Claude Code: `SubagentStart`                |
-|                           | Cursor: `subagentStart`                     |
-|                           | GitHub Copilot: `subagentStart`             |
-|                           | Hermes Agent: `subagent_start`              |
-|                           | OpenClaw: `subagent_spawned`                |
-|                           | Qwen Code: `SubagentStart`                  |
-+---------------------------+---------------------------------------------+
-| Subagent Completion       | Claude Code: `SubagentStop`                 |
-|                           | Cursor: `subagentStop`                      |
-|                           | GitHub Copilot: `subagentStop`              |
-|                           | Hermes Agent: `subagent_stop`               |
-|                           | OpenClaw: `subagent_ended`                  |
-|                           | Qwen Code: `SubagentStop`                   |
-+---------------------------+---------------------------------------------+
-| Before Tool Use           | Claude Code: `PreToolUse`                   |
-|                           | Cursor: `preToolUse`                        |
-|                           | Gemini CLI: `BeforeTool`                    |
-|                           | GitHub Copilot: `preToolUse`                |
-|                           | Hermes Agent: `pre_tool_call`               |
-|                           | OpenClaw: `before_tool_call`                |
-|                           | Qwen Code: `PreToolUse`                     |
-+---------------------------+---------------------------------------------+
-| Permission Request        | Claude Code: `PermissionRequest`            |
-|                           | Hermes Agent: `pre_approval_request`        |
-|                           | Hermes Agent: `post_approval_response`      |
-|                           | Qwen Code: `PermissionRequest`              |
-+---------------------------+---------------------------------------------+
-| Permission Denied         | Claude Code: `PermissionDenied`             |
-|                           | Qwen Code: `PermissionDenied`               |
-+---------------------------+---------------------------------------------+
-| After tool Use            | Claude Code: `PostToolUse`                  |
-|                           | Cursor: `postToolUse`                       |
-|                           | Gemini CLI: `AfterTool`                     |
-|                           | GitHub Copilot: `postToolUse`               |
-|                           | Hermes Agent: `post_tool_call`              |
-|                           | OpenClaw: `after_tool_call`                 |
-|                           | Qwen Code: `PostToolUse`                    |
-+---------------------------+---------------------------------------------+
-| Tool Batch Completion     | Claude Code: `PostToolBatch`                |
-|                           | Qwen Code: `PostToolBatch`                  |
-+---------------------------+---------------------------------------------+
-| Post Tool Use Failure     | Claude Code: `PostToolUseFailure`           |
-|                           | Cursor: `postToolUseFailure`                |
-|                           | GitHub Copilot: `postToolUseFailure`        |
-|                           | Qwen Code: `PostToolUseFailure`             |
-+---------------------------+---------------------------------------------+
-| Before MCP Execution      | Claude Code: `PreToolUse` (MCP tools)       |
-|                           | Cursor: `beforeMCPExecution`                |
-+---------------------------+---------------------------------------------+
-| After MCP Execution       | Claude Code: `PostToolUse` (MCP tools)      |
-|                           | Cursor: `afterMCPExecution`                 |
-+---------------------------+---------------------------------------------+
-| Before Command Execution  | Claude Code: `PreToolUse` (Bash)            |
-|                           | Cursor: `beforeShellExecution`              |
-+---------------------------+---------------------------------------------+
-| After Command Execution   | Claude Code: `PostToolUse` (Bash)           |
-|                           | Cursor: `afterShellExecution`               |
-+---------------------------+---------------------------------------------+
-| Before File Access        | Claude Code: `PreToolUse` (Read)            |
-|                           | Cursor: `beforeReadFile`                    |
-|                           | Cursor: `beforeTabFileRead`                 |
-+---------------------------+---------------------------------------------+
-| After File Modification   | Claude Code: `PostToolUse` (Write/Edit)     |
-|                           | Cursor: `afterFileEdit`                     |
-|                           | Cursor: `afterTabFileEdit`                  |
-+---------------------------+---------------------------------------------+
-| Agent Completion          | Claude Code: `Stop`                         |
-|                           | Cursor: `stop`                              |
-|                           | Gemini CLI: `AfterAgent`                    |
-|                           | GitHub Copilot: `agentStop`                 |
-|                           | Hermes Agent: `post_llm_call`               |
-|                           | OpenClaw: `agent_end`                       |
-+---------------------------+---------------------------------------------+
-| Session End               | Claude Code: `SessionEnd`                   |
-|                           | Cursor: `sessionEnd`                        |
-|                           | GitHub Copilot: `sessionEnd`                |
-|                           | Hermes Agent: `on_session_finalize`         |
-|                           | OpenClaw: `session_end`                     |
-|                           | Qwen Code: `SessionEnd`                     |
-+---------------------------+---------------------------------------------+
++--------------------------+----------------------------------------+
+| Name                     | Examples                               |
++--------------------------+----------------------------------------+
+| Session Start            | Claude Code: `SessionStart`            |
+|                          | Cursor: `sessionStart`                 |
+|                          | GitHub Copilot: `sessionStart`         |
+|                          | Hermes Agent: `on_session_start`       |
+|                          | OpenClaw: `session_start`              |
+|                          | Qwen Code: `SessionStart`              |
++--------------------------+----------------------------------------+
+| Before Prompt Submit     | Claude Code: `UserPromptSubmit`        |
+|                          | Cursor: `beforeSubmitPrompt`           |
+|                          | Gemini CLI: `BeforeAgent`              |
+|                          | GitHub Copilot: `userPromptSubmitted`  |
+|                          | Qwen Code: `UserPromptSubmit`          |
++--------------------------+----------------------------------------+
+| Prompt Expansion         | Claude Code: `UserPromptExpansion`     |
+|                          | Qwen Code: `UserPromptExpansion`       |
++--------------------------+----------------------------------------+
+| Before Model Request     | Gemini CLI: `BeforeModel`              |
+|                          | Hermes Agent: `pre_api_request`        |
+|                          | OpenClaw: `llm_input`                  |
++--------------------------+----------------------------------------+
+| After Model Response     | Gemini CLI: `AfterModel`               |
+|                          | Hermes Agent: `post_api_request`       |
+|                          | OpenClaw: `llm_output`                 |
++--------------------------+----------------------------------------+
+| Before Context Compaction| Claude Code: `PreCompact`              |
+|                          | Cursor: `preCompact`                   |
+|                          | Gemini CLI: `PreCompress`              |
+|                          | GitHub Copilot: `preCompact`           |
+|                          | OpenClaw: `before_compaction`          |
+|                          | Qwen Code: `PreCompact`                |
++--------------------------+----------------------------------------+
+| After Context Compaction | Claude Code: `PostCompact`             |
+|                          | Gemini CLI: `PostCompress`             |
+|                          | OpenClaw: `after_compaction`           |
+|                          | Qwen Code: `PostCompact`               |
++--------------------------+----------------------------------------+
+| Subagent Start           | Claude Code: `SubagentStart`           |
+|                          | Cursor: `subagentStart`                |
+|                          | GitHub Copilot: `subagentStart`        |
+|                          | Hermes Agent: `subagent_start`         |
+|                          | OpenClaw: `subagent_spawned`           |
+|                          | Qwen Code: `SubagentStart`             |
++--------------------------+----------------------------------------+
+| Subagent Completion      | Claude Code: `SubagentStop`            |
+|                          | Cursor: `subagentStop`                 |
+|                          | GitHub Copilot: `subagentStop`         |
+|                          | Hermes Agent: `subagent_stop`          |
+|                          | OpenClaw: `subagent_ended`             |
+|                          | Qwen Code: `SubagentStop`              |
++--------------------------+----------------------------------------+
+| Before Tool Use          | Claude Code: `PreToolUse`              |
+|                          | Cursor: `preToolUse`                   |
+|                          | Gemini CLI: `BeforeTool`               |
+|                          | GitHub Copilot: `preToolUse`           |
+|                          | Hermes Agent: `pre_tool_call`          |
+|                          | OpenClaw: `before_tool_call`           |
+|                          | Qwen Code: `PreToolUse`                |
++--------------------------+----------------------------------------+
+| Permission Request       | Claude Code: `PermissionRequest`       |
+|                          | Hermes Agent: `pre_approval_request`   |
+|                          | Hermes Agent: `post_approval_response` |
+|                          | Qwen Code: `PermissionRequest`         |
++--------------------------+----------------------------------------+
+| Permission Denied        | Claude Code: `PermissionDenied`        |
+|                          | Qwen Code: `PermissionDenied`          |
++--------------------------+----------------------------------------+
+| After tool Use           | Claude Code: `PostToolUse`             |
+|                          | Cursor: `postToolUse`                  |
+|                          | Gemini CLI: `AfterTool`                |
+|                          | GitHub Copilot: `postToolUse`          |
+|                          | Hermes Agent: `post_tool_call`         |
+|                          | OpenClaw: `after_tool_call`            |
+|                          | Qwen Code: `PostToolUse`               |
++--------------------------+----------------------------------------+
+| Tool Batch Completion    | Claude Code: `PostToolBatch`           |
+|                          | Qwen Code: `PostToolBatch`             |
++--------------------------+----------------------------------------+
+| Post Tool Use Failure    | Claude Code: `PostToolUseFailure`      |
+|                          | Cursor: `postToolUseFailure`           |
+|                          | GitHub Copilot: `postToolUseFailure`   |
+|                          | Qwen Code: `PostToolUseFailure`        |
++--------------------------+----------------------------------------+
+| Before MCP Execution     | Claude Code: `PreToolUse` (MCP tools)  |
+|                          | Cursor: `beforeMCPExecution`           |
++--------------------------+----------------------------------------+
+| After MCP Execution      | Claude Code: `PostToolUse` (MCP tools) |
+|                          | Cursor: `afterMCPExecution`            |
++--------------------------+----------------------------------------+
+| Before Command Execution | Claude Code: `PreToolUse` (Bash)       |
+|                          | Cursor: `beforeShellExecution`         |
++--------------------------+----------------------------------------+
+| After Command Execution  | Claude Code: `PostToolUse` (Bash)      |
+|                          | Cursor: `afterShellExecution`          |
++--------------------------+----------------------------------------+
+| Before File Access       | Claude Code: `PreToolUse` (Read)       |
+|                          | Cursor: `beforeReadFile`               |
+|                          | Cursor: `beforeTabFileRead`            |
++--------------------------+----------------------------------------+
+| After File Modification  | Claude Code: `PostToolUse` (Write/Edit)|
+|                          | Cursor: `afterFileEdit`                |
+|                          | Cursor: `afterTabFileEdit`             |
++--------------------------+----------------------------------------+
+| Agent Completion         | Claude Code: `Stop`                    |
+|                          | Cursor: `stop`                         |
+|                          | Gemini CLI: `AfterAgent`               |
+|                          | GitHub Copilot: `agentStop`            |
+|                          | Hermes Agent: `post_llm_call`          |
+|                          | OpenClaw: `agent_end`                  |
++--------------------------+----------------------------------------+
+| Session End              | Claude Code: `SessionEnd`              |
+|                          | Cursor: `sessionEnd`                   |
+|                          | GitHub Copilot: `sessionEnd`           |
+|                          | Hermes Agent: `on_session_finalize`    |
+|                          | OpenClaw: `session_end`                |
+|                          | Qwen Code: `SessionEnd`                |
++--------------------------+----------------------------------------+
 Note: Hooks for which consensus has not been reached are omitted.
 ~~~
 *Table 1. Agent Client Hooks and Examples*
@@ -493,7 +493,91 @@ Based on existing implementation practices listed in Table 1, the choice depends
 ## Observability and Interventability
 
 
+# Host EP
+Host EPs use operating-system hooks to observe operations performed by agent-related processes, enforce controls where supported, and generate audit records.
 
+## Summary of Host EP Hooks
+~~~
++----------------------+------------------------------------------+          
+| Name                 | Examples                                 |          
++----------------------+------------------------------------------+          
+| Process Creation     | Linux: sched_process_fork                |          
+|                      | Windows:                                 |          
+|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |          
+|                      | macOS: ES_EVENT_TYPE_NOTIFY_FORK         |          
++----------------------+------------------------------------------+          
+| Before Program       | Linux LSM: bprm_check_security           |          
+| Execution            | Windows:                                 |          
+|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |          
+|                      |   (CreateInfo != NULL)                   |          
+|                      | macOS: ES_EVENT_TYPE_AUTH_EXEC           |          
++----------------------+------------------------------------------+          
+| Before File Access   | Linux LSM: file_open                     |          
+|                      | Linux LSM: file_permission (read)        |          
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
+|                      |   (IRP_MJ_CREATE)                        |          
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
+|                      |   (IRP_MJ_READ)                          |          
+|                      | macOS: ES_EVENT_TYPE_AUTH_OPEN           |          
++----------------------+------------------------------------------+          
+| Before File          | Linux LSM: file_permission (write)       |          
+| Modification         | Linux LSM: inode_unlink                  |          
+|                      | Linux LSM: inode_rename                  |          
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
+|                      |   (IRP_MJ_WRITE)                         |          
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
+|                      |   (IRP_MJ_SET_INFORMATION)               |          
+|                      | macOS: ES_EVENT_TYPE_AUTH_UNLINK         |          
+|                      | macOS: ES_EVENT_TYPE_AUTH_RENAME         |          
++----------------------+------------------------------------------+          
+| After File Operation | Windows: PFLT_POST_OPERATION_CALLBACK    |          
+|                      |   (IRP_MJ_CREATE)                        |          
+|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |          
+|                      |   (IRP_MJ_READ)                          |          
+|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |          
+|                      |   (IRP_MJ_WRITE)                         |          
+|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |          
+|                      |   (IRP_MJ_SET_INFORMATION)               |          
+|                      | macOS: ES_EVENT_TYPE_NOTIFY_UNLINK       |
+|                      | macOS: ES_EVENT_TYPE_NOTIFY_RENAME       |          
++----------------------+------------------------------------------+          
+| Before Network       | Linux LSM: socket_connect                |          
+| Operation            | Linux LSM: socket_bind                   |          
+|                      | Linux LSM: socket_listen                 |          
+|                      | Windows WFP: classifyFn                  |          
+|                      |   FWPM_LAYER_ALE_AUTH_CONNECT_V4/V6      |          
+|                      | Windows WFP: classifyFn                  |          
+|                      |   FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4  |          
+|                      |   /V6                                    |          
+|                      | Windows WFP: classifyFn                  |          
+|                      |   FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6       |      
++----------------------+------------------------------------------+          
+| Network Flow         | Windows WFP: classifyFn                  |          
+| Established          |   FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4/V6  |          
++----------------------+------------------------------------------+          
+| Before Access to     | Linux LSM: ptrace_access_check           |          
+| Another Process      | Windows: POB_PRE_OPERATION_CALLBACK      |          
+|                      |   (process/thread handles)               |          
+|                      | macOS: ES_EVENT_TYPE_AUTH_GET_TASK       |          
++----------------------+------------------------------------------+          
+| Before Memory        | Linux LSM: file_mprotect                 |          
+| Protection Change    | macOS: ES_EVENT_TYPE_AUTH_MPROTECT       |          
++----------------------+------------------------------------------+          
+| Executable Image Load| Windows: PLOAD_IMAGE_NOTIFY_ROUTINE      |          
++----------------------+------------------------------------------+          
+| Before Registry      | Windows: RegistryCallback                |          
+| Operation            |   (pre-notification)                     |          
++----------------------+------------------------------------------+          
+| After Registry       | Windows: RegistryCallback                |          
+| Operation            |   (post-notification)                    |          
++----------------------+------------------------------------------+          
+| Process Exit         | Linux: sched_process_exit                |          
+|                      | Windows:                                 |          
+|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |          
+|                      |   (exit)                                 |          
+|                      | macOS: ES_EVENT_TYPE_NOTIFY_EXIT         |          
++----------------------+------------------------------------------+          
+~~~
 
 
 # Security Considerations {#security}
