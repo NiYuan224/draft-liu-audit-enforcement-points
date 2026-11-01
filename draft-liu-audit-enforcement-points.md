@@ -290,9 +290,9 @@ The following table lists selected hook points and representative implementation
 +--------------------------+----------------------------------------+
 Note: Hooks for which consensus has not been reached are omitted.
 ~~~
-*Table 1. Agent Client Hooks and Examples*
+*Table 1. Agent Client EP Hooks and Examples*
 
-## Critical Event and Corresponding Audit Record Claims
+## Critical Events and Corresponding Audit Record Claims
 
 For each event in Table 1, this section describes observable information, supported interventions, and REQUIRED or OPTIONAL audit record claims.
 
@@ -550,10 +550,7 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 |                      |   FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4  |          
 |                      |   /V6                                    |          
 |                      | Windows WFP: classifyFn                  |          
-|                      |   FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6       |      
-+----------------------+------------------------------------------+          
-| Network Flow         | Windows WFP: classifyFn                  |          
-| Established          |   FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4/V6  |          
+|                      |   FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6       |           
 +----------------------+------------------------------------------+          
 | Before Access to     | Linux LSM: ptrace_access_check           |          
 | Another Process      | Windows: POB_PRE_OPERATION_CALLBACK      |          
@@ -561,23 +558,67 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 |                      | macOS: ES_EVENT_TYPE_AUTH_GET_TASK       |          
 +----------------------+------------------------------------------+          
 | Before Memory        | Linux LSM: file_mprotect                 |          
-| Protection Change    | macOS: ES_EVENT_TYPE_AUTH_MPROTECT       |          
-+----------------------+------------------------------------------+          
-| Executable Image Load| Windows: PLOAD_IMAGE_NOTIFY_ROUTINE      |          
-+----------------------+------------------------------------------+          
-| Before Registry      | Windows: RegistryCallback                |          
-| Operation            |   (pre-notification)                     |          
-+----------------------+------------------------------------------+          
-| After Registry       | Windows: RegistryCallback                |          
-| Operation            |   (post-notification)                    |          
+| Protection Change    | macOS: ES_EVENT_TYPE_AUTH_MPROTECT       |                
 +----------------------+------------------------------------------+          
 | Process Exit         | Linux: sched_process_exit                |          
 |                      | Windows:                                 |          
 |                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |          
-|                      |   (exit)                                 |          
+|                      |   (CreateInfo == NULL)                   |          
 |                      | macOS: ES_EVENT_TYPE_NOTIFY_EXIT         |          
 +----------------------+------------------------------------------+          
 ~~~
+*Table 2.  HOST EP Hooks and Examples*
+
+## Critical Event and Corresponding Audit Record Claims
+
+1. **Process Creation:** Expose the identifiers of the newly created
+process and its parent. Allow denying process creation.
+
+* `process_id`: REQUIRED. An integer identifying the newly created
+  process.
+* `parent_process_id`: REQUIRED. An integer identifying its parent
+  process.
+
+2. **Before Program Execution:** Expose the process identifier and
+the program to be executed. Allow permitting or denying program
+execution.
+
+* `process_id`: REQUIRED. An integer identifying the process executing
+  the program or being created.
+* `executable_path`: OPTIONAL. A string specifying the executable
+  path.
+
+3. **Before File Access:** Expose the requested file operation and
+the target file. Allow permitting or denying the operation.
+
+* `process_id`: REQUIRED. An integer identifying the current process.
+* `operation`: REQUIRED. A string with the value "open" or "read".
+* `file_path`: OPTIONAL. A string specifying the target file path.
+
+4. **Before File Modification:** Expose the requested file modification,
+such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation
+
+* `process_id`: REQUIRED. An integer identifying the current process.
+* `operation`: REQUIRED. A string identifying the requested operation,
+  such as "write", "unlink", or "rename".
+* `file_path`: OPTIONAL. A string specifying the target file path,
+  or the source file path for a rename operation.
+* `destination_path`: OPTIONAL. A string specifying the destination
+  path for a rename operation.
+
+5. **Before Access to Another Process:** Expose the identity of the
+process being accessed. Allow permitting or denying access.
+
+* `process_id`: REQUIRED. An integer identifying the current process.
+* `target_process_id`: REQUIRED. An integer identifying the target
+  process, or the process owning the target thread.
+
+6. **Process Exit:** Expose the identifier of the exiting process.
+
+* `process_id`: REQUIRED. An integer identifying the exiting process.
+
+
+
 
 
 # Security Considerations {#security}
