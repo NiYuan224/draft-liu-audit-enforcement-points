@@ -313,7 +313,7 @@ The following claims apply to all events:
 4. **Before Model Request:** Expose model request information, including the selected model, provider, and request messages. Allow modifying or blocking model requests before invocation.
 * `model`: REQUIRED. A string identifying the model selected for the request.
 * `provider`: OPTIONAL. A string identifying the model provider.
-* `messages`: OPTIONAL. An array of message objects included in the model request.   
+* `messages`: OPTIONAL. An array of message objects included in the model request.
 
 5. **After Model Response:** Expose generated content, response metadata, and token usage. Allow modifying, replacing, or blocking the response before subsequent processing.
 * `model`: REQUIRED. A string identifying the model associated with the request.
@@ -410,7 +410,7 @@ The following claims apply to all events:
 * `file_path`: REQUIRED. A string specifying the path of the modified file.
 * `edits`: REQUIRED. An array of objects describing the specific changes made, where each object contains:
   * `old_string`: REQUIRED. A string containing the original text segment before modification.
-  * `new_string`: REQUIRED. A string containing the replacement text segment after modification.   
+  * `new_string`: REQUIRED. A string containing the replacement text segment after modification.
 
 22. **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.
 
@@ -536,74 +536,74 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 
 ## Summary of Host EP Hooks
 ~~~
-+----------------------+------------------------------------------+          
-| Name                 | Examples                                 |          
-+----------------------+------------------------------------------+          
-| Process Creation     | Linux: sched_process_fork                |          
-|                      | Windows:                                 |          
-|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |          
-|                      | macOS: ES_EVENT_TYPE_NOTIFY_FORK         |          
-+----------------------+------------------------------------------+          
-| Before Program       | Linux LSM: bprm_check_security           |          
-| Execution            | Windows:                                 |          
-|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |          
-|                      |   (CreateInfo != NULL)                   |          
-|                      | macOS: ES_EVENT_TYPE_AUTH_EXEC           |          
-+----------------------+------------------------------------------+          
-| Before File Access   | Linux LSM: file_open                     |          
-|                      | Linux LSM: file_permission (read)        |          
-|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
-|                      |   (IRP_MJ_CREATE)                        |          
-|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
-|                      |   (IRP_MJ_READ)                          |          
-|                      | macOS: ES_EVENT_TYPE_AUTH_OPEN           |          
-+----------------------+------------------------------------------+          
-| Before File          | Linux LSM: file_permission (write)       |          
-| Modification         | Linux LSM: inode_unlink                  |          
-|                      | Linux LSM: inode_rename                  |          
-|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
-|                      |   (IRP_MJ_WRITE)                         |          
-|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |          
-|                      |   (IRP_MJ_SET_INFORMATION)               |          
-|                      | macOS: ES_EVENT_TYPE_AUTH_UNLINK         |          
-|                      | macOS: ES_EVENT_TYPE_AUTH_RENAME         |          
-+----------------------+------------------------------------------+          
-| After File Operation | Windows: PFLT_POST_OPERATION_CALLBACK    |          
-|                      |   (IRP_MJ_CREATE)                        |          
-|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |          
-|                      |   (IRP_MJ_READ)                          |          
-|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |          
-|                      |   (IRP_MJ_WRITE)                         |          
-|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |          
-|                      |   (IRP_MJ_SET_INFORMATION)               |          
++----------------------+------------------------------------------+
+| Name                 | Examples                                 |
++----------------------+------------------------------------------+
+| Process Creation     | Linux: sched_process_fork                |
+|                      | Windows:                                 |
+|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |
+|                      | macOS: ES_EVENT_TYPE_NOTIFY_FORK         |
++----------------------+------------------------------------------+
+| Before Program       | Linux LSM: bprm_check_security           |
+| Execution            | Windows:                                 |
+|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |
+|                      |   (CreateInfo != NULL)                   |
+|                      | macOS: ES_EVENT_TYPE_AUTH_EXEC           |
++----------------------+------------------------------------------+
+| Before File Access   | Linux LSM: file_open                     |
+|                      | Linux LSM: file_permission (read)        |
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
+|                      |   (IRP_MJ_CREATE)                        |
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
+|                      |   (IRP_MJ_READ)                          |
+|                      | macOS: ES_EVENT_TYPE_AUTH_OPEN           |
++----------------------+------------------------------------------+
+| Before File          | Linux LSM: file_permission (write)       |
+| Modification         | Linux LSM: inode_unlink                  |
+|                      | Linux LSM: inode_rename                  |
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
+|                      |   (IRP_MJ_WRITE)                         |
+|                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
+|                      |   (IRP_MJ_SET_INFORMATION)               |
+|                      | macOS: ES_EVENT_TYPE_AUTH_UNLINK         |
+|                      | macOS: ES_EVENT_TYPE_AUTH_RENAME         |
++----------------------+------------------------------------------+
+| After File Operation | Windows: PFLT_POST_OPERATION_CALLBACK    |
+|                      |   (IRP_MJ_CREATE)                        |
+|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |
+|                      |   (IRP_MJ_READ)                          |
+|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |
+|                      |   (IRP_MJ_WRITE)                         |
+|                      | Windows: PFLT_POST_OPERATION_CALLBACK    |
+|                      |   (IRP_MJ_SET_INFORMATION)               |
 |                      | macOS: ES_EVENT_TYPE_NOTIFY_UNLINK       |
-|                      | macOS: ES_EVENT_TYPE_NOTIFY_RENAME       |          
-+----------------------+------------------------------------------+          
-| Before Network       | Linux LSM: socket_connect                |          
-| Operation            | Linux LSM: socket_bind                   |          
-|                      | Linux LSM: socket_listen                 |          
-|                      | Windows WFP: classifyFn                  |          
-|                      |   FWPM_LAYER_ALE_AUTH_CONNECT_V4/V6      |          
-|                      | Windows WFP: classifyFn                  |          
-|                      |   FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4  |          
-|                      |   /V6                                    |          
-|                      | Windows WFP: classifyFn                  |          
-|                      |   FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6       |           
-+----------------------+------------------------------------------+          
-| Before Access to     | Linux LSM: ptrace_access_check           |          
-| Another Process      | Windows: POB_PRE_OPERATION_CALLBACK      |          
-|                      |   (process/thread handles)               |          
-|                      | macOS: ES_EVENT_TYPE_AUTH_GET_TASK       |          
-+----------------------+------------------------------------------+          
-| Before Memory        | Linux LSM: file_mprotect                 |          
-| Protection Change    | macOS: ES_EVENT_TYPE_AUTH_MPROTECT       |                
-+----------------------+------------------------------------------+          
-| Process Exit         | Linux: sched_process_exit                |          
-|                      | Windows:                                 |          
-|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |          
-|                      |   (CreateInfo == NULL)                   |          
-|                      | macOS: ES_EVENT_TYPE_NOTIFY_EXIT         |          
-+----------------------+------------------------------------------+          
+|                      | macOS: ES_EVENT_TYPE_NOTIFY_RENAME       |
++----------------------+------------------------------------------+
+| Before Network       | Linux LSM: socket_connect                |
+| Operation            | Linux LSM: socket_bind                   |
+|                      | Linux LSM: socket_listen                 |
+|                      | Windows WFP: classifyFn                  |
+|                      |   FWPM_LAYER_ALE_AUTH_CONNECT_V4/V6      |
+|                      | Windows WFP: classifyFn                  |
+|                      |   FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4  |
+|                      |   /V6                                    |
+|                      | Windows WFP: classifyFn                  |
+|                      |   FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6       |
++----------------------+------------------------------------------+
+| Before Access to     | Linux LSM: ptrace_access_check           |
+| Another Process      | Windows: POB_PRE_OPERATION_CALLBACK      |
+|                      |   (process/thread handles)               |
+|                      | macOS: ES_EVENT_TYPE_AUTH_GET_TASK       |
++----------------------+------------------------------------------+
+| Before Memory        | Linux LSM: file_mprotect                 |
+| Protection Change    | macOS: ES_EVENT_TYPE_AUTH_MPROTECT       |
++----------------------+------------------------------------------+
+| Process Exit         | Linux: sched_process_exit                |
+|                      | Windows:                                 |
+|                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |
+|                      |   (CreateInfo == NULL)                   |
+|                      | macOS: ES_EVENT_TYPE_NOTIFY_EXIT         |
++----------------------+------------------------------------------+
 ~~~
 *Table 2.  HOST EP Hooks and Examples*
 
