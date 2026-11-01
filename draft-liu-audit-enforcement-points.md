@@ -65,6 +65,10 @@ informative:
     title: "OpenClaw Plugin Hooks"
     target: https://docs.openclaw.ai/plugins/hooks
 
+  HooksSecurity:
+    title: "HooksSecurity"
+     target: https://hooks.security/
+
   LiteLLMHooks:
     title: "LiteLLM Proxy Call Hooks"
     target: https://docs.litellm.ai/docs/proxy/call_hooks
@@ -85,21 +89,21 @@ informative:
 
 --- abstract
 
-This document identifies key enforcement points (EPs) for agents, specifying the agent activities they cover and the audit records they provide. It describes how hooks exposed by agent implementations enable EPs to observe agent activities, intervene in these activities or their subsequent processing, and generate corresponding audit records.
-
+Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent Client, Gateway, and Host EPs by detailing their coverage and audit data. This helps to define the specific capabilities of different EPs and evaluate the overall evidence coverage.
 
 --- middle
 
 # Introduction {#intro}
 
 
-智能体审计需要获取运行过程中的信息，而这些信息主要由不同类型的执行点（EP）通过观测和干预提供。
 Agents increasingly act on behalf of users across multiple services and administrative domains. Auditing their activities requires runtime information, primarily provided by enforcement points (EPs) that observe and, where supported, intervene in agent activities. These EPs are distributed across the interaction chain, each covering a different set of activities and providing corresponding audit records.
 
-案例
 
-由于不同执行点覆盖的活动范围不同，需要明确它们能够提供哪些审计信息，以及各自的局限性。
-This document considers three categories of EPs: Agent Client EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide and their limitations, providing a basis for identifying the records needed across participating domains and understanding the coverage of the available evidence.
+Various industry implementations demonstrate how runtime monitoring and intervention are achieved in practice. Many AI Agent implementations provide native hooks for external monitors to execute behavioral telemetry and enforce inline security interventions. Popular platforms featuring AI Agent hooks include {{ClaudeCodeHooks}}{{CursorHooks}}{{CopilotHooks}}. There are even security hooks registry service specifically for AI Agents {{HooksSecurity}}. Moving beyond the local client, interaction chains rely on network-level gateway enforcement points like MantiSec, Lakera Guard, and Portkey AI Gateway to inspect API payloads, redact PII, and block prompt injections before they reach the LLM backbone, while traditional and agent-aware host runtime security systems—such as Snyk Evo Agent Guard, Wiz Runtime Security, and Sysdig Secure—act as the final line of defense by utilizing container sandboxes, system call auditing, and eBPF-powered tracking to intercept malicious system modifications and dangerous tool calls at the execution layer.
+
+To monitor and intervene in runtime AI operations, industry solutions deploy controls across client, gateway, and host layers: client-side platforms leverage native hooks for inline behavioral telemetry {{ClaudeCodeHooks}}{{CursorHooks}}{{HooksSecurity}}; network gateways like MantiSec, Lakera Guard, and Portkey intercept prompt injections, inspect API payloads, and redact PII; and host-level security tools like Snyk Evo Agent Guard, Wiz, and Sysdig serve as the final defense, utilizing sandboxing and eBPF system call tracking to block malicious execution and dangerous tool calls.
+
+This document considers three categories of EPs: Agent Client EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide and their limitations, providing a basis for identifying the records across participating domains and understanding the coverage of the available evidence.
 
 # Conventions and Definitions
 
@@ -296,28 +300,27 @@ Note: Hooks for which consensus has not been reached are omitted.
 
 For each event in Table 1, this section describes observable information, supported interventions, and REQUIRED or OPTIONAL audit record claims.
 
-1. **Session Start:** Expose session information, including the session identifier and source. Allow setting session-specific environment variables or injecting initial security context.
+The following claims apply to all events:
 * `session_id`: REQUIRED. A string identifying the current session.
+
+
+1. **Session Start:** Expose session information, including the session identifier and source. Allow setting session-specific environment variables or injecting initial security context.
 * `source`: OPTIONAL. A string indicating how the session started, such as "startup" or "resume".
 
 2. **Before Prompt Submit:** Expose the submitted prompt and associated session information. Allow inspecting, modifying, or blocking the prompt before agent processing.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `prompt`: REQUIRED. A string containing the submitted user prompt.
 
 3. **Prompt Expansion:** Expose prompt and command information during prompt expansion. Allow adding context or blocking expansion or submission.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `command_name`: REQUIRED. A string identifying the command being expanded.
 * `command_args`: OPTIONAL. A string containing argument text after the command name.
 * `prompt`: OPTIONAL. A string containing the original input or expanded prompt, depending on the implementation.
 
 4. **Before Model Request:** Expose model request information, including the selected model, provider, and request messages. Allow modifying or blocking model requests before invocation.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `model`: REQUIRED. A string identifying the model selected for the request.
 * `provider`: OPTIONAL. A string identifying the model provider.
 * `messages`: OPTIONAL. An array of message objects included in the model request.   
 
 5. **After Model Response:** Expose generated content, response metadata, and token usage. Allow modifying, replacing, or blocking the response before subsequent processing.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `model`: REQUIRED. A string identifying the model associated with the request.
 * `response`: OPTIONAL. An object containing the model response information exposed by the hook.
 * `finish_reason`: OPTIONAL. A string indicating why response generation ended.
@@ -325,24 +328,20 @@ For each event in Table 1, this section describes observable information, suppor
 
 
 6. **Before Context Compaction:** Expose session information and the compaction trigger. Allow blocking compaction.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically (`"auto"`) or manually (`"manual"`).
 
 7. **After Context Compaction:** Expose session information, the compaction trigger, and the generated summary.
 
-* `session_id`: REQUIRED. A string identifying the current session.
 * `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically (`"auto"`) or manually (`"manual"`).
 * `compact_summary`: OPTIONAL. A string containing the conversation summary generated by compaction.
 
 8.  **Subagent Start:** Expose session information and the subagent identifier and type. Allow injecting additional context or blocking subagent creation.
 
-* `session_id`: REQUIRED. A string identifying the session associated with the event.
 * `agent_id`: REQUIRED. A string identifying the subagent.
 * `agent_type`: REQUIRED. A string indicating the subagent type.
 
 9. **Subagent Completion:** Expose subagent information and its final response. Allow requesting continued execution.
 
-* `session_id`: REQUIRED. A string identifying the current session.
 * `agent_id`: REQUIRED. A string identifying the subagent.
 * `agent_type`: REQUIRED. A string indicating the subagent type.
 * `last_assistant_message`: OPTIONAL. A string containing the subagent's last message.
@@ -350,31 +349,29 @@ For each event in Table 1, this section describes observable information, suppor
 
 10. **Before Tool Use:** Expose the tool name, invocation arguments, and tool call identifier. Allow approving, denying, or modifying tool invocations before execution.
 
-* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_name`: REQUIRED. A string identifying the tool to be invoked.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `tool_use_id`: OPTIONAL. A string identifying the tool invocation.
 
 11. **Permission Request:** Expose the tool name and invocation arguments associated with a permission request. Allow approving or denying the requested operation.
-* `session_id`: REQUIRED. A string identifying the current session.
+
 * `tool_name`: REQUIRED. A string identifying the tool requesting permission.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 
 
 12. **Permission Denied:** Expose the tool name, invocation arguments, and reason for a denied operation.
-* `session_id`: REQUIRED. A string identifying the current session.
+
 * `tool_name`: REQUIRED. A string identifying the tool whose invocation was denied.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `reason`: OPTIONAL. A string indicating why the invocation was denied.
 
 13. **After Tool Use:** Expose the tool name, invocation arguments, and execution result. Allow modifying or withholding the result before subsequent model processing.
-* `session_id`: REQUIRED. A string identifying the current session.
+
 * `tool_name`: REQUIRED. A string identifying the invoked tool.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `tool_response`: OPTIONAL. The tool execution result. Depending on the tool, this may be a string containing file content, an object containing command output and exit status, or an array of query results.
 
 14. **Tool Batch Completion:** Expose the tool calls in a completed batch, including their arguments and results.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_calls`: REQUIRED. An array of objects describing the tool calls in the batch. Each object contains:
   * `tool_name`: REQUIRED. A string identifying the invoked tool.
   * `tool_input`: REQUIRED. An object containing the tool's input parameters.
@@ -382,50 +379,46 @@ For each event in Table 1, this section describes observable information, suppor
   * `tool_response`: OPTIONAL. The tool execution result, represented as a string, array, or object depending on the implementation.
 
 15. **Post Tool Use Failure:** Expose the tool name, invocation arguments, and error information for a failed tool invocation.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_name`: REQUIRED. A string identifying the tool whose invocation failed.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `error`: REQUIRED. A string describing the tool invocation failure.
 * `is_interrupt`: OPTIONAL. A boolean indicating whether the failure was caused by user interruption.
 
 16. **Before MCP Execution:** Expose the MCP server name, tool name, and invocation arguments. Allow approving or denying MCP tool execution before invocation.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
 * `tool_name`: REQUIRED. A string identifying the MCP tool to be invoked.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 
 
 17. **After MCP Execution:** Expose the MCP server name, tool name, invocation arguments, and execution result. Allow modifying or replacing the result before subsequent processing.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
 * `tool_name`: REQUIRED. A string identifying the invoked MCP tool.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `tool_response`: OPTIONAL. The tool execution result, represented as a string, object, or array depending on the tool.
 
 18. **Before Command Execution:** Expose the command and working directory. Allow permitting, denying, or requesting user confirmation before command execution.
-* `session_id`: REQUIRED. A string identifying the current session.
 * `command`: REQUIRED. A string containing the command to be executed.
 * `cwd`: OPTIONAL. A string specifying the current working directory.
 
 19. **After Command Execution:** Expose the executed command and captured output.
-* `session_id`: REQUIRED. A string identifying the current session.
+
 * `command`: REQUIRED. A string containing the executed command.
 * `output`: OPTIONAL. A string containing the captured command output.
 
 20. **Before File Access:** Expose file access information, including the file path and requested file content. Allow permitting or denying file access before the content is provided to the agent.
-* `session_id`: REQUIRED. A string identifying the current session.
+
 * `file_path`: REQUIRED. A string specifying the path of the file being accessed.
 * `requested_content`: OPTIONAL. A string or object containing the content of the file requested by the agent.
 
 21. **After File Modification:** Expose file modification information, including the file path and changes made, such as the original and modified text.
-* `session_id`: REQUIRED. A string identifying the current session.
+
 * `file_path`: REQUIRED. A string specifying the path of the modified file.
 * `edits`: REQUIRED. An array of objects describing the specific changes made, where each object contains:
   * `old_string`: REQUIRED. A string containing the original text segment before modification.
   * `new_string`: REQUIRED. A string containing the replacement text segment after modification.   
 
 22. **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.
-* `session_id`: REQUIRED. A string identifying the current session.
+
 * `stop_reason`: REQUIRED. A string specifying why the agent intends to stop (e.g., "end_turn", "task_completed", "max_tokens", "user_interrupt").
 * `last_assistant_message`: OPTIONAL. A string or message object containing the final answer, summary, or response text generated by the agent prior to stopping.
 * `stop_hook_active`: OPTIONAL. A boolean indicating whether this stop event was triggered during a re-entrant evaluation loop, used to prevent infinite hook recursion.
@@ -457,7 +450,7 @@ audit records.
 
 ##  Critical Events and Corresponding Audit Record Claims
 
-1. **Before Inbound Request Forwarding:** Expose the destination agent and the incoming request. Allow permitting or denying request forwarding and inspecting or modifying request content.
+1. **Before Inbound Request Forwarding:** Expose the destination agent and the incoming request. Allow permitting or denying request forwarding, and modifying request content.
 
 * `destination`: REQUIRED. A string identifying the destination agent endpoint by URL or configured backend name.
 * `caller_id`: REQUIRED for successfully authenticated requests. A string identifying the authenticated caller.
