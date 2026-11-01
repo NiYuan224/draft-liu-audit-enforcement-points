@@ -300,7 +300,7 @@ For each event in Table 1, this section describes observable information, suppor
 * `session_id`: REQUIRED. A string identifying the current session.
 * `source`: OPTIONAL. A string indicating how the session started, such as "startup" or "resume".
 
-2. **Prompt Submission:** Expose the submitted prompt and associated session information. Allow inspecting, modifying, or blocking the prompt before agent processing.
+2. **Before Prompt Submit:** Expose the submitted prompt and associated session information. Allow inspecting, modifying, or blocking the prompt before agent processing.
 * `session_id`: REQUIRED. A string identifying the current session.
 * `prompt`: REQUIRED. A string containing the submitted user prompt.
 
@@ -436,6 +436,21 @@ For each event in Table 1, this section describes observable information, suppor
 * `session_duration`: OPTIONAL. A numeric value representing the total active runtime of the session.
 * `total_token_usage`: OPTIONAL. An object capturing cumulative token consumption across the session.
 
+## Hook Failure Handling
+
+Hook failures can affect security enforcement and audit coverage. Two common handling policies are:
+
+* Fail-open: Allow the operation or subsequent processing to continue when a hook fails. This preserves availability but may bypass security checks.
+
+* Fail-closed: Block the operation or subsequent processing when a hook fails. This prevents unchecked operations but may interrupt legitimate workflows.
+
+Based on existing implementation practices listed in Table 1, the choice depends on the hook's purpose and the consequences of failure:
+
+* Security-critical hooks SHOULD fail closed: Any hook involved in input defense, permission validation, pre-execution interception of sensitive operations, or subagent spawning that could lead to privilege escalation MUST block subsequent operations if it fails. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure. Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.
+
+* Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations. Typical events includes Session Start, After Model Response, Before / After Context Compaction, Subagent Completion, After tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.
+
+
 # Gateway EP
 
 ## Summary of Gateway EP Hooks
@@ -479,19 +494,7 @@ For each event in Table 1, this section describes observable information, suppor
 
 
 
-# Hook Failure Handling
 
-Hook failures can affect security enforcement and audit coverage. Two common handling policies are:
-
-* Fail-open: Allow the operation or subsequent processing to continue when a hook fails. This preserves availability but may bypass security checks.
-
-* Fail-closed: Block the operation or subsequent processing when a hook fails. This prevents unchecked operations but may interrupt legitimate workflows.
-
-Based on existing implementation practices, such as OpenClaw, Cursor, and Claude Code, the choice depends on the hook's purpose and the consequences of failure:
-
-* Security-critical hooks SHOULD fail closed: These include hooks enforcing input security checks, model request inspection, tool invocation, permission decisions, sensitive file access, and extension installation. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure.
-
-* Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection, and file modification auditing. Failure to collect audit information should not normally interrupt legitimate operations.
 
 # Security Considerations {#security}
 
