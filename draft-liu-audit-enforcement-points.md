@@ -445,8 +445,7 @@ Based on existing implementation practices listed in Table 1, the choice depends
 
 
 # Gateway EP
-Gateway EPs proxy requests and responses between clients and agents, and between agents and models, tools or other agents. They observe traffic passing through them, apply controls before forwarding, and generate
-audit records.
+Gateway EPs proxy requests and responses between clients and agents, and between agents and models, tools or other agents. They observe traffic passing through them, apply controls before forwarding, and generate audit records.
 
 ##  Critical Events and Corresponding Audit Record Claims
 
@@ -543,37 +542,38 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 
 ## Critical Event and Corresponding Audit Record Claims
 
+The following claims apply to all events:
+* `process_id`: REQUIRED. An integer identifying the current process.
+
 1. **Process Creation:** Expose the identifiers of the newly created process and its parent. Allow denying process creation.
 
-* `process_id`: REQUIRED. An integer identifying the newly created process.
+
 * `parent_process_id`: REQUIRED. An integer identifying its parent process.
 
 2. **Before Program Execution:** Expose the process identifier and the program to be executed. Allow permitting or denying program execution.
 
-* `process_id`: REQUIRED. An integer identifying the process executing the program or being created.
 * `executable_path`: OPTIONAL. A string specifying the executable path.
 
 3. **Before File Access:** Expose the requested file operation and the target file. Allow permitting or denying the operation.
 
-* `process_id`: REQUIRED. An integer identifying the current process.
+
 * `operation`: REQUIRED. A string with the value "open" or "read".
 * `file_path`: OPTIONAL. A string specifying the target file path.
 
 4. **Before File Modification:** Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation
 
-* `process_id`: REQUIRED. An integer identifying the current process.
+
 * `operation`: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".
 * `file_path`: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.
 * `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
 
 5. **Before Access to Another Process:** Expose the identity of the process being accessed. Allow permitting or denying access.
 
-* `process_id`: REQUIRED. An integer identifying the current process.
 * `target_process_id`: REQUIRED. An integer identifying the target process, or the process owning the target thread.
 
 6. **Process Exit:** Expose the identifier of the exiting process.
 
-* `process_id`: REQUIRED. An integer identifying the exiting process.
+
 
 
 
