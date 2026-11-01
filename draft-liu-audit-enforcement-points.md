@@ -37,7 +37,6 @@ normative:
  RFC8174:
 
 informative:
-informative:
   ClaudeCodeHooks:
     title: "Claude Code Hooks"
     target: https://code.claude.com/docs/en/hooks
@@ -343,6 +342,7 @@ For each event in Table 1, this section describes observable information, suppor
 
 9. **Subagent Completion:** Expose subagent information and its final response. Allow requesting continued execution.
 
+* `session_id`: REQUIRED. A string identifying the current session.
 * `agent_id`: REQUIRED. A string identifying the subagent.
 * `agent_type`: REQUIRED. A string indicating the subagent type.
 * `last_assistant_message`: OPTIONAL. A string containing the subagent's last message.
@@ -350,53 +350,91 @@ For each event in Table 1, this section describes observable information, suppor
 
 10. **Before Tool Use:** Expose the tool name, invocation arguments, and tool call identifier. Allow approving, denying, or modifying tool invocations before execution.
 
+* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_name`: REQUIRED. A string identifying the tool to be invoked.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `tool_use_id`: OPTIONAL. A string identifying the tool invocation.
 
 11. **Permission Request:** Expose the tool name and invocation arguments associated with a permission request. Allow approving or denying the requested operation.
-
+* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_name`: REQUIRED. A string identifying the tool requesting permission.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 
 
 12. **Permission Denied:** Expose the tool name, invocation arguments, and reason for a denied operation.
-
+* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_name`: REQUIRED. A string identifying the tool whose invocation was denied.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `reason`: OPTIONAL. A string indicating why the invocation was denied.
 
-13. **After Tool Use:** Expose the tool name, invocation arguments, and execution result. Allow modifying or withholding the result before subsequent model processing, where supported.
-
+13. **After Tool Use:** Expose the tool name, invocation arguments, and execution result. Allow modifying or withholding the result before subsequent model processing.
+* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_name`: REQUIRED. A string identifying the invoked tool.
 * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 * `tool_response`: OPTIONAL. The tool execution result. Depending on the tool, this may be a string containing file content, an object containing command output and exit status, or an array of query results.
 
-* **Tool Batch Completion:** Expose the tool calls in a completed batch, including their arguments and results.
-
+14. **Tool Batch Completion:** Expose the tool calls in a completed batch, including their arguments and results.
+* `session_id`: REQUIRED. A string identifying the current session.
 * `tool_calls`: REQUIRED. An array of objects describing the tool calls in the batch. Each object contains:
   * `tool_name`: REQUIRED. A string identifying the invoked tool.
   * `tool_input`: REQUIRED. An object containing the tool's input parameters.
   * `tool_use_id`: REQUIRED. A string identifying the tool invocation.
   * `tool_response`: OPTIONAL. The tool execution result, represented as a string, array, or object depending on the implementation.
 
-* **Post Tool Use Failure:** Expose failed tool invocation information, including the tool name, invocation arguments, error details, and failure status.
+15. **Post Tool Use Failure:** Expose the tool name, invocation arguments, and error information for a failed tool invocation.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `tool_name`: REQUIRED. A string identifying the tool whose invocation failed.
+* `tool_input`: REQUIRED. An object containing the tool's input parameters.
+* `error`: REQUIRED. A string describing the tool invocation failure.
+* `is_interrupt`: OPTIONAL. A boolean indicating whether the failure was caused by user interruption.
 
-* **Before MCP Execution:** Expose MCP invocation information, including the MCP server, tool name, and invocation arguments. Allow EPs to approve or deny MCP tool execution before invocation.
+16. **Before MCP Execution:** Expose the MCP server name, tool name, and invocation arguments. Allow approving or denying MCP tool execution before invocation.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
+* `tool_name`: REQUIRED. A string identifying the MCP tool to be invoked.
+* `tool_input`: REQUIRED. An object containing the tool's input parameters.
 
-* **After MCP Execution:** Expose MCP execution information, including the MCP server, tool name, and execution results. Allow EPs to modify or replace MCP results before subsequent processing.
 
-* **Before Command Execution:** Expose command execution information, including the command and working directory. Allow EPs to permit, deny, or request user confirmation before command execution.
+17. **After MCP Execution:** Expose the MCP server name, tool name, invocation arguments, and execution result. Allow modifying or replacing the result before subsequent processing.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
+* `tool_name`: REQUIRED. A string identifying the invoked MCP tool.
+* `tool_input`: REQUIRED. An object containing the tool's input parameters.
+* `tool_response`: OPTIONAL. The tool execution result, represented as a string, object, or array depending on the tool.
 
-* **After Command Execution:** Expose command execution results, including the executed command, captured output, exit status, and execution duration.
+18. **Before Command Execution:** Expose the command and working directory. Allow permitting, denying, or requesting user confirmation before command execution.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `command`: REQUIRED. A string containing the command to be executed.
+* `cwd`: OPTIONAL. A string specifying the current working directory.
 
-* **Before File Access:** Expose file access information, including the file path and requested file content. Allow EPs to permit or deny file access before the content is provided to the agent.
+19. **After Command Execution:** Expose the executed command and captured output.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `command`: REQUIRED. A string containing the executed command.
+* `output`: OPTIONAL. A string containing the captured command output.
 
-* **After File Modification:** Expose file modification information, including the file path and changes made, such as the original and modified text.
+20. **Before File Access:** Expose file access information, including the file path and requested file content. Allow permitting or denying file access before the content is provided to the agent.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `file_path`: REQUIRED. A string specifying the path of the file being accessed.
+* `requested_content`: OPTIONAL. A string or object containing the content of the file requested by the agent.
 
-* **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow EPs to request additional processing or continued execution before the agent terminates.
+21. **After File Modification:** Expose file modification information, including the file path and changes made, such as the original and modified text.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `file_path`: REQUIRED. A string specifying the path of the modified file.
+* `edits`: REQUIRED. An array of objects describing the specific changes made, where each object contains:
+  * `old_string`: REQUIRED. A string containing the original text segment before modification.
+  * `new_string`: REQUIRED. A string containing the replacement text segment after modification.   
 
-* **Session End:** Expose session termination information, including the session identifier, termination reason, and session duration.
+22. **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.
+* `session_id`: REQUIRED. A string identifying the current session.
+* `stop_reason`: REQUIRED. A string specifying why the agent intends to stop (e.g., "end_turn", "task_completed", "max_tokens", "user_interrupt").
+* `last_assistant_message`: OPTIONAL. A string or message object containing the final answer, summary, or response text generated by the agent prior to stopping.
+* `stop_hook_active`: OPTIONAL. A boolean indicating whether this stop event was triggered during a re-entrant evaluation loop, used to prevent infinite hook recursion.
+
+23. **Session End:** Expose session termination information, including the session identifier, termination reason, and session duration.
+* `session_id`: REQUIRED. A string identifying the closed session.
+* `reason`: REQUIRED. A string indicating the precise cause of session termination (e.g., "user_exit", "clear_context", "timeout", "auth_logout", "fatal_error").
+* `session_duration`: OPTIONAL. A numeric value representing the total active runtime of the session.
+* `total_token_usage`: OPTIONAL. An object capturing cumulative token consumption across the session.
 
 # Gateway EP
 
