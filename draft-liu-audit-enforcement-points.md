@@ -93,112 +93,72 @@ This document identifies key enforcement points (EPs) for agents, specifying the
 
 # Introduction {#intro}
 
-Agents increasingly act on behalf of users across multiple services and administrative domains. Their activities span users, other agents, models, tools, and hosts, but the audit information is distributed across participants, limiting visibility into the entire interaction chain.
 
-Security products and components deployed along the interaction chain can observe agent activities, enforce security controls, and provide audit information. For example, agent gateways can inspect requests and responses and enforce access policies; model gateways can inspect model requests and responses; MCP proxies can inspect tool calls and results; and EDR systems and sandbox monitoring components can monitor host operations and restrict unauthorized operations. In this document, these products and components serve as enforcement points (EPs), each covering a different set of agent activities and providing corresponding audit records. Agent implementations may expose hooks at different stages to enable these capabilities.
+智能体审计需要获取运行过程中的信息，而这些信息主要由不同类型的执行点（EP）通过观测和干预提供。
+Agents increasingly act on behalf of users across multiple services and administrative domains. Auditing their activities requires runtime information, primarily provided by enforcement points (EPs) that observe and, where supported, intervene in agent activities. These EPs are distributed across the interaction chain, each covering a different set of activities and providing corresponding audit records. 
 
-This document classifies EPs into three categories based on the activities they cover: agent interaction, model and tool invocation, and host-level operation. For each category, it describes how hooks enable EPs to observe and, where supported, intervene in agent activities, as well as the corresponding audit records EP provide. This analysis is a prerequisite for identifying the audit records needed across participating domains and understanding the coverage and limitations of the available evidence.
+案例
 
-智能体审计需要获取运行过程中的信息，而这些信息主要由不同类型的执行点（EP）通过可观测性提供。
-
-部分执行点还具备干预能力，其干预行为和执行结果同样需要纳入审计。
-
-由于不同执行点覆盖的活动范围不同，需要识别各类 EP 的观测和干预能力，明确它们能够提供哪些审计信息，以及各自的局限性。
+由于不同执行点覆盖的活动范围不同，需要明确它们能够提供哪些审计信息，以及各自的局限性。
+This document considers three categories of EPs: Agent Client EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide and their limitations, providing a basis for identifying the records needed across participating domains and understanding the coverage of the available evidence.
 
 # Conventions and Definitions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-Enforcement Point (EP): A logical entity that observes a defined set of agent activities and may intervene in these activities or their subsequent processing, including by blocking or modifying them, and generates corresponding audit records.
+Enforcement Point (EP): A logical entity or network element that observe agent activities, enforces security controls, and generates corresponding audit records.
 
-Observability: A hook provides information about a specific stage of an agent activity for audit recording, such as tool invocation arguments, execution results, error information, or execution status.
+Audit Record: A record of the observable behavior of agents, including user intent, agent or tool interactions, invoked or declined actions, exchanged data, and resulting outcomes across trust boundaries.
 
-Interventability: A hook allows EP to affect an agent activity or its subsequent processing, including by blocking or cancelling the activity, modifying its parameters or content, or changing information passed to subsequent processing.
-
-Audit Record:
+Hook：A mechanism exposed by software or an operating system at a defined execution point to enable observation and, where supported, intervention.
 
 # Agent Workflows and Enforcement Points
 
-## Agent Workflow
-
-Figure 1 illustrates a typical agent workflow.
+Figure 1 illustrates a typical agent workflow and the and the locations of the three EP categories. 
 
 ~~~
-+----------------+       +----------------+ (2)   +----------------+
-|                |       |                |------>| Large Language |
-|                |       |                |<------| Model (LLM)    |
-|                | (1)   |                | (3)   +----------------+
-|                |------>|                |
-|                |       |                | (4)   +----------------+
-|  User/System   |       |      Agent     |------>|     Tools      |
-|                |       |                |<------|                |
-|                |<------|                | (5)   +----------------+
-|                |  (10) |                |
-|                |       |                | (6)   +----------------+
-|                |       |                |------>|  Other Agents  |
-|                |       |                |<------|                |
-+----------------+       +---|--------^---+ (7)   +----------------+
-                             |        |
-                          (8)|        |(9)
-+----------------------------v--------+----------------------------+
-|                               Host                               |
-+------------------------------------------------------------------+
++---------+      +-------+     +------+-(2) +--------+    +------+ 
+|         |      |       |     |      |-----|        +--->| LLM  | 
+|         |      |       |     |      |<----|        +----|      | 
+|         | (1)  |       |     |      | (3) |        |    +------+ 
+|         |------+       +----->      |     |        |             
+|         |      |       |     |      | (4) |        |    +------+ 
+|   User  |      |Gateway|     | Agent|-----|Gateway +--->|Tools | 
+| /System |      |  EP   |     |(Agent|<----|   EP   +----|      | 
+|         |<-----+Inbound+-----|Client| (5) |Outbound|    +------+ 
+|         | (10) |       |     |  EP) |     |        |             
+|         |      |       |     |      | (6) |        |    +------+ 
+|         |      |       |     |      |-----|        +--->|Other | 
+|         |      |       |     |      |<----|        +----|Agents| 
++---------+      +-------+     +--+-^-- (7) +--------+    +------+ 
+                                  | |                              
+                               (8)| |(9)                           
++---------------------------------v-------------------------------+
+|                           Host (Host EP)                        |
++-----------------------------------------------------------------+
 ~~~
-*Figure 1. Agent Workflow*
+*Figure 1. Agent Workflow and EPs*
 
-1. (Optional) The User or System provides a request or instruction to the AI Agent.
-2. The AI Agent provides context to the LLM.
-3. The LLM returns output to the AI Agent to support the selection of subsequent actions.
-4. The AI Agent invokes one or more Tools.
-5. The invoked endpoints return results to the AI Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2-5 until the task is completed.
-6. (Optional) The AI Agent delegates tasks to or exchanges requests with other agents.
-7. (Optional) Other agents return responses or task execution results to the AI Agent.
-8. (Optional) The AI Agent perform operations on the Host.
-8. (Optional) The Host provides corresponding results, status, or errors.
-9. (Optional) The AI Agent returns a response to the User or System, or requests additional input.
+1. (Optional) The User or System provides a request or instruction to the Agent.
+2. The Agent provides context to the LLM.
+3. The LLM returns output to the Agent to support the selection of subsequent actions.
+4. The Agent invokes one or more tools.
+5. The tools return results to the Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2-5 as needed.
+6. (Optional) The Agent delegates tasks to or exchanges requests with other agents.
+7. (Optional) Other Agents return responses or task execution results to the Agent.
+8. (Optional) The Agent performs operations on the host.
+8. (Optional) The host provides corresponding results, status, or errors.
+9. (Optional) The Agent returns a response to the User or System, or requests additional input.
 
-
-## Enforcement Point Categories
-
-Enforcement Points (EPs) provide visibility into and control over agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and EDR EPs.
+Enforcement Points (EPs) provide visibility into and control over the above agent activities. They may be located within the agent client, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and Host EPs.
 
 * Agent Client EPs：EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
 
 * Gateway EPs: EPs deployed in the inbound communication paths between users/systems and agents, and the outbound communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.
 
-* EDR EPs: EPs running on the hosts or endpoints where agents execute. They monitor and control agent-related processes, command execution, file access, and other system operations.
+* Host EPs: EPs running on the hosts or endpoints where agents execute. They monitor and control agent-related processes, command execution, file access, and other system operations.
 
-~~~
-+----------------------------------------------------------------------+
-|                               Agent                                  |
-+------^--------------^-------------^-------------^-------------^------+
-       |              |             |             |             |
-       |        +-----+-------------+-------------+-------------+------+
-       |        |                    Agent-native EP                   |
-       |        +-----+-------------+-------------+-------------+------+
-       |              |             |             |             |
-+------+--------------+-------------+-------------+-----+ +-----+------+
-|                        Gateway EP                     | |  EDR EP    |
-+------+--------------+-------------+-------------+-----+ +-----+------+
-       |              |             |             |             |
-+------v-----+  +-----v-----+ +-----v-----+ +-----v-----+ +-----v------+
-|Other Agents|  |User/System| |   LLM     | |   Tools   | |    Host    |
-+------------+  +-----------+ +-----------+ +-----------+ +------------+
-~~~
-*Figure 2. Enforcement Points for Agents*
-
-
-
-1. (Optional) The User or System provides a request or instruction to the AI Agent.
-2. The AI Agent provides context to the LLM.
-3. The LLM returns output to the AI Agent to support the selection of subsequent actions.
-4. The AI Agent invokes one or more Tools.
-5. The invoked endpoints return results to the AI Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2-5 until the task is completed.
-6. (Optional) The AI Agent or its Tools perform operations on the Host.
-7. (Optional) The Host provides corresponding results, status, or errors.
-8. (Optional) The AI Agent returns a response to the User or System, or requests additional input.
-
-The three EP categories cover different parts of this interaction chain. The Agent Interaction EP covers the user/system-agent interactions in steps 1 and 8. The Model and Tool Invocation EP covers the model and tool interactions in steps 2-5. The Host-level Operation EP covers the host-level operations and their corresponding results in steps 6 and 7.
+Each category provides audit records within its observation and intervention scope. Their coverage may overlap, but no single EP necessarily observes the entire interaction chain.
 
 
 # Agent Client EP
