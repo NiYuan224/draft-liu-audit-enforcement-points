@@ -15,9 +15,9 @@ Abstract
 
    Agent auditing relies on distributed enforcement points (EPs) to
    observe and intervene in agent activities.  This document analyzes
-   Agent Client, Gateway, and Host EPs by detailing their coverage and
-   audit data.  This helps to define the specific capabilities of
-   different EPs and evaluate the overall evidence coverage.
+   Agent, Gateway, and Host EPs by detailing their coverage and audit
+   data.  This provides a basis for understanding the capabilities of
+   different EPs and evaluating overall audit evidence coverage.
 
 About This Document
 
@@ -74,15 +74,15 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Agent Workflows and Enforcement Points
-   4.  Agent Client EP
-     4.1.  Summary of Agent Client EP Hooks
+   4.  Agent EP
+     4.1.  Summary of Agent EP Hooks
      4.2.  Critical Events and Corresponding Audit Record Schema
      4.3.  Hook Failure Handling
    5.  Gateway EP
      5.1.  Critical Events and Corresponding Audit Record Schema
    6.  Host EP
      6.1.  Summary of Host EP Hooks
-     6.2.  Critical Event and Corresponding Audit Record Schema
+     6.2.  Critical Events and Corresponding Audit Record Schema
    7.  Security Considerations
    8.  IANA Considerations
    9.  References
@@ -102,16 +102,16 @@ Table of Contents
    records.
 
    To support runtime monitoring and auditing, industry solutions record
-   events at the agent client, gateway, and host layers: client hooks
+   events at the agent client, gateway, and host layers: agent hooks
    expose agent lifecycle events and tool calls
    [ClaudeCodeHooks][CursorHooks][HooksSecurity]; gateways inspect
    requests and responses and record access decisions and content
-   filtering results[LiteLLMLogging]; Endpoint Detection and Response
-   (EDR) systems monitor process execution, file access, and network
+   filtering results[LiteLLMLogs]; Endpoint Detection and Response (EDR)
+   systems monitor process execution, file access, and network
    connections[DefenderEDR].
 
-   This document considers three categories of EPs: Agent Client EPs,
-   Gateway EPs, and Host EPs.  For each category, it describes the audit
+   This document considers three categories of EPs: Agent EPs, Gateway
+   EPs, and Host EPs.  For each category, it describes the audit
    information EPs can provide, providing a basis for identifying the
    records across participating domains and understanding the coverage
    of the available evidence.
@@ -130,7 +130,7 @@ Table of Contents
    [AUDIT-CHARTER].
 
    Enforcement Point (EP): A logical entity or network element that
-   observe agent activities, enforces security controls, and generates
+   observes agent activities, enforces security controls, and generates
    corresponding audit records.
 
    Audit Record: A record of the observable behavior of agents,
@@ -144,74 +144,61 @@ Table of Contents
 
 3.  Agent Workflows and Enforcement Points
 
-   Figure 1 illustrates a typical agent workflow and the and the
-   locations of the three EP categories.
+   Figure 1 illustrates a typical agent workflow and the locations of
+   the three EP categories.  The interactions shown are illustrative and
+   may occur in different sequences and multiple times depending on the
+   agent workflow.
 
-   +---------+      +-------+     +------+-(2) +--------+    +------+
-   |         |      |       |     |      |-----|        +--->| LLM  |
-   |         |      |       |     |      |<----|        +----|      |
-   |         | (1)  |       |     |      | (3) |        |    +------+
-   |         |------+       +----->      |     |        |
-   |         |      |       |     |      | (4) |        |    +------+
-   |   User  |      |Gateway|     | Agent|-----|Gateway +--->|Tools |
-   | /System |      |  EP   |     |(Agent|<----|   EP   +----|      |
-   |         |<-----+Inbound+-----|Client| (5) |Outbound|    +------+
-   |         | (10) |       |     |  EP) |     |        |
-   |         |      |       |     |      | (6) |        |    +------+
-   |         |      |       |     |      |-----|        +--->|Other |
-   |         |      |       |     |      |<----|        +----|Agents|
-   +---------+      +-------+     +--+-^-- (7) +--------+    +------+
-                                     | |
-                                  (8)| |(9)
-   +---------------------------------v-------------------------------+
-   |                           Host (Host EP)                        |
-   +-----------------------------------------------------------------+
+                              +-----------+
+                              |           |
+   +------------------+ (1)   |           |        +------------------+
+   |                  +-------+           +-------->       LLM        |
+   |                  <-------+           +--------+                  |
+   |                  | (2)   |           |        +------------------+
+   |                  | (3)   |           |        +------------------+
+   |   Client Agent   +-------+   Gateway +------->|      Tools       |
+   |    (Agent EP)    <-------+     EP    +--------+                  |
+   |                  | (4)   |           |        +------------------+
+   |                  | (5)   |           |        +------------------+
+   |                  +-------+           +-------->   Server Agent   |
+   |                  |<------+           +--------+    (Agent EP)    |
+   +------------------+ (6)   |           |        +------------------+
+   |   Host(Host EP)  |       |           |        |  Host (Host EP)  |
+   +------------------+       |           |        +------------------+
+                              |           |
+                              |           |
+                              +-----------+
 
    _Figure 1.  Agent Workflow and EPs_
 
-   1.   (Optional) The User or System provides a request or instruction
-        to the Agent.
+   1.  The Agent provides context to the LLM.
 
-   2.   The Agent provides context to the LLM.
+   2.  The LLM returns output to the Agent to support the selection of
+       subsequent actions.
 
-   3.   The LLM returns output to the Agent to support the selection of
-        subsequent actions.
+   3.  The Agent invokes one or more tools.
 
-   4.   The Agent invokes one or more tools.
+   4.  The tools return results to the Agent.
 
-   5.   The tools return results to the Agent.  The Agent may provide
-        these results as additional context to the LLM and repeat steps
-        2-5 as needed.
+   5.  The Agent delegates tasks to or exchanges requests with other
+       agents.
 
-   6.   (Optional) The Agent delegates tasks to or exchanges requests
-        with other agents.
-
-   7.   (Optional) Other Agents return responses or task execution
-        results to the Agent.
-
-   8.   (Optional) The Agent performs operations on the host.
-
-   9.   (Optional) The host provides corresponding results, status, or
-        errors.
-
-   10.  (Optional) The Agent returns a response to the User or System,
-        or requests additional input.
+   6.  Other Agents return responses or task execution results to the
+       Agent.
 
    EPs provide visibility into and control over the above agent
-   activities.  They may be located within the agent client, at
-   communication gateways, or on the host where the agent runs.
-   Accordingly, EPs are classified into three categories: Agent Client
-   EPs, Gateway EPs, and Host EPs.
+   activities.  They may be located within the agent, at communication
+   gateways, or on the host where the agent runs.  Accordingly, EPs are
+   classified into three categories: Agent EPs, Gateway EPs, and Host
+   EPs.
 
-   *  Agent Client EPs: EPs integrated into the agent client, using
-      hooks to observe and control agent activities, such as user
-      interactions, model requests, tool calls, and host operations.
+   *  Agent EPs: EPs integrated into the agent, using hooks to observe
+      and control agent activities, such as user interactions, model
+      requests, tool calls, and host operations.
 
-   *  Gateway EPs: EPs deployed in the inbound communication paths
-      between users/systems and agents, and the outbound communication
-      paths between agents and models, tools, and other agents.  They
-      inspect and control requests and responses passing through the
-      gateway.
+   *  Gateway EPs: EPs deployed in the communication paths between
+      agents and models, tools, and other agents.  They inspect and
+      control requests and responses passing through the gateway.
 
    *  Host EPs: EPs running on the hosts or endpoints where agents
       execute.  They monitor and control agent-related processes,
@@ -221,144 +208,124 @@ Table of Contents
    intervention scope.  Their coverage may overlap, but no single EP
    necessarily observes the entire interaction chain.
 
-4.  Agent Client EP
+4.  Agent EP
 
-   Agent Client EPs use client-provided hooks to observe critical agent
-   events, enforce controls where supported, and generate audit records.
+   Agent EPs use agent-provided hooks to observe critical agent events,
+   enforce controls where supported, and generate audit records.
 
-4.1.  Summary of Agent Client EP Hooks
+4.1.  Summary of Agent EP Hooks
 
-   The following table lists selected hook points and representative
-   implementations, ordered by the agent's workflow sequence.
+   The following table lists commonly adopted agent hooks and
+   representative implementations.
 
+   The hooks cover critical events, including session lifecycle
+   management, prompt handling, model requests and responses, subagent
+   management, tool invocation and results, command execution, and file
+   operations. ~~~
+   +--------------------------+----------------------------------------+ |
+   Name | Examples |
+   +--------------------------+----------------------------------------+ |
+   Session Start | Claude Code: SessionStart | | | Cursor:
+   sessionStart | | | GitHub Copilot: sessionStart | | | Hermes Agent:
+   on_session_start | | | OpenClaw: session_start | | | Qwen Code:
+   SessionStart |
+   +--------------------------+----------------------------------------+ |
+   Before Prompt Submit | Claude Code: UserPromptSubmit | | | Cursor:
+   beforeSubmitPrompt | | | Gemini CLI: BeforeAgent | | | GitHub
+   Copilot: userPromptSubmitted | | | Qwen Code: UserPromptSubmit |
+   +--------------------------+----------------------------------------+ |
+   Prompt Expansion | Claude Code: UserPromptExpansion | | | Qwen Code:
+   UserPromptExpansion |
+   +--------------------------+----------------------------------------+ |
+   Before Model Request | Gemini CLI: BeforeModel | | | Hermes Agent:
+   pre_api_request | | | OpenClaw: llm_input |
+   +--------------------------+----------------------------------------+ |
+   After Model Response | Gemini CLI: AfterModel | | | Hermes Agent:
+   post_api_request | | | OpenClaw: llm_output |
+   +--------------------------+----------------------------------------+ |
+   Before Context Compaction| Claude Code: PreCompact | | | Cursor:
+   preCompact | | | Gemini CLI: PreCompress | | | GitHub Copilot:
+   preCompact | | | OpenClaw: before_compaction | | | Qwen Code:
+   PreCompact |
+   +--------------------------+----------------------------------------+ |
+   After Context Compaction | Claude Code: PostCompact | | | Gemini CLI:
+   PostCompress | | | OpenClaw: after_compaction | | | Qwen Code:
+   PostCompact |
+   +--------------------------+----------------------------------------+ |
+   Subagent Start | Claude Code: SubagentStart | | | Cursor:
+   subagentStart | | | GitHub Copilot: subagentStart | | | Hermes Agent:
+   subagent_start | | | OpenClaw: subagent_spawned | | | Qwen Code:
+   SubagentStart |
+   +--------------------------+----------------------------------------+ |
+   Subagent Completion | Claude Code: SubagentStop | | | Cursor:
+   subagentStop | | | GitHub Copilot: subagentStop | | | Hermes Agent:
+   subagent_stop | | | OpenClaw: subagent_ended | | | Qwen Code:
+   SubagentStop |
+   +--------------------------+----------------------------------------+ |
+   Before Tool Use | Claude Code: PreToolUse | | | Cursor:
+   preToolUse | | | Gemini CLI: BeforeTool | | | GitHub Copilot:
+   preToolUse | | | Hermes Agent: pre_tool_call | | | OpenClaw:
+   before_tool_call | | | Qwen Code: PreToolUse |
+   +--------------------------+----------------------------------------+ |
+   Permission Request | Claude Code: PermissionRequest | | | Hermes
+   Agent: pre_approval_request | | | Hermes Agent:
+   post_approval_response | | | Qwen Code: PermissionRequest |
+   +--------------------------+----------------------------------------+ |
+   Permission Denied | Claude Code: PermissionDenied | | | Qwen Code:
+   PermissionDenied |
+   +--------------------------+----------------------------------------+ |
+   After Tool Use | Claude Code: PostToolUse | | | Cursor:
+   postToolUse | | | Gemini CLI: AfterTool | | | GitHub Copilot:
+   postToolUse | | | Hermes Agent: post_tool_call | | | OpenClaw:
+   after_tool_call | | | Qwen Code: PostToolUse |
+   +--------------------------+----------------------------------------+ |
+   Tool Batch Completion | Claude Code: PostToolBatch | | | Qwen Code:
+   PostToolBatch |
+   +--------------------------+----------------------------------------+ |
+   Post Tool Use Failure | Claude Code: PostToolUseFailure | | | Cursor:
+   postToolUseFailure | | | GitHub Copilot: postToolUseFailure | | |
+   Qwen Code: PostToolUseFailure |
+   +--------------------------+----------------------------------------+ |
+   Before MCP Execution | Claude Code: PreToolUse (MCP tools) | | |
+   Cursor: beforeMCPExecution |
+   +--------------------------+----------------------------------------+ |
+   After MCP Execution | Claude Code: PostToolUse (MCP tools) | | |
+   Cursor: afterMCPExecution |
+   +--------------------------+----------------------------------------+ |
+   Before Command Execution | Claude Code: PreToolUse (Bash) | | |
+   Cursor: beforeShellExecution |
+   +--------------------------+----------------------------------------+ |
+   After Command Execution | Claude Code: PostToolUse (Bash) | | |
+   Cursor: afterShellExecution |
+   +--------------------------+----------------------------------------+ |
+   Before File Access | Claude Code: PreToolUse (Read) | | | Cursor:
+   beforeReadFile | | | Cursor: beforeTabFileRead |
+   +--------------------------+----------------------------------------+ |
+   After File Modification | Claude Code: PostToolUse (Write/Edit)| | |
+   Cursor: afterFileEdit | | | Cursor: afterTabFileEdit |
+   +--------------------------+----------------------------------------+ |
+   Agent Completion | Claude Code: Stop | | | Cursor: stop | | | Gemini
+   CLI: AfterAgent | | | GitHub Copilot: agentStop | | | Hermes Agent:
+   post_llm_call | | | OpenClaw: agent_end |
+   +--------------------------+----------------------------------------+ |
+   Session End | Claude Code: SessionEnd | | | Cursor: sessionEnd | | |
+   GitHub Copilot: sessionEnd | | | Hermes Agent:
+   on_session_finalize | | | OpenClaw: session_end | | | Qwen Code:
+   SessionEnd |
    +--------------------------+----------------------------------------+
-   | Name                     | Examples                               |
-   +--------------------------+----------------------------------------+
-   | Session Start            | Claude Code: `SessionStart`            |
-   |                          | Cursor: `sessionStart`                 |
-   |                          | GitHub Copilot: `sessionStart`         |
-   |                          | Hermes Agent: `on_session_start`       |
-   |                          | OpenClaw: `session_start`              |
-   |                          | Qwen Code: `SessionStart`              |
-   +--------------------------+----------------------------------------+
-   | Before Prompt Submit     | Claude Code: `UserPromptSubmit`        |
-   |                          | Cursor: `beforeSubmitPrompt`           |
-   |                          | Gemini CLI: `BeforeAgent`              |
-   |                          | GitHub Copilot: `userPromptSubmitted`  |
-   |                          | Qwen Code: `UserPromptSubmit`          |
-   +--------------------------+----------------------------------------+
-   | Prompt Expansion         | Claude Code: `UserPromptExpansion`     |
-   |                          | Qwen Code: `UserPromptExpansion`       |
-   +--------------------------+----------------------------------------+
-   | Before Model Request     | Gemini CLI: `BeforeModel`              |
-   |                          | Hermes Agent: `pre_api_request`        |
-   |                          | OpenClaw: `llm_input`                  |
-   +--------------------------+----------------------------------------+
-   | After Model Response     | Gemini CLI: `AfterModel`               |
-   |                          | Hermes Agent: `post_api_request`       |
-   |                          | OpenClaw: `llm_output`                 |
-   +--------------------------+----------------------------------------+
-   | Before Context Compaction| Claude Code: `PreCompact`              |
-   |                          | Cursor: `preCompact`                   |
-   |                          | Gemini CLI: `PreCompress`              |
-   |                          | GitHub Copilot: `preCompact`           |
-   |                          | OpenClaw: `before_compaction`          |
-   |                          | Qwen Code: `PreCompact`                |
-   +--------------------------+----------------------------------------+
-   | After Context Compaction | Claude Code: `PostCompact`             |
-   |                          | Gemini CLI: `PostCompress`             |
-   |                          | OpenClaw: `after_compaction`           |
-   |                          | Qwen Code: `PostCompact`               |
-   +--------------------------+----------------------------------------+
-   | Subagent Start           | Claude Code: `SubagentStart`           |
-   |                          | Cursor: `subagentStart`                |
-   |                          | GitHub Copilot: `subagentStart`        |
-   |                          | Hermes Agent: `subagent_start`         |
-   |                          | OpenClaw: `subagent_spawned`           |
-   |                          | Qwen Code: `SubagentStart`             |
-   +--------------------------+----------------------------------------+
-   | Subagent Completion      | Claude Code: `SubagentStop`            |
-   |                          | Cursor: `subagentStop`                 |
-   |                          | GitHub Copilot: `subagentStop`         |
-   |                          | Hermes Agent: `subagent_stop`          |
-   |                          | OpenClaw: `subagent_ended`             |
-   |                          | Qwen Code: `SubagentStop`              |
-   +--------------------------+----------------------------------------+
-   | Before Tool Use          | Claude Code: `PreToolUse`              |
-   |                          | Cursor: `preToolUse`                   |
-   |                          | Gemini CLI: `BeforeTool`               |
-   |                          | GitHub Copilot: `preToolUse`           |
-   |                          | Hermes Agent: `pre_tool_call`          |
-   |                          | OpenClaw: `before_tool_call`           |
-   |                          | Qwen Code: `PreToolUse`                |
-   +--------------------------+----------------------------------------+
-   | Permission Request       | Claude Code: `PermissionRequest`       |
-   |                          | Hermes Agent: `pre_approval_request`   |
-   |                          | Hermes Agent: `post_approval_response` |
-   |                          | Qwen Code: `PermissionRequest`         |
-   +--------------------------+----------------------------------------+
-   | Permission Denied        | Claude Code: `PermissionDenied`        |
-   |                          | Qwen Code: `PermissionDenied`          |
-   +--------------------------+----------------------------------------+
-   | After tool Use           | Claude Code: `PostToolUse`             |
-   |                          | Cursor: `postToolUse`                  |
-   |                          | Gemini CLI: `AfterTool`                |
-   |                          | GitHub Copilot: `postToolUse`          |
-   |                          | Hermes Agent: `post_tool_call`         |
-   |                          | OpenClaw: `after_tool_call`            |
-   |                          | Qwen Code: `PostToolUse`               |
-   +--------------------------+----------------------------------------+
-   | Tool Batch Completion    | Claude Code: `PostToolBatch`           |
-   |                          | Qwen Code: `PostToolBatch`             |
-   +--------------------------+----------------------------------------+
-   | Post Tool Use Failure    | Claude Code: `PostToolUseFailure`      |
-   |                          | Cursor: `postToolUseFailure`           |
-   |                          | GitHub Copilot: `postToolUseFailure`   |
-   |                          | Qwen Code: `PostToolUseFailure`        |
-   +--------------------------+----------------------------------------+
-   | Before MCP Execution     | Claude Code: `PreToolUse` (MCP tools)  |
-   |                          | Cursor: `beforeMCPExecution`           |
-   +--------------------------+----------------------------------------+
-   | After MCP Execution      | Claude Code: `PostToolUse` (MCP tools) |
-   |                          | Cursor: `afterMCPExecution`            |
-   +--------------------------+----------------------------------------+
-   | Before Command Execution | Claude Code: `PreToolUse` (Bash)       |
-   |                          | Cursor: `beforeShellExecution`         |
-   +--------------------------+----------------------------------------+
-   | After Command Execution  | Claude Code: `PostToolUse` (Bash)      |
-   |                          | Cursor: `afterShellExecution`          |
-   +--------------------------+----------------------------------------+
-   | Before File Access       | Claude Code: `PreToolUse` (Read)       |
-   |                          | Cursor: `beforeReadFile`               |
-   |                          | Cursor: `beforeTabFileRead`            |
-   +--------------------------+----------------------------------------+
-   | After File Modification  | Claude Code: `PostToolUse` (Write/Edit)|
-   |                          | Cursor: `afterFileEdit`                |
-   |                          | Cursor: `afterTabFileEdit`             |
-   +--------------------------+----------------------------------------+
-   | Agent Completion         | Claude Code: `Stop`                    |
-   |                          | Cursor: `stop`                         |
-   |                          | Gemini CLI: `AfterAgent`               |
-   |                          | GitHub Copilot: `agentStop`            |
-   |                          | Hermes Agent: `post_llm_call`          |
-   |                          | OpenClaw: `agent_end`                  |
-   +--------------------------+----------------------------------------+
-   | Session End              | Claude Code: `SessionEnd`              |
-   |                          | Cursor: `sessionEnd`                   |
-   |                          | GitHub Copilot: `sessionEnd`           |
-   |                          | Hermes Agent: `on_session_finalize`    |
-   |                          | OpenClaw: `session_end`                |
-   |                          | Qwen Code: `SessionEnd`                |
-   +--------------------------+----------------------------------------+
-   Note: Hooks for which consensus has not been reached are omitted.
-
-   _Table 1.  Agent Client EP Hooks and Examples_
+   Note: Hooks for which consensus has not been reached are omitted. ~~~
+   _Table 1.  Agent EP Hooks and Examples_
 
 4.2.  Critical Events and Corresponding Audit Record Schema
 
-   For each event in Table 1, this section describes observable
-   information, supported interventions, and REQUIRED or OPTIONAL audit
-   record claims.
+   The events and audit record claims in this section are derived from
+   commonly adopted agent hooks documented by Claude Code
+   [ClaudeCodeHooks], Cursor [CursorHooks], GitHub Copilot
+   [CopilotHooks], Qwen Code [QwenCodeHooks], Gemini CLI
+   [GeminiCLIHooks], Hermes Agent [HermesHooks], and OpenClaw
+   [OpenClawHooks].  For each event, this section describes the
+   observable information, supported interventions, and corresponding
+   REQUIRED or OPTIONAL audit record claims.
 
    The following claims apply to all events: * session_id: REQUIRED.  A
    string identifying the current session.
@@ -606,236 +573,91 @@ Table of Contents
       of sensitive operations, or subagent spawning that could lead to
       privilege escalation MUST block subsequent operations if it fails.
       Failure to perform required checks may lead to unauthorized
-      operations or sensitive information exposure.  Typical events
-      include Before Prompt Submit, Before Model Request, Subagent
-      Start, Before Tool Use, Before MCP Execution, Before Command
-      Execution, Before File Access, Permission Request, etc.
+      operations or sensitive information exposure.
+
+      -  Typical events include Before Prompt Submit, Before Model
+         Request, Subagent Start, Before Tool Use, Before MCP Execution,
+         Before Command Execution, Before File Access, Permission
+         Request, etc.
 
    *  Observation-only hooks SHOULD generally fail open: These include
       hooks used only for session lifecycle monitoring, invocation
       completion logging, context compaction monitoring, command
       execution result collection.  Failure to collect audit information
-      should not normally interrupt legitimate operations.  Typical
-      events includes Session Start, After Model Response, Before /
-      After Context Compaction, Subagent Completion, After tool Use,
-      After MCP Execution, After Command Execution, Tool Batch
-      Completion, Post Tool Use Failure, etc.
+      should not normally interrupt legitimate operations.
+
+      -  Typical events include Session Start, After Model Response,
+         Before and After Context Compaction, Subagent Completion, After
+         Tool Use, After MCP Execution, After Command Execution, Tool
+         Batch Completion, Post Tool Use Failure, etc.
 
 5.  Gateway EP
 
-   Gateway EPs proxy requests and responses between clients and agents,
-   and between agents and models, tools or other agents.  They observe
-   traffic passing through them, apply controls before forwarding, and
-   generate audit records.
+   Gateway EPs proxy requests and responses between agents and external
+   models, tools, or other agents.  They inspect traffic, apply access
+   controls and content policies, and generate corresponding audit
+   records.
 
 5.1.  Critical Events and Corresponding Audit Record Schema
 
-   1.  *Before Inbound Request Forwarding:* Expose the destination agent
-       and incoming request.  Allow permitting or denying forwarding and
-       modifying request content.
+   The following events and audit record claims are derived from access
+   logging and audit practices in Agentgateway [AgentgatewayLogs], Kong
+   AI Gateway [KongAILogs], Envoy Gateway [EnvoyAccessLogs], and LiteLLM
+   [LiteLLMLogs].
 
-   *  request_id: REQUIRED.  A string identifying this inbound request
-      to the destination agent.
+   1.  *Before Request Forwarding:* Expose request information,
+       including the caller, destination, protocol, and operation.
+       Allow permitting or denying request forwarding and modifying
+       request content.
 
-   *  caller_id: OPTIONAL.  A string identifying the authenticated
-      caller of this inbound request.
+   *  request_id: REQUIRED.  A string identifying the request.
 
-   *  agent: REQUIRED.  A string identifying the destination agent by
-      its configured name or identifier.
+   *  caller: OPTIONAL.  A string identifying the entity initiating the
+      request, such as an authenticated user or agent.
 
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this request to the destination agent.
+   *  destination: OPTIONAL.  A string identifying the destination of
+      the request, such as a model, tool, agent, or service endpoint.
 
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this request before forwarding.
+   *  protocol: OPTIONAL.  A string identifying the protocol, such as
+      "HTTP", "MCP", or "A2A".
 
-   *  reason: OPTIONAL.  A string explaining why this request was
-      blocked or modified.
+   *  operation: OPTIONAL.  A string identifying the requested
+      operation, such as a model operation, MCP method, or A2A method.
 
-   *  request_body: OPTIONAL.  The incoming request content.
+   *  action: OPTIONAL.  A string indicating the policy action, such as
+      "allow", "deny", "mask", or "reject".
 
-   1.  *Before Model Request Forwarding:* Expose the requested model and
-       model input.  Allow permitting or denying forwarding and
-       modifying request content.
+   *  action_reason: OPTIONAL.  A string explaining the policy action.
 
-   *  request_id: REQUIRED.  A string identifying this model request.
-      Separate model requests within the same agent workflow use
-      different identifiers.
+   *  request_body: OPTIONAL.  The request content.
 
-   *  caller_id: OPTIONAL.  A string identifying the authenticated
-      caller of this model request.
-
-   *  model: REQUIRED when identifiable from the request or gateway
-      configuration.  A string identifying the requested model or
-      configured model alias.
-
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this request to the model service.
-
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this model request before forwarding.
-
-   *  reason: OPTIONAL.  A string explaining why this model request was
-      blocked or modified.
-
-   *  request_body: OPTIONAL.  The model request content, including
-      messages and supplied parameters.
-
-   1.  *Before Model Response Forwarding:* Expose the model response.
-       Allow permitting or denying forwarding and modifying the response
-       content.
+   1.  *Before Response Forwarding:* Expose response information and
+       execution outcomes.  Allow permitting or denying response
+       forwarding and modifying response content.
 
    *  request_id: REQUIRED.  A string matching the identifier recorded
-      for the corresponding model request.
+      for the corresponding request.
 
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this model response to the caller.
+   *  status: OPTIONAL.  A string or integer indicating the outcome of
+      the request, such as an HTTP status code, an RPC error code, or an
+      A2A task state.
 
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this model response before forwarding.
+   *  action: OPTIONAL.  A string indicating the action taken by the
+      gateway, such as "allow", "deny", "mask", or "reject".
 
-   *  reason: OPTIONAL.  A string explaining why this model response was
-      blocked or modified.
+   *  action_reason: OPTIONAL.  A string explaining the policy action.
 
-   *  response_body: OPTIONAL.  The model response content.
+   *  response_body: OPTIONAL.  The response content.
 
-   *  error: OPTIONAL.  Error information reported for the model call.
+   *  error: OPTIONAL.  A string describing an error encountered during
+      request forwarding or response forwarding.
 
-   *  usage: OPTIONAL.  An object containing token usage information.
-
-   *  duration: OPTIONAL.  A numeric value representing the elapsed
-      time, in milliseconds, from forwarding the corresponding model
-      request to receiving the complete model response.
-
-   1.  *Before Tool Request Forwarding:* Expose the requested tool and
-       supplied arguments.  Allow permitting or denying forwarding and
-       modifying tool arguments.
-
-   *  request_id: REQUIRED.  A string identifying this tool request.
-      Separate tool requests within the same agent workflow use
-      different identifiers.
-
-   *  caller_id: OPTIONAL.  A string identifying the authenticated
-      caller of this tool request.
-
-   *  tool_name: REQUIRED when identifiable from the request or gateway
-      configuration.  A string identifying the requested tool.
-
-   *  arguments: OPTIONAL.  An object containing the supplied tool
-      arguments.
-
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this request to the tool service.
-
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this tool request before forwarding.
-
-   *  reason: OPTIONAL.  A string explaining why this tool request was
-      blocked or modified.
-
-   1.  *Before Tool Response Forwarding:* Expose the tool response,
-       including reported errors.  Allow permitting or denying
-       forwarding and modifying or replacing supported response content.
-
-   *  request_id: REQUIRED.  A string matching the identifier recorded
-      for the corresponding tool request.
-
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this tool response to the caller.
-
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this tool response before forwarding.
-
-   *  reason: OPTIONAL.  A string explaining why this tool response was
-      blocked or modified.
-
-   *  result: OPTIONAL.  The returned tool result.
-
-   *  error: OPTIONAL.  Error information reported for the tool call.
-
-   *  duration: OPTIONAL.  A numeric value representing the elapsed
-      time, in milliseconds, from forwarding the corresponding tool
-      request to receiving the complete tool response.
-
-   1.  *Before Outbound Agent Request Forwarding:* Expose the
-       destination agent and outgoing request.  Allow permitting or
-       denying forwarding and modifying or redacting supported request
-       content.
-
-   *  request_id: REQUIRED.  A string identifying this request to
-      another agent.  Separate requests within the same agent workflow
-      use different identifiers.
-
-   *  caller_id: OPTIONAL.  A string identifying the authenticated
-      caller of this outgoing request, rather than an earlier caller
-      merely referenced in the request.
-
-   *  agent: REQUIRED when identifiable from the request or gateway
-      configuration.  A string identifying the destination agent by its
-      configured name or identifier.
-
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this request to the destination agent.
-
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this outgoing agent request before forwarding.
-
-   *  reason: OPTIONAL.  A string explaining why this outgoing agent
-      request was blocked or modified.
-
-   *  request_body: OPTIONAL.  The outgoing agent request content.
-
-   1.  *Before Outbound Agent Response Forwarding:* Expose the called
-       agent's response.  Allow permitting or denying forwarding and
-       modifying or redacting supported response content.
-
-   *  request_id: REQUIRED.  A string matching the identifier recorded
-      for the corresponding outbound agent request.
-
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this agent response to the caller.
-
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this agent response before forwarding.
-
-   *  reason: OPTIONAL.  A string explaining why this agent response was
-      blocked or modified.
-
-   *  response_body: OPTIONAL.  The returned agent response content.
-
-   *  error: OPTIONAL.  Error information reported by the destination
-      agent or its service.
-
-   *  duration: OPTIONAL.  A numeric value representing the elapsed
-      time, in milliseconds, from when the gateway received the
-      corresponding outbound agent request until it received the
-      complete agent response.
-
-   1.  *Before Inbound Response Forwarding:* Expose the agent response
-       to the inbound request.  Allow permitting or denying forwarding
-       and modifying response content.
-
-   *  request_id: REQUIRED.  A string matching the identifier recorded
-      for the corresponding inbound request.
-
-   *  decision: REQUIRED.  A string indicating "allow" or "deny" for
-      forwarding this agent response to the caller.
-
-   *  modified: OPTIONAL.  A boolean indicating whether the gateway
-      modified this agent response before forwarding.
-
-   *  reason: OPTIONAL.  A string explaining why this agent response was
-      blocked or modified.
-
-   *  response_body: OPTIONAL.  The agent response content.
-
-   *  error: OPTIONAL.  Error information reported by the destination
-      agent or its service.
-
-   *  duration: OPTIONAL.  A numeric value representing the elapsed
-      time, in milliseconds, from when the gateway received the
-      corresponding inbound request until it received the complete agent
+   *  duration: REQUIRED.  A numeric value representing the elapsed time
+      from receiving the corresponding request to receiving the complete
       response.
+
+   *  usage: OPTIONAL.  An object containing resource usage information,
+      such as input and output token counts.
 
 6.  Host EP
 
@@ -845,87 +667,77 @@ Table of Contents
 
 6.1.  Summary of Host EP Hooks
 
+   The hooks in Table 2 cover major host-level activities, including
+   process lifecycle management, file operations, network operations,
+   access to other processes, and memory protection changes. ~~~
+   +----------------------+------------------------------------------+ |
+   Name | Examples |
+   +----------------------+------------------------------------------+ |
+   Process Creation | Linux: sched_process_fork | | | Windows: | | |
+   PCREATE_PROCESS_NOTIFY_ROUTINE_EX | | | macOS:
+   ES_EVENT_TYPE_NOTIFY_FORK |
+   +----------------------+------------------------------------------+ |
+   Before Program | Linux LSM: bprm_check_security | | Execution |
+   Windows: | | | PCREATE_PROCESS_NOTIFY_ROUTINE_EX | | | (CreateInfo !=
+   NULL) | | | macOS: ES_EVENT_TYPE_AUTH_EXEC |
+   +----------------------+------------------------------------------+ |
+   Before File Access | Linux LSM: file_open | | | Linux LSM:
+   file_permission (read) | | | Windows:
+   PFLT_PRE_OPERATION_CALLBACK | | | (IRP_MJ_CREATE) | | | Windows:
+   PFLT_PRE_OPERATION_CALLBACK | | | (IRP_MJ_READ) | | | macOS:
+   ES_EVENT_TYPE_AUTH_OPEN |
+   +----------------------+------------------------------------------+ |
+   Before File | Linux LSM: file_permission (write) | | Modification |
+   Linux LSM: inode_unlink | | | Linux LSM: inode_rename | | | Windows:
+   PFLT_PRE_OPERATION_CALLBACK | | | (IRP_MJ_WRITE) | | | Windows:
+   PFLT_PRE_OPERATION_CALLBACK | | | (IRP_MJ_SET_INFORMATION) | | |
+   macOS: ES_EVENT_TYPE_AUTH_UNLINK | | | macOS:
+   ES_EVENT_TYPE_AUTH_RENAME |
+   +----------------------+------------------------------------------+ |
+   After File Operation | Windows: PFLT_POST_OPERATION_CALLBACK | | |
+   (IRP_MJ_CREATE) | | | Windows: PFLT_POST_OPERATION_CALLBACK | | |
+   (IRP_MJ_READ) | | | Windows: PFLT_POST_OPERATION_CALLBACK | | |
+   (IRP_MJ_WRITE) | | | Windows: PFLT_POST_OPERATION_CALLBACK | | |
+   (IRP_MJ_SET_INFORMATION) | | | macOS:
+   ES_EVENT_TYPE_NOTIFY_UNLINK | | | macOS:
+   ES_EVENT_TYPE_NOTIFY_RENAME |
+   +----------------------+------------------------------------------+ |
+   Before Network | Linux LSM: socket_connect | | Operation | Linux LSM:
+   socket_bind | | | Linux LSM: socket_listen | | | Windows WFP:
+   classifyFn | | | FWPM_LAYER_ALE_AUTH_CONNECT_V4/V6 | | | Windows WFP:
+   classifyFn | | | FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4 | | |
+   /V6 | | | Windows WFP: classifyFn | | |
+   FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6 |
+   +----------------------+------------------------------------------+ |
+   Before Access to | Linux LSM: ptrace_access_check | | Another
+   Process | Windows: POB_PRE_OPERATION_CALLBACK | | | (process/thread
+   handles) | | | macOS: ES_EVENT_TYPE_AUTH_GET_TASK |
+   +----------------------+------------------------------------------+ |
+   Before Memory | Linux LSM: file_mprotect | | Protection Change |
+   macOS: ES_EVENT_TYPE_AUTH_MPROTECT |
+   +----------------------+------------------------------------------+ |
+   Process Exit | Linux: sched_process_exit | | | Windows: | | |
+   PCREATE_PROCESS_NOTIFY_ROUTINE_EX | | | (CreateInfo == NULL) | | |
+   macOS: ES_EVENT_TYPE_NOTIFY_EXIT |
    +----------------------+------------------------------------------+
-   | Name                 | Examples                                 |
-   +----------------------+------------------------------------------+
-   | Process Creation     | Linux: sched_process_fork                |
-   |                      | Windows:                                 |
-   |                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |
-   |                      | macOS: ES_EVENT_TYPE_NOTIFY_FORK         |
-   +----------------------+------------------------------------------+
-   | Before Program       | Linux LSM: bprm_check_security           |
-   | Execution            | Windows:                                 |
-   |                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |
-   |                      |   (CreateInfo != NULL)                   |
-   |                      | macOS: ES_EVENT_TYPE_AUTH_EXEC           |
-   +----------------------+------------------------------------------+
-   | Before File Access   | Linux LSM: file_open                     |
-   |                      | Linux LSM: file_permission (read)        |
-   |                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
-   |                      |   (IRP_MJ_CREATE)                        |
-   |                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
-   |                      |   (IRP_MJ_READ)                          |
-   |                      | macOS: ES_EVENT_TYPE_AUTH_OPEN           |
-   +----------------------+------------------------------------------+
-   | Before File          | Linux LSM: file_permission (write)       |
-   | Modification         | Linux LSM: inode_unlink                  |
-   |                      | Linux LSM: inode_rename                  |
-   |                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
-   |                      |   (IRP_MJ_WRITE)                         |
-   |                      | Windows: PFLT_PRE_OPERATION_CALLBACK     |
-   |                      |   (IRP_MJ_SET_INFORMATION)               |
-   |                      | macOS: ES_EVENT_TYPE_AUTH_UNLINK         |
-   |                      | macOS: ES_EVENT_TYPE_AUTH_RENAME         |
-   +----------------------+------------------------------------------+
-   | After File Operation | Windows: PFLT_POST_OPERATION_CALLBACK    |
-   |                      |   (IRP_MJ_CREATE)                        |
-   |                      | Windows: PFLT_POST_OPERATION_CALLBACK    |
-   |                      |   (IRP_MJ_READ)                          |
-   |                      | Windows: PFLT_POST_OPERATION_CALLBACK    |
-   |                      |   (IRP_MJ_WRITE)                         |
-   |                      | Windows: PFLT_POST_OPERATION_CALLBACK    |
-   |                      |   (IRP_MJ_SET_INFORMATION)               |
-   |                      | macOS: ES_EVENT_TYPE_NOTIFY_UNLINK       |
-   |                      | macOS: ES_EVENT_TYPE_NOTIFY_RENAME       |
-   +----------------------+------------------------------------------+
-   | Before Network       | Linux LSM: socket_connect                |
-   | Operation            | Linux LSM: socket_bind                   |
-   |                      | Linux LSM: socket_listen                 |
-   |                      | Windows WFP: classifyFn                  |
-   |                      |   FWPM_LAYER_ALE_AUTH_CONNECT_V4/V6      |
-   |                      | Windows WFP: classifyFn                  |
-   |                      |   FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4  |
-   |                      |   /V6                                    |
-   |                      | Windows WFP: classifyFn                  |
-   |                      |   FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6       |
-   +----------------------+------------------------------------------+
-   | Before Access to     | Linux LSM: ptrace_access_check           |
-   | Another Process      | Windows: POB_PRE_OPERATION_CALLBACK      |
-   |                      |   (process/thread handles)               |
-   |                      | macOS: ES_EVENT_TYPE_AUTH_GET_TASK       |
-   +----------------------+------------------------------------------+
-   | Before Memory        | Linux LSM: file_mprotect                 |
-   | Protection Change    | macOS: ES_EVENT_TYPE_AUTH_MPROTECT       |
-   +----------------------+------------------------------------------+
-   | Process Exit         | Linux: sched_process_exit                |
-   |                      | Windows:                                 |
-   |                      |   PCREATE_PROCESS_NOTIFY_ROUTINE_EX      |
-   |                      |   (CreateInfo == NULL)                   |
-   |                      | macOS: ES_EVENT_TYPE_NOTIFY_EXIT         |
-   +----------------------+------------------------------------------+
+   ~~~ _Table 2.  HOST EP Hooks and Examples_
 
-   _Table 2.  HOST EP Hooks and Examples_
+6.2.  Critical Events and Corresponding Audit Record Schema
 
-6.2.  Critical Event and Corresponding Audit Record Schema
+   The events and audit record claims in this section are derived from
+   operating system hook interfaces and event data structures provided
+   by Linux Security Modules (LSM) [LinuxLSM], Windows kernel callbacks
+   and filtering mechanisms [WindowsKernelHooks], and Apple Endpoint
+   Security [AppleEndpointSecurity].
 
    The following claims apply to all events: * process_id: REQUIRED.  An
-   integer identifying the current process.
+   integer identifying the process associated with the event.
 
    In addition to the common claim above, each event defines its own
    audit record claims to capture event-specific information.
 
    1.  *Process Creation:* Expose the identifiers of the newly created
-       process and its parent.  Allow denying process creation.
+       process and its parent.
 
    *  parent_process_id: REQUIRED.  An integer identifying its parent
       process.
@@ -957,11 +769,48 @@ Table of Contents
    *  destination_path: OPTIONAL.  A string specifying the destination
       path for a rename operation.
 
+   1.  *After File Operation:* Expose information about the completed
+       file operation and the affected file.
+
+   *  operation: OPTIONAL.  A string identifying the completed file
+      operation.
+
+   *  file_path: OPTIONAL.  A string specifying the path of the affected
+      file, or the source path for a rename operation.
+
+   *  destination_path: OPTIONAL.  A string specifying the destination
+      path for a rename operation.
+
+   1.  *Before Network Operation:* Expose the local and remote network
+       endpoints involved in the requested network operation.  Allow
+       permitting or denying the operation where supported by the
+       operating system.
+
+   *  local_endpoint: OPTIONAL.  A string identifying the local network
+      endpoint.
+
+   *  remote_endpoint: OPTIONAL.  A string identifying the remote
+      network endpoint.
+
    1.  *Before Access to Another Process:* Expose the identity of the
        process being accessed.  Allow permitting or denying access.
 
    *  target_process_id: REQUIRED.  An integer identifying the target
       process, or the process owning the target thread.
+
+   1.  *Before Memory Protection Change:* Expose the requested memory
+       protection change, including the affected address range and
+       protection attributes.  Allow permitting or denying the change
+       where supported by the operating system.
+
+   *  address: OPTIONAL.  An integer identifying the starting virtual
+      memory address of the affected range.
+
+   *  size: OPTIONAL.  An integer specifying the size of the affected
+      memory range.
+
+   *  protection: OPTIONAL.  An integer identifying the memory
+      protection attributes to be applied to the affected range.
 
    1.  *Process Exit:* Expose the identifier of the exiting process.  No
        additional event-specific audit record claims are defined.
@@ -995,6 +844,16 @@ Table of Contents
 
 9.2.  Informative References
 
+   [AgentgatewayLogs]
+              "Agentgateway Access Logs", n.d.,
+              <https://agentgateway.dev/docs/standalone/latest/
+              documentation/observability/access-logs/view/>.
+
+   [AppleEndpointSecurity]
+              "Endpoint Security Event Types", n.d.,
+              <https://developer.apple.com/documentation/
+              endpointsecurity/es_event_type_t>.
+
    [AUDIT-CHARTER]
               "Agent Use of Delegation and Interaction Traceability
               (AUDIT) Working Group Charter", n.d.,
@@ -1017,6 +876,11 @@ Table of Contents
               <https://learn.microsoft.com/en-us/defender-endpoint/
               overview-endpoint-detection-response>.
 
+   [EnvoyAccessLogs]
+              "Envoy Gateway Proxy Access Logs", n.d.,
+              <https://gateway.envoyproxy.io/latest/tasks/observability/
+              proxy-accesslog/>.
+
    [GeminiCLIHooks]
               "Gemini CLI Hooks Reference", n.d.,
               <https://geminicli.com/docs/hooks/reference/>.
@@ -1028,9 +892,17 @@ Table of Contents
    [HooksSecurity]
               "HooksSecurity", n.d., <https://hooks.security/>.
 
-   [LiteLLMLogging]
-              "LiteLLM StandardLoggingPayload Specification", n.d.,
-              <https://docs.litellm.ai/docs/proxy/logging_spec>.
+   [KongAILogs]
+              "Kong AI Gateway Audit Log Reference", n.d.,
+              <https://developer.konghq.com/ai-gateway/ai-audit-log-
+              reference/>.
+
+   [LinuxLSM] "Linux Security Modules: General Security Hooks for
+              Linux", n.d., <https://docs.kernel.org/security/lsm.html>.
+
+   [LiteLLMLogs]
+              "LiteLLM Logging", n.d.,
+              <https://docs.litellm.ai/docs/proxy/logging>.
 
    [OpenClawHooks]
               "OpenClaw Plugin Hooks", n.d.,
@@ -1039,6 +911,11 @@ Table of Contents
    [QwenCodeHooks]
               "Qwen Code Hooks", n.d., <https://github.com/QwenLM/qwen-
               code/blob/main/docs/users/features/hooks.md>.
+
+   [WindowsKernelHooks]
+              "Windows Kernel Callbacks and Filtering Mechanisms", n.d.,
+              <https://learn.microsoft.com/en-us/windows-
+              hardware/drivers/ddi/>.
 
 Acknowledgments
 

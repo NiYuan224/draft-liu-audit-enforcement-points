@@ -8,7 +8,7 @@
 <meta content="Chunchi Peter Liu" name="author">
 <meta content="Yuan Ni" name="author">
 <meta content="
-       Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent Client, Gateway, and Host EPs by detailing their coverage and audit data. This helps to define the specific capabilities of different EPs and evaluate the overall evidence coverage. 
+       Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent, Gateway, and Host EPs by detailing their coverage and audit data. This provides a basis for understanding the capabilities of different EPs and evaluating overall audit evidence coverage. 
     " name="description">
 <meta content="xml2rfc 3.34.1" name="generator">
 <meta content="draft-liu-audit-enforcement-points-latest" name="ietf.draft">
@@ -1080,7 +1080,7 @@ svg {
 <h1 id="title">Enforcement Points for Agents</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent Client, Gateway, and Host EPs by detailing their coverage and audit data. This helps to define the specific capabilities of different EPs and evaluate the overall evidence coverage.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent, Gateway, and Host EPs by detailing their coverage and audit data. This provides a basis for understanding the capabilities of different EPs and evaluating overall audit evidence coverage.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1156,10 +1156,10 @@ svg {
             <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-agent-workflows-and-enforce" class="internal xref">Agent Workflows and Enforcement Points</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-agent-client-ep" class="internal xref">Agent Client EP</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-agent-ep" class="internal xref">Agent EP</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
-                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-summary-of-agent-client-ep-" class="internal xref">Summary of Agent Client EP Hooks</a></p>
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-summary-of-agent-ep-hooks" class="internal xref">Summary of Agent EP Hooks</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-critical-events-and-corresp" class="internal xref">Critical Events and Corresponding Audit Record Schema</a></p>
@@ -1184,7 +1184,7 @@ svg {
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-summary-of-host-ep-hooks" class="internal xref">Summary of Host EP Hooks</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-critical-event-and-correspo" class="internal xref">Critical Event and Corresponding Audit Record Schema</a></p>
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-critical-events-and-correspon" class="internal xref">Critical Events and Corresponding Audit Record Schema</a></p>
 </li>
             </ul>
 </li>
@@ -1221,8 +1221,8 @@ svg {
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">Agents increasingly act on behalf of users across multiple services and administrative domains. Auditing their activities requires runtime information, primarily provided by enforcement points (EPs) that observe and, where supported, intervene in agent activities. These EPs are distributed across the interaction chain, each covering a different set of activities and providing corresponding audit records.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">To support runtime monitoring and auditing, industry solutions record events at the agent client, gateway, and host layers: client hooks expose agent lifecycle events and tool calls <span>[<a href="#ClaudeCodeHooks" class="cite xref">ClaudeCodeHooks</a>]</span><span>[<a href="#CursorHooks" class="cite xref">CursorHooks</a>]</span><span>[<a href="#HooksSecurity" class="cite xref">HooksSecurity</a>]</span>; gateways inspect requests and responses and record access decisions and content filtering results<span>[<a href="#LiteLLMLogging" class="cite xref">LiteLLMLogging</a>]</span>; Endpoint Detection and Response (EDR) systems monitor process execution, file access, and network connections<span>[<a href="#DefenderEDR" class="cite xref">DefenderEDR</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This document considers three categories of EPs: Agent Client EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide, providing a basis for identifying the records across participating domains and understanding the coverage of the available evidence.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-2">To support runtime monitoring and auditing, industry solutions record events at the agent client, gateway, and host layers: agent hooks expose agent lifecycle events and tool calls <span>[<a href="#ClaudeCodeHooks" class="cite xref">ClaudeCodeHooks</a>]</span><span>[<a href="#CursorHooks" class="cite xref">CursorHooks</a>]</span><span>[<a href="#HooksSecurity" class="cite xref">HooksSecurity</a>]</span>; gateways inspect requests and responses and record access decisions and content filtering results<span>[<a href="#LiteLLMLogs" class="cite xref">LiteLLMLogs</a>]</span>; Endpoint Detection and Response (EDR) systems monitor process execution, file access, and network connections<span>[<a href="#DefenderEDR" class="cite xref">DefenderEDR</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document considers three categories of EPs: Agent EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide, providing a basis for identifying the records across participating domains and understanding the coverage of the available evidence.<a href="#section-1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1232,7 +1232,7 @@ svg {
       </h2>
 <p id="section-2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">The definitions in this document are based on the Policy Enforcement Point (PEP) definition in <span>[<a href="#RFC3198" class="cite xref">RFC3198</a>]</span> and the audit record concepts described in the proposed AUDIT Working Group Charter <span>[<a href="#AUDIT-CHARTER" class="cite xref">AUDIT-CHARTER</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">Enforcement Point (EP): A logical entity or network element that observe agent activities, enforces security controls, and generates corresponding audit records.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-3">Enforcement Point (EP): A logical entity or network element that observes agent activities, enforces security controls, and generates corresponding audit records.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">Audit Record: A record of the observable behavior of agents, including user intent, agent or tool interactions, invoked or declined actions, exchanged data, and resulting outcomes across trust boundaries.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">Hook: A mechanism exposed by software or an operating system at a defined execution point to enable observation and, where supported, intervention.<a href="#section-2-5" class="pilcrow">¶</a></p>
 </section>
@@ -1242,70 +1242,58 @@ svg {
       <h2 id="name-agent-workflows-and-enforce">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-agent-workflows-and-enforce" class="section-name selfRef">Agent Workflows and Enforcement Points</a>
       </h2>
-<p id="section-3-1">Figure 1 illustrates a typical agent workflow and the and the locations of the three EP categories.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Figure 1 illustrates a typical agent workflow and the locations of the three EP categories. The interactions shown are illustrative and may occur in different sequences and multiple times depending on the agent workflow.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3-2">
 <pre>
-+---------+      +-------+     +------+-(2) +--------+    +------+
-|         |      |       |     |      |-----|        +---&gt;| LLM  |
-|         |      |       |     |      |&lt;----|        +----|      |
-|         | (1)  |       |     |      | (3) |        |    +------+
-|         |------+       +-----&gt;      |     |        |
-|         |      |       |     |      | (4) |        |    +------+
-|   User  |      |Gateway|     | Agent|-----|Gateway +---&gt;|Tools |
-| /System |      |  EP   |     |(Agent|&lt;----|   EP   +----|      |
-|         |&lt;-----+Inbound+-----|Client| (5) |Outbound|    +------+
-|         | (10) |       |     |  EP) |     |        |
-|         |      |       |     |      | (6) |        |    +------+
-|         |      |       |     |      |-----|        +---&gt;|Other |
-|         |      |       |     |      |&lt;----|        +----|Agents|
-+---------+      +-------+     +--+-^-- (7) +--------+    +------+
-                                  | |
-                               (8)| |(9)
-+---------------------------------v-------------------------------+
-|                           Host (Host EP)                        |
-+-----------------------------------------------------------------+
+                           +-----------+
+                           |           |
++------------------+ (1)   |           |        +------------------+
+|                  +-------+           +--------&gt;       LLM        |
+|                  &lt;-------+           +--------+                  |
+|                  | (2)   |           |        +------------------+
+|                  | (3)   |           |        +------------------+
+|   Client Agent   +-------+   Gateway +-------&gt;|      Tools       |
+|    (Agent EP)    &lt;-------+     EP    +--------+                  |
+|                  | (4)   |           |        +------------------+
+|                  | (5)   |           |        +------------------+
+|                  +-------+           +--------&gt;   Server Agent   |
+|                  |&lt;------+           +--------+    (Agent EP)    |
++------------------+ (6)   |           |        +------------------+
+|   Host(Host EP)  |       |           |        |  Host (Host EP)  |
++------------------+       |           |        +------------------+
+                           |           |
+                           |           |
+                           +-----------+
 </pre><a href="#section-3-2" class="pilcrow">¶</a>
 </div>
 <p id="section-3-3"><em>Figure 1. Agent Workflow and EPs</em><a href="#section-3-3" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3-4">
 <li id="section-3-4.1">
-          <p id="section-3-4.1.1">(Optional) The User or System provides a request or instruction to the Agent.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.1.1">The Agent provides context to the LLM.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-3-4.2">
-          <p id="section-3-4.2.1">The Agent provides context to the LLM.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.2.1">The LLM returns output to the Agent to support the selection of subsequent actions.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-3-4.3">
-          <p id="section-3-4.3.1">The LLM returns output to the Agent to support the selection of subsequent actions.<a href="#section-3-4.3.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.3.1">The Agent invokes one or more tools.<a href="#section-3-4.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-3-4.4">
-          <p id="section-3-4.4.1">The Agent invokes one or more tools.<a href="#section-3-4.4.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.4.1">The tools return results to the Agent.<a href="#section-3-4.4.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-3-4.5">
-          <p id="section-3-4.5.1">The tools return results to the Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2-5 as needed.<a href="#section-3-4.5.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.5.1">The Agent delegates tasks to or exchanges requests with other agents.<a href="#section-3-4.5.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-3-4.6">
-          <p id="section-3-4.6.1">(Optional) The Agent delegates tasks to or exchanges requests with other agents.<a href="#section-3-4.6.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="section-3-4.7">
-          <p id="section-3-4.7.1">(Optional) Other Agents return responses or task execution results to the Agent.<a href="#section-3-4.7.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="section-3-4.8">
-          <p id="section-3-4.8.1">(Optional) The Agent performs operations on the host.<a href="#section-3-4.8.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="section-3-4.9">
-          <p id="section-3-4.9.1">(Optional) The host provides corresponding results, status, or errors.<a href="#section-3-4.9.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="section-3-4.10">
-          <p id="section-3-4.10.1">(Optional) The Agent returns a response to the User or System, or requests additional input.<a href="#section-3-4.10.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.6.1">Other Agents return responses or task execution results to the Agent.<a href="#section-3-4.6.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-3-5">EPs provide visibility into and control over the above agent activities. They may be located within the agent client, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and Host EPs.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-5">EPs provide visibility into and control over the above agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent EPs, Gateway EPs, and Host EPs.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-6.1">
-          <p id="section-3-6.1.1">Agent Client EPs: EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
+          <p id="section-3-6.1.1">Agent EPs: EPs integrated into the agent, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.2">
-          <p id="section-3-6.2.1">Gateway EPs: EPs deployed in the inbound communication paths between users/systems and agents, and the outbound communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-6.2.1">Gateway EPs: EPs deployed in the communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.3">
           <p id="section-3-6.3.1">Host EPs: EPs running on the hosts or endpoints where agents execute. They monitor and control agent-related processes, command execution, file access, and other system operations.<a href="#section-3-6.3.1" class="pilcrow">¶</a></p>
@@ -1314,143 +1302,142 @@ svg {
 <p id="section-3-7">Each category provides audit records within its observation and intervention scope. Their coverage may overlap, but no single EP necessarily observes the entire interaction chain.<a href="#section-3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="agent-client-ep">
+<div id="agent-ep">
 <section id="section-4">
-      <h2 id="name-agent-client-ep">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-agent-client-ep" class="section-name selfRef">Agent Client EP</a>
+      <h2 id="name-agent-ep">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-agent-ep" class="section-name selfRef">Agent EP</a>
       </h2>
-<p id="section-4-1">Agent Client EPs use client-provided hooks to observe critical agent events, enforce controls where supported, and generate audit records.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<div id="summary-of-agent-client-ep-hooks">
+<p id="section-4-1">Agent EPs use agent-provided hooks to observe critical agent events, enforce controls where supported, and generate audit records.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="summary-of-agent-ep-hooks">
 <section id="section-4.1">
-        <h3 id="name-summary-of-agent-client-ep-">
-<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-summary-of-agent-client-ep-" class="section-name selfRef">Summary of Agent Client EP Hooks</a>
+        <h3 id="name-summary-of-agent-ep-hooks">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-summary-of-agent-ep-hooks" class="section-name selfRef">Summary of Agent EP Hooks</a>
         </h3>
-<p id="section-4.1-1">The following table lists selected hook points and representative implementations, ordered by the agent's workflow sequence.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-2">
-<pre>
+<p id="section-4.1-1">The following table lists commonly adopted agent hooks and representative implementations.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">The hooks cover critical events, including session lifecycle management, prompt handling, model requests and responses, subagent management, tool invocation and results, command execution, and file operations.
+~~~
 +--------------------------+----------------------------------------+
 | Name                     | Examples                               |
 +--------------------------+----------------------------------------+
-| Session Start            | Claude Code: `SessionStart`            |
-|                          | Cursor: `sessionStart`                 |
-|                          | GitHub Copilot: `sessionStart`         |
-|                          | Hermes Agent: `on_session_start`       |
-|                          | OpenClaw: `session_start`              |
-|                          | Qwen Code: `SessionStart`              |
+| Session Start            | Claude Code: <code>SessionStart</code>            |
+|                          | Cursor: <code>sessionStart</code>                 |
+|                          | GitHub Copilot: <code>sessionStart</code>         |
+|                          | Hermes Agent: <code>on_session_start</code>       |
+|                          | OpenClaw: <code>session_start</code>              |
+|                          | Qwen Code: <code>SessionStart</code>              |
 +--------------------------+----------------------------------------+
-| Before Prompt Submit     | Claude Code: `UserPromptSubmit`        |
-|                          | Cursor: `beforeSubmitPrompt`           |
-|                          | Gemini CLI: `BeforeAgent`              |
-|                          | GitHub Copilot: `userPromptSubmitted`  |
-|                          | Qwen Code: `UserPromptSubmit`          |
+| Before Prompt Submit     | Claude Code: <code>UserPromptSubmit</code>        |
+|                          | Cursor: <code>beforeSubmitPrompt</code>           |
+|                          | Gemini CLI: <code>BeforeAgent</code>              |
+|                          | GitHub Copilot: <code>userPromptSubmitted</code>  |
+|                          | Qwen Code: <code>UserPromptSubmit</code>          |
 +--------------------------+----------------------------------------+
-| Prompt Expansion         | Claude Code: `UserPromptExpansion`     |
-|                          | Qwen Code: `UserPromptExpansion`       |
+| Prompt Expansion         | Claude Code: <code>UserPromptExpansion</code>     |
+|                          | Qwen Code: <code>UserPromptExpansion</code>       |
 +--------------------------+----------------------------------------+
-| Before Model Request     | Gemini CLI: `BeforeModel`              |
-|                          | Hermes Agent: `pre_api_request`        |
-|                          | OpenClaw: `llm_input`                  |
+| Before Model Request     | Gemini CLI: <code>BeforeModel</code>              |
+|                          | Hermes Agent: <code>pre_api_request</code>        |
+|                          | OpenClaw: <code>llm_input</code>                  |
 +--------------------------+----------------------------------------+
-| After Model Response     | Gemini CLI: `AfterModel`               |
-|                          | Hermes Agent: `post_api_request`       |
-|                          | OpenClaw: `llm_output`                 |
+| After Model Response     | Gemini CLI: <code>AfterModel</code>               |
+|                          | Hermes Agent: <code>post_api_request</code>       |
+|                          | OpenClaw: <code>llm_output</code>                 |
 +--------------------------+----------------------------------------+
-| Before Context Compaction| Claude Code: `PreCompact`              |
-|                          | Cursor: `preCompact`                   |
-|                          | Gemini CLI: `PreCompress`              |
-|                          | GitHub Copilot: `preCompact`           |
-|                          | OpenClaw: `before_compaction`          |
-|                          | Qwen Code: `PreCompact`                |
+| Before Context Compaction| Claude Code: <code>PreCompact</code>              |
+|                          | Cursor: <code>preCompact</code>                   |
+|                          | Gemini CLI: <code>PreCompress</code>              |
+|                          | GitHub Copilot: <code>preCompact</code>           |
+|                          | OpenClaw: <code>before_compaction</code>          |
+|                          | Qwen Code: <code>PreCompact</code>                |
 +--------------------------+----------------------------------------+
-| After Context Compaction | Claude Code: `PostCompact`             |
-|                          | Gemini CLI: `PostCompress`             |
-|                          | OpenClaw: `after_compaction`           |
-|                          | Qwen Code: `PostCompact`               |
+| After Context Compaction | Claude Code: <code>PostCompact</code>             |
+|                          | Gemini CLI: <code>PostCompress</code>             |
+|                          | OpenClaw: <code>after_compaction</code>           |
+|                          | Qwen Code: <code>PostCompact</code>               |
 +--------------------------+----------------------------------------+
-| Subagent Start           | Claude Code: `SubagentStart`           |
-|                          | Cursor: `subagentStart`                |
-|                          | GitHub Copilot: `subagentStart`        |
-|                          | Hermes Agent: `subagent_start`         |
-|                          | OpenClaw: `subagent_spawned`           |
-|                          | Qwen Code: `SubagentStart`             |
+| Subagent Start           | Claude Code: <code>SubagentStart</code>           |
+|                          | Cursor: <code>subagentStart</code>                |
+|                          | GitHub Copilot: <code>subagentStart</code>        |
+|                          | Hermes Agent: <code>subagent_start</code>         |
+|                          | OpenClaw: <code>subagent_spawned</code>           |
+|                          | Qwen Code: <code>SubagentStart</code>             |
 +--------------------------+----------------------------------------+
-| Subagent Completion      | Claude Code: `SubagentStop`            |
-|                          | Cursor: `subagentStop`                 |
-|                          | GitHub Copilot: `subagentStop`         |
-|                          | Hermes Agent: `subagent_stop`          |
-|                          | OpenClaw: `subagent_ended`             |
-|                          | Qwen Code: `SubagentStop`              |
+| Subagent Completion      | Claude Code: <code>SubagentStop</code>            |
+|                          | Cursor: <code>subagentStop</code>                 |
+|                          | GitHub Copilot: <code>subagentStop</code>         |
+|                          | Hermes Agent: <code>subagent_stop</code>          |
+|                          | OpenClaw: <code>subagent_ended</code>             |
+|                          | Qwen Code: <code>SubagentStop</code>              |
 +--------------------------+----------------------------------------+
-| Before Tool Use          | Claude Code: `PreToolUse`              |
-|                          | Cursor: `preToolUse`                   |
-|                          | Gemini CLI: `BeforeTool`               |
-|                          | GitHub Copilot: `preToolUse`           |
-|                          | Hermes Agent: `pre_tool_call`          |
-|                          | OpenClaw: `before_tool_call`           |
-|                          | Qwen Code: `PreToolUse`                |
+| Before Tool Use          | Claude Code: <code>PreToolUse</code>              |
+|                          | Cursor: <code>preToolUse</code>                   |
+|                          | Gemini CLI: <code>BeforeTool</code>               |
+|                          | GitHub Copilot: <code>preToolUse</code>           |
+|                          | Hermes Agent: <code>pre_tool_call</code>          |
+|                          | OpenClaw: <code>before_tool_call</code>           |
+|                          | Qwen Code: <code>PreToolUse</code>                |
 +--------------------------+----------------------------------------+
-| Permission Request       | Claude Code: `PermissionRequest`       |
-|                          | Hermes Agent: `pre_approval_request`   |
-|                          | Hermes Agent: `post_approval_response` |
-|                          | Qwen Code: `PermissionRequest`         |
+| Permission Request       | Claude Code: <code>PermissionRequest</code>       |
+|                          | Hermes Agent: <code>pre_approval_request</code>   |
+|                          | Hermes Agent: <code>post_approval_response</code> |
+|                          | Qwen Code: <code>PermissionRequest</code>         |
 +--------------------------+----------------------------------------+
-| Permission Denied        | Claude Code: `PermissionDenied`        |
-|                          | Qwen Code: `PermissionDenied`          |
+| Permission Denied        | Claude Code: <code>PermissionDenied</code>        |
+|                          | Qwen Code: <code>PermissionDenied</code>          |
 +--------------------------+----------------------------------------+
-| After tool Use           | Claude Code: `PostToolUse`             |
-|                          | Cursor: `postToolUse`                  |
-|                          | Gemini CLI: `AfterTool`                |
-|                          | GitHub Copilot: `postToolUse`          |
-|                          | Hermes Agent: `post_tool_call`         |
-|                          | OpenClaw: `after_tool_call`            |
-|                          | Qwen Code: `PostToolUse`               |
+| After Tool Use           | Claude Code: <code>PostToolUse</code>             |
+|                          | Cursor: <code>postToolUse</code>                  |
+|                          | Gemini CLI: <code>AfterTool</code>                |
+|                          | GitHub Copilot: <code>postToolUse</code>          |
+|                          | Hermes Agent: <code>post_tool_call</code>         |
+|                          | OpenClaw: <code>after_tool_call</code>            |
+|                          | Qwen Code: <code>PostToolUse</code>               |
 +--------------------------+----------------------------------------+
-| Tool Batch Completion    | Claude Code: `PostToolBatch`           |
-|                          | Qwen Code: `PostToolBatch`             |
+| Tool Batch Completion    | Claude Code: <code>PostToolBatch</code>           |
+|                          | Qwen Code: <code>PostToolBatch</code>             |
 +--------------------------+----------------------------------------+
-| Post Tool Use Failure    | Claude Code: `PostToolUseFailure`      |
-|                          | Cursor: `postToolUseFailure`           |
-|                          | GitHub Copilot: `postToolUseFailure`   |
-|                          | Qwen Code: `PostToolUseFailure`        |
+| Post Tool Use Failure    | Claude Code: <code>PostToolUseFailure</code>      |
+|                          | Cursor: <code>postToolUseFailure</code>           |
+|                          | GitHub Copilot: <code>postToolUseFailure</code>   |
+|                          | Qwen Code: <code>PostToolUseFailure</code>        |
 +--------------------------+----------------------------------------+
-| Before MCP Execution     | Claude Code: `PreToolUse` (MCP tools)  |
-|                          | Cursor: `beforeMCPExecution`           |
+| Before MCP Execution     | Claude Code: <code>PreToolUse</code> (MCP tools)  |
+|                          | Cursor: <code>beforeMCPExecution</code>           |
 +--------------------------+----------------------------------------+
-| After MCP Execution      | Claude Code: `PostToolUse` (MCP tools) |
-|                          | Cursor: `afterMCPExecution`            |
+| After MCP Execution      | Claude Code: <code>PostToolUse</code> (MCP tools) |
+|                          | Cursor: <code>afterMCPExecution</code>            |
 +--------------------------+----------------------------------------+
-| Before Command Execution | Claude Code: `PreToolUse` (Bash)       |
-|                          | Cursor: `beforeShellExecution`         |
+| Before Command Execution | Claude Code: <code>PreToolUse</code> (Bash)       |
+|                          | Cursor: <code>beforeShellExecution</code>         |
 +--------------------------+----------------------------------------+
-| After Command Execution  | Claude Code: `PostToolUse` (Bash)      |
-|                          | Cursor: `afterShellExecution`          |
+| After Command Execution  | Claude Code: <code>PostToolUse</code> (Bash)      |
+|                          | Cursor: <code>afterShellExecution</code>          |
 +--------------------------+----------------------------------------+
-| Before File Access       | Claude Code: `PreToolUse` (Read)       |
-|                          | Cursor: `beforeReadFile`               |
-|                          | Cursor: `beforeTabFileRead`            |
+| Before File Access       | Claude Code: <code>PreToolUse</code> (Read)       |
+|                          | Cursor: <code>beforeReadFile</code>               |
+|                          | Cursor: <code>beforeTabFileRead</code>            |
 +--------------------------+----------------------------------------+
-| After File Modification  | Claude Code: `PostToolUse` (Write/Edit)|
-|                          | Cursor: `afterFileEdit`                |
-|                          | Cursor: `afterTabFileEdit`             |
+| After File Modification  | Claude Code: <code>PostToolUse</code> (Write/Edit)|
+|                          | Cursor: <code>afterFileEdit</code>                |
+|                          | Cursor: <code>afterTabFileEdit</code>             |
 +--------------------------+----------------------------------------+
-| Agent Completion         | Claude Code: `Stop`                    |
-|                          | Cursor: `stop`                         |
-|                          | Gemini CLI: `AfterAgent`               |
-|                          | GitHub Copilot: `agentStop`            |
-|                          | Hermes Agent: `post_llm_call`          |
-|                          | OpenClaw: `agent_end`                  |
+| Agent Completion         | Claude Code: <code>Stop</code>                    |
+|                          | Cursor: <code>stop</code>                         |
+|                          | Gemini CLI: <code>AfterAgent</code>               |
+|                          | GitHub Copilot: <code>agentStop</code>            |
+|                          | Hermes Agent: <code>post_llm_call</code>          |
+|                          | OpenClaw: <code>agent_end</code>                  |
 +--------------------------+----------------------------------------+
-| Session End              | Claude Code: `SessionEnd`              |
-|                          | Cursor: `sessionEnd`                   |
-|                          | GitHub Copilot: `sessionEnd`           |
-|                          | Hermes Agent: `on_session_finalize`    |
-|                          | OpenClaw: `session_end`                |
-|                          | Qwen Code: `SessionEnd`                |
+| Session End              | Claude Code: <code>SessionEnd</code>              |
+|                          | Cursor: <code>sessionEnd</code>                   |
+|                          | GitHub Copilot: <code>sessionEnd</code>           |
+|                          | Hermes Agent: <code>on_session_finalize</code>    |
+|                          | OpenClaw: <code>session_end</code>                |
+|                          | Qwen Code: <code>SessionEnd</code>                |
 +--------------------------+----------------------------------------+
 Note: Hooks for which consensus has not been reached are omitted.
-</pre><a href="#section-4.1-2" class="pilcrow">¶</a>
-</div>
-<p id="section-4.1-3"><em>Table 1. Agent Client EP Hooks and Examples</em><a href="#section-4.1-3" class="pilcrow">¶</a></p>
+~~~
+<em>Table 1. Agent EP Hooks and Examples</em><a href="#section-4.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="critical-events-and-corresponding-audit-record-schema">
@@ -1458,7 +1445,7 @@ Note: Hooks for which consensus has not been reached are omitted.
         <h3 id="name-critical-events-and-corresp">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-critical-events-and-corresp" class="section-name selfRef">Critical Events and Corresponding Audit Record Schema</a>
         </h3>
-<p id="section-4.2-1">For each event in Table 1, this section describes observable information, supported interventions, and REQUIRED or OPTIONAL audit record claims.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">The events and audit record claims in this section are derived from commonly adopted agent hooks documented by Claude Code <span>[<a href="#ClaudeCodeHooks" class="cite xref">ClaudeCodeHooks</a>]</span>, Cursor <span>[<a href="#CursorHooks" class="cite xref">CursorHooks</a>]</span>, GitHub Copilot <span>[<a href="#CopilotHooks" class="cite xref">CopilotHooks</a>]</span>, Qwen Code <span>[<a href="#QwenCodeHooks" class="cite xref">QwenCodeHooks</a>]</span>, Gemini CLI <span>[<a href="#GeminiCLIHooks" class="cite xref">GeminiCLIHooks</a>]</span>, Hermes Agent <span>[<a href="#HermesHooks" class="cite xref">HermesHooks</a>]</span>, and OpenClaw <span>[<a href="#OpenClawHooks" class="cite xref">OpenClawHooks</a>]</span>. For each event, this section describes the observable information, supported interventions, and corresponding REQUIRED or OPTIONAL audit record claims.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.2-2">The following claims apply to all events:
 * <code>session_id</code>: REQUIRED. A string identifying the current session.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.2-3">In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
@@ -1492,7 +1479,7 @@ Note: Hooks for which consensus has not been reached are omitted.
 </li>
           <li id="section-4.2-4.6">
             <p id="section-4.2-4.6.1"><strong>Before Context Compaction:</strong> Expose session information and the compaction trigger. Allow blocking compaction.
-* <code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically (<code>"auto"</code>) or manually (<code>"manual"</code>).<a href="#section-4.2-4.6.1" class="pilcrow">¶</a></p>
+* <code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").<a href="#section-4.2-4.6.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-4.2-4.7">
             <p id="section-4.2-4.7.1"><strong>After Context Compaction:</strong> Expose session information, the compaction trigger, and the generated summary.<a href="#section-4.2-4.7.1" class="pilcrow">¶</a></p>
@@ -1500,7 +1487,7 @@ Note: Hooks for which consensus has not been reached are omitted.
         </ol>
 <ul class="normal">
 <li class="normal" id="section-4.2-5.1">
-            <p id="section-4.2-5.1.1"><code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically (<code>"auto"</code>) or manually (<code>"manual"</code>).<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.2-5.1.1"><code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.2-5.2">
             <p id="section-4.2-5.2.1"><code>compact_summary</code>: OPTIONAL. A string containing the conversation summary generated by compaction.<a href="#section-4.2-5.2.1" class="pilcrow">¶</a></p>
@@ -1720,10 +1707,20 @@ Note: Hooks for which consensus has not been reached are omitted.
 <p id="section-4.3-3">Based on existing implementation practices listed in Table 1, the choice depends on the hook's purpose and the consequences of failure:<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-4.1">
-            <p id="section-4.3-4.1.1">Security-critical hooks SHOULD fail closed: Any hook involved in input defense, permission validation, pre-execution interception of sensitive operations, or subagent spawning that could lead to privilege escalation MUST block subsequent operations if it fails. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure. Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.<a href="#section-4.3-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-4.1.1">Security-critical hooks SHOULD fail closed: Any hook involved in input defense, permission validation, pre-execution interception of sensitive operations, or subagent spawning that could lead to privilege escalation MUST block subsequent operations if it fails. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure.<a href="#section-4.3-4.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.3-4.1.2.1">
+                <p id="section-4.3-4.1.2.1.1">Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.<a href="#section-4.3-4.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
           <li class="normal" id="section-4.3-4.2">
-            <p id="section-4.3-4.2.1">Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations. Typical events includes Session Start, After Model Response, Before / After Context Compaction, Subagent Completion, After tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.<a href="#section-4.3-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-4.2.1">Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations.<a href="#section-4.3-4.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.3-4.2.2.1">
+                <p id="section-4.3-4.2.2.1.1">Typical events include Session Start, After Model Response, Before and After Context Compaction, Subagent Completion, After Tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.<a href="#section-4.3-4.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
         </ul>
 </section>
@@ -1735,237 +1732,73 @@ Note: Hooks for which consensus has not been reached are omitted.
       <h2 id="name-gateway-ep">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-gateway-ep" class="section-name selfRef">Gateway EP</a>
       </h2>
-<p id="section-5-1">Gateway EPs proxy requests and responses between clients and agents, and between agents and models, tools or other agents. They observe traffic passing through them, apply controls before forwarding, and generate audit records.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">Gateway EPs proxy requests and responses between agents and external models, tools, or other agents. They inspect traffic, apply access controls and content policies, and generate corresponding audit records.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <div id="critical-events-and-corresponding-audit-record-schema-1">
 <section id="section-5.1">
         <h3 id="name-critical-events-and-correspo">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-critical-events-and-correspo" class="section-name selfRef">Critical Events and Corresponding Audit Record Schema</a>
         </h3>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-1">
-<li id="section-5.1-1.1">
-            <p id="section-5.1-1.1.1"><strong>Before Inbound Request Forwarding:</strong> Expose the destination agent and incoming request. Allow permitting or denying forwarding and modifying request content.<a href="#section-5.1-1.1.1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">The following events and audit record claims are derived from access logging and audit practices in Agentgateway <span>[<a href="#AgentgatewayLogs" class="cite xref">AgentgatewayLogs</a>]</span>, Kong AI Gateway <span>[<a href="#KongAILogs" class="cite xref">KongAILogs</a>]</span>, Envoy Gateway <span>[<a href="#EnvoyAccessLogs" class="cite xref">EnvoyAccessLogs</a>]</span>, and LiteLLM <span>[<a href="#LiteLLMLogs" class="cite xref">LiteLLMLogs</a>]</span>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.1-2">
+<li id="section-5.1-2.1">
+            <p id="section-5.1-2.1.1"><strong>Before Request Forwarding:</strong> Expose request information, including the caller, destination, protocol, and operation. Allow permitting or denying request forwarding and modifying request content.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1"><code>request_id</code>: REQUIRED. A string identifying this inbound request to the destination agent.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.1-3.1">
+            <p id="section-5.1-3.1.1"><code>request_id</code>: REQUIRED. A string identifying the request.<a href="#section-5.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this inbound request.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.2">
+            <p id="section-5.1-3.2.1"><code>caller</code>: OPTIONAL. A string identifying the entity initiating the request, such as an authenticated user or agent.<a href="#section-5.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.3">
-            <p id="section-5.1-2.3.1"><code>agent</code>: REQUIRED. A string identifying the destination agent by its configured name or identifier.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.3">
+            <p id="section-5.1-3.3.1"><code>destination</code>: OPTIONAL. A string identifying the destination of the request, such as a model, tool, agent, or service endpoint.<a href="#section-5.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.4">
-            <p id="section-5.1-2.4.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.4">
+            <p id="section-5.1-3.4.1"><code>protocol</code>: OPTIONAL. A string identifying the protocol, such as "HTTP", "MCP", or "A2A".<a href="#section-5.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.5">
-            <p id="section-5.1-2.5.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this request before forwarding.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.5">
+            <p id="section-5.1-3.5.1"><code>operation</code>: OPTIONAL. A string identifying the requested operation, such as a model operation, MCP method, or A2A method.<a href="#section-5.1-3.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.6">
-            <p id="section-5.1-2.6.1"><code>reason</code>: OPTIONAL. A string explaining why this request was blocked or modified.<a href="#section-5.1-2.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.6">
+            <p id="section-5.1-3.6.1"><code>action</code>: OPTIONAL. A string indicating the policy action, such as "allow", "deny", "mask", or "reject".<a href="#section-5.1-3.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.7">
-            <p id="section-5.1-2.7.1"><code>request_body</code>: OPTIONAL. The incoming request content.<a href="#section-5.1-2.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.7">
+            <p id="section-5.1-3.7.1"><code>action_reason</code>: OPTIONAL. A string explaining the policy action.<a href="#section-5.1-3.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-3.8">
+            <p id="section-5.1-3.8.1"><code>request_body</code>: OPTIONAL. The request content.<a href="#section-5.1-3.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-3">
-<li id="section-5.1-3.1">
-            <p id="section-5.1-3.1.1"><strong>Before Model Request Forwarding:</strong> Expose the requested model and model input. Allow permitting or denying forwarding and modifying request content.<a href="#section-5.1-3.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.1-4">
+<li id="section-5.1-4.1">
+            <p id="section-5.1-4.1.1"><strong>Before Response Forwarding:</strong>  Expose response information and execution outcomes. Allow permitting or denying response forwarding and modifying response content.<a href="#section-5.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-5.1-4.1">
-            <p id="section-5.1-4.1.1"><code>request_id</code>: REQUIRED. A string identifying this model request. Separate model requests within the same agent workflow use different identifiers.<a href="#section-5.1-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.1-5.1">
+            <p id="section-5.1-5.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding request.<a href="#section-5.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-4.2">
-            <p id="section-5.1-4.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this model request.<a href="#section-5.1-4.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-5.2">
+            <p id="section-5.1-5.2.1"><code>status</code>: OPTIONAL. A string or integer indicating the outcome of the request, such as an HTTP status code, an RPC error code, or an A2A task state.<a href="#section-5.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-4.3">
-            <p id="section-5.1-4.3.1"><code>model</code>: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested model or configured model alias.<a href="#section-5.1-4.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-5.3">
+            <p id="section-5.1-5.3.1"><code>action</code>: OPTIONAL. A string indicating the action taken by the gateway, such as "allow", "deny", "mask", or "reject".<a href="#section-5.1-5.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-4.4">
-            <p id="section-5.1-4.4.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the model service.<a href="#section-5.1-4.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-5.4">
+            <p id="section-5.1-5.4.1"><code>action_reason</code>: OPTIONAL. A string explaining the policy action.<a href="#section-5.1-5.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-4.5">
-            <p id="section-5.1-4.5.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this model request before forwarding.<a href="#section-5.1-4.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-5.5">
+            <p id="section-5.1-5.5.1"><code>response_body</code>: OPTIONAL. The response content.<a href="#section-5.1-5.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-4.6">
-            <p id="section-5.1-4.6.1"><code>reason</code>: OPTIONAL. A string explaining why this model request was blocked or modified.<a href="#section-5.1-4.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-5.6">
+            <p id="section-5.1-5.6.1"><code>error</code>: OPTIONAL. A string describing an error encountered during request forwarding or response forwarding.<a href="#section-5.1-5.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-4.7">
-            <p id="section-5.1-4.7.1"><code>request_body</code>: OPTIONAL. The model request content, including messages and supplied parameters.<a href="#section-5.1-4.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-5.7">
+            <p id="section-5.1-5.7.1"><code>duration</code>: REQUIRED. A numeric value representing the elapsed time from receiving the corresponding request to receiving the complete response.<a href="#section-5.1-5.7.1" class="pilcrow">¶</a></p>
 </li>
-        </ul>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-5">
-<li id="section-5.1-5.1">
-            <p id="section-5.1-5.1.1"><strong>Before Model Response Forwarding:</strong> Expose the model response. Allow permitting or denying forwarding and modifying the response content.<a href="#section-5.1-5.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<ul class="normal">
-<li class="normal" id="section-5.1-6.1">
-            <p id="section-5.1-6.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding model request.<a href="#section-5.1-6.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.2">
-            <p id="section-5.1-6.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this model response to the caller.<a href="#section-5.1-6.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.3">
-            <p id="section-5.1-6.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.<a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.4">
-            <p id="section-5.1-6.4.1"><code>reason</code>: OPTIONAL. A string explaining why this model response was blocked or modified.<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.5">
-            <p id="section-5.1-6.5.1"><code>response_body</code>: OPTIONAL. The model response content.<a href="#section-5.1-6.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.6">
-            <p id="section-5.1-6.6.1"><code>error</code>: OPTIONAL. Error information reported for the model call.<a href="#section-5.1-6.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.7">
-            <p id="section-5.1-6.7.1"><code>usage</code>: OPTIONAL. An object containing token usage information.<a href="#section-5.1-6.7.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.8">
-            <p id="section-5.1-6.8.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding model request to receiving the complete model response.<a href="#section-5.1-6.8.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-7">
-<li id="section-5.1-7.1">
-            <p id="section-5.1-7.1.1"><strong>Before Tool Request Forwarding:</strong> Expose the requested tool and supplied arguments. Allow permitting or denying forwarding and modifying tool arguments.<a href="#section-5.1-7.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<ul class="normal">
-<li class="normal" id="section-5.1-8.1">
-            <p id="section-5.1-8.1.1"><code>request_id</code>: REQUIRED. A string identifying this tool request. Separate tool requests within the same agent workflow use different identifiers.<a href="#section-5.1-8.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-8.2">
-            <p id="section-5.1-8.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this tool request.<a href="#section-5.1-8.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-8.3">
-            <p id="section-5.1-8.3.1"><code>tool_name</code>: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested tool.<a href="#section-5.1-8.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-8.4">
-            <p id="section-5.1-8.4.1"><code>arguments</code>: OPTIONAL. An object containing the supplied tool arguments.<a href="#section-5.1-8.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-8.5">
-            <p id="section-5.1-8.5.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the tool service.<a href="#section-5.1-8.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-8.6">
-            <p id="section-5.1-8.6.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this tool request before forwarding.<a href="#section-5.1-8.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-8.7">
-            <p id="section-5.1-8.7.1"><code>reason</code>: OPTIONAL. A string explaining why this tool request was blocked or modified.<a href="#section-5.1-8.7.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-9">
-<li id="section-5.1-9.1">
-            <p id="section-5.1-9.1.1"><strong>Before Tool Response Forwarding:</strong> Expose the tool response, including reported errors. Allow permitting or denying forwarding and modifying or replacing supported response content.<a href="#section-5.1-9.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<ul class="normal">
-<li class="normal" id="section-5.1-10.1">
-            <p id="section-5.1-10.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding tool request.<a href="#section-5.1-10.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-10.2">
-            <p id="section-5.1-10.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this tool response to the caller.<a href="#section-5.1-10.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-10.3">
-            <p id="section-5.1-10.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this tool response before forwarding.<a href="#section-5.1-10.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-10.4">
-            <p id="section-5.1-10.4.1"><code>reason</code>: OPTIONAL. A string explaining why this tool response was blocked or modified.<a href="#section-5.1-10.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-10.5">
-            <p id="section-5.1-10.5.1"><code>result</code>: OPTIONAL. The returned tool result.<a href="#section-5.1-10.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-10.6">
-            <p id="section-5.1-10.6.1"><code>error</code>: OPTIONAL. Error information reported for the tool call.<a href="#section-5.1-10.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-10.7">
-            <p id="section-5.1-10.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding tool request to receiving the complete tool response.<a href="#section-5.1-10.7.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-11">
-<li id="section-5.1-11.1">
-            <p id="section-5.1-11.1.1"><strong>Before Outbound Agent Request Forwarding:</strong> Expose the destination agent and outgoing request. Allow permitting or denying forwarding and modifying or redacting supported request content.<a href="#section-5.1-11.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<ul class="normal">
-<li class="normal" id="section-5.1-12.1">
-            <p id="section-5.1-12.1.1"><code>request_id</code>: REQUIRED. A string identifying this request to another agent. Separate requests within the same agent workflow use different identifiers.<a href="#section-5.1-12.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-12.2">
-            <p id="section-5.1-12.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this outgoing request, rather than an earlier caller merely referenced in the request.<a href="#section-5.1-12.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-12.3">
-            <p id="section-5.1-12.3.1"><code>agent</code>: REQUIRED when identifiable from the request or gateway configuration. A string identifying the destination agent by its configured name or identifier.<a href="#section-5.1-12.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-12.4">
-            <p id="section-5.1-12.4.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.<a href="#section-5.1-12.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-12.5">
-            <p id="section-5.1-12.5.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this outgoing agent request before forwarding.<a href="#section-5.1-12.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-12.6">
-            <p id="section-5.1-12.6.1"><code>reason</code>: OPTIONAL. A string explaining why this outgoing agent request was blocked or modified.<a href="#section-5.1-12.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-12.7">
-            <p id="section-5.1-12.7.1"><code>request_body</code>: OPTIONAL. The outgoing agent request content.<a href="#section-5.1-12.7.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-13">
-<li id="section-5.1-13.1">
-            <p id="section-5.1-13.1.1"><strong>Before Outbound Agent Response Forwarding:</strong> Expose the called agent's response. Allow permitting or denying forwarding and modifying or redacting supported response content.<a href="#section-5.1-13.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<ul class="normal">
-<li class="normal" id="section-5.1-14.1">
-            <p id="section-5.1-14.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding outbound agent request.<a href="#section-5.1-14.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-14.2">
-            <p id="section-5.1-14.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.<a href="#section-5.1-14.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-14.3">
-            <p id="section-5.1-14.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.<a href="#section-5.1-14.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-14.4">
-            <p id="section-5.1-14.4.1"><code>reason</code>: OPTIONAL. A string explaining why this agent response was blocked or modified.<a href="#section-5.1-14.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-14.5">
-            <p id="section-5.1-14.5.1"><code>response_body</code>: OPTIONAL. The returned agent response content.<a href="#section-5.1-14.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-14.6">
-            <p id="section-5.1-14.6.1"><code>error</code>: OPTIONAL. Error information reported by the destination agent or its service.<a href="#section-5.1-14.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-14.7">
-            <p id="section-5.1-14.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding outbound agent request until it received the complete agent response.<a href="#section-5.1-14.7.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-15">
-<li id="section-5.1-15.1">
-            <p id="section-5.1-15.1.1"><strong>Before Inbound Response Forwarding:</strong> Expose the agent response to the inbound request. Allow permitting or denying forwarding and modifying response content.<a href="#section-5.1-15.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<ul class="normal">
-<li class="normal" id="section-5.1-16.1">
-            <p id="section-5.1-16.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding inbound request.<a href="#section-5.1-16.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-16.2">
-            <p id="section-5.1-16.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.<a href="#section-5.1-16.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-16.3">
-            <p id="section-5.1-16.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.<a href="#section-5.1-16.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-16.4">
-            <p id="section-5.1-16.4.1"><code>reason</code>: OPTIONAL. A string explaining why this agent response was blocked or modified.<a href="#section-5.1-16.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-16.5">
-            <p id="section-5.1-16.5.1"><code>response_body</code>: OPTIONAL. The agent response content.<a href="#section-5.1-16.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-16.6">
-            <p id="section-5.1-16.6.1"><code>error</code>: OPTIONAL. Error information reported by the destination agent or its service.<a href="#section-5.1-16.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-16.7">
-            <p id="section-5.1-16.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding inbound request until it received the complete agent response.<a href="#section-5.1-16.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-5.8">
+            <p id="section-5.1-5.8.1"><code>usage</code>: OPTIONAL. An object containing resource usage information, such as input and output token counts.<a href="#section-5.1-5.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1983,8 +1816,8 @@ Note: Hooks for which consensus has not been reached are omitted.
         <h3 id="name-summary-of-host-ep-hooks">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-summary-of-host-ep-hooks" class="section-name selfRef">Summary of Host EP Hooks</a>
         </h3>
-<div class="alignLeft art-text artwork" id="section-6.1-1">
-<pre>
+<p id="section-6.1-1">The hooks in Table 2 cover major host-level activities, including process lifecycle management, file operations, network operations, access to other processes, and memory protection changes.
+~~~
 +----------------------+------------------------------------------+
 | Name                 | Examples                                 |
 +----------------------+------------------------------------------+
@@ -2053,81 +1886,126 @@ Note: Hooks for which consensus has not been reached are omitted.
 |                      |   (CreateInfo == NULL)                   |
 |                      | macOS: ES_EVENT_TYPE_NOTIFY_EXIT         |
 +----------------------+------------------------------------------+
-</pre><a href="#section-6.1-1" class="pilcrow">¶</a>
-</div>
-<p id="section-6.1-2"><em>Table 2.  HOST EP Hooks and Examples</em><a href="#section-6.1-2" class="pilcrow">¶</a></p>
+~~~
+<em>Table 2.  HOST EP Hooks and Examples</em><a href="#section-6.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="critical-event-and-corresponding-audit-record-schema">
+<div id="critical-events-and-corresponding-audit-record-schema-2">
 <section id="section-6.2">
-        <h3 id="name-critical-event-and-correspo">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-critical-event-and-correspo" class="section-name selfRef">Critical Event and Corresponding Audit Record Schema</a>
+        <h3 id="name-critical-events-and-correspon">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-critical-events-and-correspon" class="section-name selfRef">Critical Events and Corresponding Audit Record Schema</a>
         </h3>
-<p id="section-6.2-1">The following claims apply to all events:
-* <code>process_id</code>: REQUIRED. An integer identifying the current process.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<p id="section-6.2-2">In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-3">
-<li id="section-6.2-3.1">
-            <p id="section-6.2-3.1.1"><strong>Process Creation:</strong> Expose the identifiers of the newly created process and its parent. Allow denying process creation.<a href="#section-6.2-3.1.1" class="pilcrow">¶</a></p>
+<p id="section-6.2-1">The events and audit record claims in this section are derived from operating system hook interfaces and event data structures provided by Linux Security Modules (LSM) <span>[<a href="#LinuxLSM" class="cite xref">LinuxLSM</a>]</span>, Windows kernel callbacks and filtering mechanisms <span>[<a href="#WindowsKernelHooks" class="cite xref">WindowsKernelHooks</a>]</span>, and Apple Endpoint Security <span>[<a href="#AppleEndpointSecurity" class="cite xref">AppleEndpointSecurity</a>]</span>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">The following claims apply to all events:
+* <code>process_id</code>: REQUIRED. An integer identifying the process associated with the event.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-3">In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-4">
+<li id="section-6.2-4.1">
+            <p id="section-6.2-4.1.1"><strong>Process Creation:</strong> Expose the identifiers of the newly created process and its parent.<a href="#section-6.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-4.1">
-            <p id="section-6.2-4.1.1"><code>parent_process_id</code>: REQUIRED. An integer identifying its parent process.<a href="#section-6.2-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-5.1">
+            <p id="section-6.2-5.1.1"><code>parent_process_id</code>: REQUIRED. An integer identifying its parent process.<a href="#section-6.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-5">
-<li id="section-6.2-5.1">
-            <p id="section-6.2-5.1.1"><strong>Before Program Execution:</strong> Expose the process identifier and the program to be executed. Allow permitting or denying program execution.<a href="#section-6.2-5.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-6">
+<li id="section-6.2-6.1">
+            <p id="section-6.2-6.1.1"><strong>Before Program Execution:</strong> Expose the process identifier and the program to be executed. Allow permitting or denying program execution.<a href="#section-6.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-6.1">
-            <p id="section-6.2-6.1.1"><code>executable_path</code>: OPTIONAL. A string specifying the executable path.<a href="#section-6.2-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-7.1">
+            <p id="section-6.2-7.1.1"><code>executable_path</code>: OPTIONAL. A string specifying the executable path.<a href="#section-6.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-7">
-<li id="section-6.2-7.1">
-            <p id="section-6.2-7.1.1"><strong>Before File Access:</strong> Expose the requested file operation and the target file. Allow permitting or denying the operation.<a href="#section-6.2-7.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-8">
+<li id="section-6.2-8.1">
+            <p id="section-6.2-8.1.1"><strong>Before File Access:</strong> Expose the requested file operation and the target file. Allow permitting or denying the operation.<a href="#section-6.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-8.1">
-            <p id="section-6.2-8.1.1"><code>operation</code>: REQUIRED. A string with the value "open" or "read".<a href="#section-6.2-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-9.1">
+            <p id="section-6.2-9.1.1"><code>operation</code>: REQUIRED. A string with the value "open" or "read".<a href="#section-6.2-9.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.2-8.2">
-            <p id="section-6.2-8.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path.<a href="#section-6.2-8.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.2-9.2">
+            <p id="section-6.2-9.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path.<a href="#section-6.2-9.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-9">
-<li id="section-6.2-9.1">
-            <p id="section-6.2-9.1.1"><strong>Before File Modification:</strong> Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation.<a href="#section-6.2-9.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-10">
+<li id="section-6.2-10.1">
+            <p id="section-6.2-10.1.1"><strong>Before File Modification:</strong> Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation.<a href="#section-6.2-10.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-10.1">
-            <p id="section-6.2-10.1.1"><code>operation</code>: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".<a href="#section-6.2-10.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-11.1">
+            <p id="section-6.2-11.1.1"><code>operation</code>: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".<a href="#section-6.2-11.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.2-10.2">
-            <p id="section-6.2-10.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.<a href="#section-6.2-10.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.2-11.2">
+            <p id="section-6.2-11.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.<a href="#section-6.2-11.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.2-10.3">
-            <p id="section-6.2-10.3.1"><code>destination_path</code>: OPTIONAL. A string specifying the destination path for a rename operation.<a href="#section-6.2-10.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.2-11.3">
+            <p id="section-6.2-11.3.1"><code>destination_path</code>: OPTIONAL. A string specifying the destination path for a rename operation.<a href="#section-6.2-11.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-11">
-<li id="section-6.2-11.1">
-            <p id="section-6.2-11.1.1"><strong>Before Access to Another Process:</strong> Expose the identity of the process being accessed. Allow permitting or denying access.<a href="#section-6.2-11.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-12">
+<li id="section-6.2-12.1">
+            <p id="section-6.2-12.1.1"><strong>After File Operation:</strong> Expose information about the completed file operation and the affected file.<a href="#section-6.2-12.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-12.1">
-            <p id="section-6.2-12.1.1"><code>target_process_id</code>: REQUIRED. An integer identifying the target process, or the process owning the target thread.<a href="#section-6.2-12.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-13.1">
+            <p id="section-6.2-13.1.1"><code>operation</code>: OPTIONAL. A string identifying the completed file operation.<a href="#section-6.2-13.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-13.2">
+            <p id="section-6.2-13.2.1"><code>file_path</code>: OPTIONAL. A string specifying the path of the affected file, or the source path for a rename operation.<a href="#section-6.2-13.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-13.3">
+            <p id="section-6.2-13.3.1"><code>destination_path</code>: OPTIONAL. A string specifying the destination path for a rename operation.<a href="#section-6.2-13.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-13">
-<li id="section-6.2-13.1">
-            <p id="section-6.2-13.1.1"><strong>Process Exit:</strong> Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.<a href="#section-6.2-13.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-14">
+<li id="section-6.2-14.1">
+            <p id="section-6.2-14.1.1"><strong>Before Network Operation:</strong> Expose the local and remote network endpoints involved in the requested network operation. Allow permitting or denying the operation where supported by the operating system.<a href="#section-6.2-14.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<ul class="normal">
+<li class="normal" id="section-6.2-15.1">
+            <p id="section-6.2-15.1.1"><code>local_endpoint</code>: OPTIONAL. A string identifying the local network endpoint.<a href="#section-6.2-15.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-15.2">
+            <p id="section-6.2-15.2.1"><code>remote_endpoint</code>: OPTIONAL. A string identifying the remote network endpoint.<a href="#section-6.2-15.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-16">
+<li id="section-6.2-16.1">
+            <p id="section-6.2-16.1.1"><strong>Before Access to Another Process:</strong> Expose the identity of the process being accessed. Allow permitting or denying access.<a href="#section-6.2-16.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<ul class="normal">
+<li class="normal" id="section-6.2-17.1">
+            <p id="section-6.2-17.1.1"><code>target_process_id</code>: REQUIRED. An integer identifying the target process, or the process owning the target thread.<a href="#section-6.2-17.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-18">
+<li id="section-6.2-18.1">
+            <p id="section-6.2-18.1.1"><strong>Before Memory Protection Change:</strong> Expose the requested memory protection change, including the affected address range and protection attributes. Allow permitting or denying the change where supported by the operating system.<a href="#section-6.2-18.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<ul class="normal">
+<li class="normal" id="section-6.2-19.1">
+            <p id="section-6.2-19.1.1"><code>address</code>: OPTIONAL. An integer identifying the starting virtual memory address of the affected range.<a href="#section-6.2-19.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-19.2">
+            <p id="section-6.2-19.2.1"><code>size</code>: OPTIONAL. An integer specifying the size of the affected memory range.<a href="#section-6.2-19.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-19.3">
+            <p id="section-6.2-19.3.1"><code>protection</code>: OPTIONAL. An integer identifying the memory protection attributes to be applied to the affected range.<a href="#section-6.2-19.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-20">
+<li id="section-6.2-20.1">
+            <p id="section-6.2-20.1.1"><strong>Process Exit:</strong> Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.<a href="#section-6.2-20.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 </section>
@@ -2182,6 +2060,14 @@ Note: Hooks for which consensus has not been reached are omitted.
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="AgentgatewayLogs">[AgentgatewayLogs]</dt>
+        <dd>
+<span class="refTitle">"Agentgateway Access Logs"</span>, <span>n.d.</span>, <span>&lt;<a href="https://agentgateway.dev/docs/standalone/latest/documentation/observability/access-logs/view/">https://agentgateway.dev/docs/standalone/latest/documentation/observability/access-logs/view/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="AppleEndpointSecurity">[AppleEndpointSecurity]</dt>
+        <dd>
+<span class="refTitle">"Endpoint Security Event Types"</span>, <span>n.d.</span>, <span>&lt;<a href="https://developer.apple.com/documentation/endpointsecurity/es_event_type_t">https://developer.apple.com/documentation/endpointsecurity/es_event_type_t</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="AUDIT-CHARTER">[AUDIT-CHARTER]</dt>
         <dd>
 <span class="refTitle">"Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter"</span>, <span>n.d.</span>, <span>&lt;<a href="https://datatracker.ietf.org/doc/bofreq-mirjak-audit/">https://datatracker.ietf.org/doc/bofreq-mirjak-audit/</a>&gt;</span>. </dd>
@@ -2202,6 +2088,10 @@ Note: Hooks for which consensus has not been reached are omitted.
         <dd>
 <span class="refTitle">"Overview of Endpoint Detection and Response"</span>, <span>n.d.</span>, <span>&lt;<a href="https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response">https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="EnvoyAccessLogs">[EnvoyAccessLogs]</dt>
+        <dd>
+<span class="refTitle">"Envoy Gateway Proxy Access Logs"</span>, <span>n.d.</span>, <span>&lt;<a href="https://gateway.envoyproxy.io/latest/tasks/observability/proxy-accesslog/">https://gateway.envoyproxy.io/latest/tasks/observability/proxy-accesslog/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="GeminiCLIHooks">[GeminiCLIHooks]</dt>
         <dd>
 <span class="refTitle">"Gemini CLI Hooks Reference"</span>, <span>n.d.</span>, <span>&lt;<a href="https://geminicli.com/docs/hooks/reference/">https://geminicli.com/docs/hooks/reference/</a>&gt;</span>. </dd>
@@ -2214,17 +2104,29 @@ Note: Hooks for which consensus has not been reached are omitted.
         <dd>
 <span class="refTitle">"HooksSecurity"</span>, <span>n.d.</span>, <span>&lt;<a href="https://hooks.security/">https://hooks.security/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="LiteLLMLogging">[LiteLLMLogging]</dt>
+<dt id="KongAILogs">[KongAILogs]</dt>
         <dd>
-<span class="refTitle">"LiteLLM StandardLoggingPayload Specification"</span>, <span>n.d.</span>, <span>&lt;<a href="https://docs.litellm.ai/docs/proxy/logging_spec">https://docs.litellm.ai/docs/proxy/logging_spec</a>&gt;</span>. </dd>
+<span class="refTitle">"Kong AI Gateway Audit Log Reference"</span>, <span>n.d.</span>, <span>&lt;<a href="https://developer.konghq.com/ai-gateway/ai-audit-log-reference/">https://developer.konghq.com/ai-gateway/ai-audit-log-reference/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="LinuxLSM">[LinuxLSM]</dt>
+        <dd>
+<span class="refTitle">"Linux Security Modules: General Security Hooks for Linux"</span>, <span>n.d.</span>, <span>&lt;<a href="https://docs.kernel.org/security/lsm.html">https://docs.kernel.org/security/lsm.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="LiteLLMLogs">[LiteLLMLogs]</dt>
+        <dd>
+<span class="refTitle">"LiteLLM Logging"</span>, <span>n.d.</span>, <span>&lt;<a href="https://docs.litellm.ai/docs/proxy/logging">https://docs.litellm.ai/docs/proxy/logging</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="OpenClawHooks">[OpenClawHooks]</dt>
         <dd>
 <span class="refTitle">"OpenClaw Plugin Hooks"</span>, <span>n.d.</span>, <span>&lt;<a href="https://docs.openclaw.ai/plugins/hooks">https://docs.openclaw.ai/plugins/hooks</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="QwenCodeHooks">[QwenCodeHooks]</dt>
-      <dd>
+        <dd>
 <span class="refTitle">"Qwen Code Hooks"</span>, <span>n.d.</span>, <span>&lt;<a href="https://github.com/QwenLM/qwen-code/blob/main/docs/users/features/hooks.md">https://github.com/QwenLM/qwen-code/blob/main/docs/users/features/hooks.md</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="WindowsKernelHooks">[WindowsKernelHooks]</dt>
+      <dd>
+<span class="refTitle">"Windows Kernel Callbacks and Filtering Mechanisms"</span>, <span>n.d.</span>, <span>&lt;<a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/">https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
