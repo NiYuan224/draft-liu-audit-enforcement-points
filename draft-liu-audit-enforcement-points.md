@@ -288,13 +288,14 @@ Note: Hooks for which consensus has not been reached are omitted.
 ~~~
 *Table 1. Agent Client EP Hooks and Examples*
 
-## Critical Events and Corresponding Audit Record Claims
+## Critical Events and Corresponding Audit Record Schema
 
 For each event in Table 1, this section describes observable information, supported interventions, and REQUIRED or OPTIONAL audit record claims.
 
 The following claims apply to all events:
 * `session_id`: REQUIRED. A string identifying the current session.
 
+In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.
 
 1. **Session Start:** Expose session information, including the session identifier and source. Allow setting session-specific environment variables or injecting initial security context.
 * `source`: OPTIONAL. A string indicating how the session started, such as "startup" or "resume".
@@ -439,7 +440,7 @@ Based on existing implementation practices listed in Table 1, the choice depends
 # Gateway EP
 Gateway EPs proxy requests and responses between clients and agents, and between agents and models, tools or other agents. They observe traffic passing through them, apply controls before forwarding, and generate audit records.
 
-##  Critical Events and Corresponding Audit Record Claims
+##  Critical Events and Corresponding Audit Record Schema
 
 1. **Before Inbound Request Forwarding:** Expose the destination agent and incoming request. Allow permitting or denying forwarding and modifying request content.
 
@@ -604,10 +605,12 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 ~~~
 *Table 2.  HOST EP Hooks and Examples*
 
-## Critical Event and Corresponding Audit Record Claims
+## Critical Event and Corresponding Audit Record Schema
 
 The following claims apply to all events:
 * `process_id`: REQUIRED. An integer identifying the current process.
+
+In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.
 
 1. **Process Creation:** Expose the identifiers of the newly created process and its parent. Allow denying process creation.
 
@@ -635,7 +638,7 @@ The following claims apply to all events:
 
 * `target_process_id`: REQUIRED. An integer identifying the target process, or the process owning the target thread.
 
-6. **Process Exit:** Expose the identifier of the exiting process.
+6. **Process Exit:** Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.
 
 
 
