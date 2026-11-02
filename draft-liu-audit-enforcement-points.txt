@@ -770,8 +770,8 @@ Table of Contents
    *  destination_path: OPTIONAL.  A string specifying the destination
       path for a rename operation.
 
-   *  operation: REQUIRED.  A string identifying the requested file
-      access operation, such as "open" or "read".
+   1.  *After File Operation:* Expose information about the completed
+       file operation and the affected file.
 
    *  operation: OPTIONAL.  A string identifying the completed file
       operation.
