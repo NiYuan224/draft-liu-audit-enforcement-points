@@ -70,9 +70,21 @@ informative:
     title: "HooksSecurity"
     target: https://hooks.security/
 
-  LiteLLMLogging:
-    title: "LiteLLM StandardLoggingPayload Specification"
-    target: https://docs.litellm.ai/docs/proxy/logging_spec
+  AgentgatewayLogs:
+    title: "Agentgateway Access Logs"
+    target: https://agentgateway.dev/docs/standalone/latest/documentation/observability/access-logs/view/
+
+  KongAILogs:
+    title: "Kong AI Gateway Audit Log Reference"
+    target: https://developer.konghq.com/ai-gateway/ai-audit-log-reference/
+
+  EnvoyAccessLogs:
+    title: "Envoy Gateway Proxy Access Logs"
+    target: https://gateway.envoyproxy.io/latest/tasks/observability/proxy-accesslog/
+
+  LiteLLMLogs:
+    title: "LiteLLM Logging"
+    target: https://docs.litellm.ai/docs/proxy/logging
 
   DefenderEDR:
     title: "Overview of Endpoint Detection and Response"
@@ -89,7 +101,7 @@ informative:
 
 --- abstract
 
-Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent Client, Gateway, and Host EPs by detailing their coverage and audit data. This helps to define the specific capabilities of different EPs and evaluate the overall evidence coverage.
+Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent , Gateway, and Host EPs by detailing their coverage and audit data. This helps to define the specific capabilities of different EPs and evaluate the overall evidence coverage.
 
 --- middle
 
@@ -98,9 +110,9 @@ Agent auditing relies on distributed enforcement points (EPs) to observe and int
 
 Agents increasingly act on behalf of users across multiple services and administrative domains. Auditing their activities requires runtime information, primarily provided by enforcement points (EPs) that observe and, where supported, intervene in agent activities. These EPs are distributed across the interaction chain, each covering a different set of activities and providing corresponding audit records.
 
-To support runtime monitoring and auditing, industry solutions record events at the agent client, gateway, and host layers: client hooks expose agent lifecycle events and tool calls {{ClaudeCodeHooks}}{{CursorHooks}}{{HooksSecurity}}; gateways inspect requests and responses and record access decisions and content filtering results{{LiteLLMLogging}}; Endpoint Detection and Response (EDR) systems monitor process execution, file access, and network connections{{DefenderEDR}}.
+To support runtime monitoring and auditing, industry solutions record events at the agent client, gateway, and host layers: agent hooks expose agent lifecycle events and tool calls {{ClaudeCodeHooks}}{{CursorHooks}}{{HooksSecurity}}; gateways inspect requests and responses and record access decisions and content filtering results{{LiteLLMLogs}}; Endpoint Detection and Response (EDR) systems monitor process execution, file access, and network connections{{DefenderEDR}}.
 
-This document considers three categories of EPs: Agent Client EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide, providing a basis for identifying the records across participating domains and understanding the coverage of the available evidence.
+This document considers three categories of EPs: Agent EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide, providing a basis for identifying the records across participating domains and understanding the coverage of the available evidence.
 
 # Conventions and Definitions
 
@@ -117,61 +129,59 @@ Hook: A mechanism exposed by software or an operating system at a defined execut
 
 # Agent Workflows and Enforcement Points
 
-Figure 1 illustrates a typical agent workflow and the and the locations of the three EP categories.
+Figure 1 illustrates a typical agent workflow and the locations of the three EP categories. The interactions shown are illustrative and may occur in different sequences and multiple times depending on the agent workflow.
 
 ~~~
-+---------+      +-------+     +------+-(2) +--------+    +------+
-|         |      |       |     |      |-----|        +--->| LLM  |
-|         |      |       |     |      |<----|        +----|      |
-|         | (1)  |       |     |      | (3) |        |    +------+
-|         |------+       +----->      |     |        |
-|         |      |       |     |      | (4) |        |    +------+
-|   User  |      |Gateway|     | Agent|-----|Gateway +--->|Tools |
-| /System |      |  EP   |     |(Agent|<----|   EP   +----|      |
-|         |<-----+Inbound+-----|Client| (5) |Outbound|    +------+
-|         | (10) |       |     |  EP) |     |        |
-|         |      |       |     |      | (6) |        |    +------+
-|         |      |       |     |      |-----|        +--->|Other |
-|         |      |       |     |      |<----|        +----|Agents|
-+---------+      +-------+     +--+-^-- (7) +--------+    +------+
-                                  | |
-                               (8)| |(9)
-+---------------------------------v-------------------------------+
-|                           Host (Host EP)                        |
-+-----------------------------------------------------------------+
+                           +-----------+                            
+                           |           |                            
++------------------+ (1)   |           |        +------------------+
+|                  +-------+           +-------->       LLM        |
+|                  <-------+           +--------+                  |
+|                  | (2)   |           |        +------------------+
+|                  | (3)   |           |        +------------------+
+|   Client Agent   +-------+   Gateway +------->|      Tools       |
+|    (Agent EP)    <-------+     EP    +--------+                  |
+|                  | (4)   |           |        +------------------+
+|                  | (5)   |           |        +------------------+
+|                  +-------+           +-------->   Server Agent   |
+|                  |<------+           +--------+    (Agent EP)    |
++------------------+ (6)   |           |        +------------------+
+|   Host(Host EP)  |       |           |        |  Host (Host EP)  |
++------------------+       |           |        +------------------+
+                           |           |                            
+                           |           |                            
+                           +-----------+                                                                      
 ~~~
+
 *Figure 1. Agent Workflow and EPs*
 
-1. (Optional) The User or System provides a request or instruction to the Agent.
-2. The Agent provides context to the LLM.
-3. The LLM returns output to the Agent to support the selection of subsequent actions.
-4. The Agent invokes one or more tools.
-5. The tools return results to the Agent. The Agent may provide these results as additional context to the LLM and repeat steps 2-5 as needed.
-6. (Optional) The Agent delegates tasks to or exchanges requests with other agents.
-7. (Optional) Other Agents return responses or task execution results to the Agent.
-8. (Optional) The Agent performs operations on the host.
-8. (Optional) The host provides corresponding results, status, or errors.
-9. (Optional) The Agent returns a response to the User or System, or requests additional input.
+1. The Agent provides context to the LLM.
+2. The LLM returns output to the Agent to support the selection of subsequent actions.
+3. The Agent invokes one or more tools.
+4. The tools return results to the Agent. 
+5. The Agent delegates tasks to or exchanges requests with other agents.
+6. Other Agents return responses or task execution results to the Agent.
 
-EPs provide visibility into and control over the above agent activities. They may be located within the agent client, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and Host EPs.
+EPs provide visibility into and control over the above agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and Host EPs.
 
-* Agent Client EPs: EPs integrated into the agent client, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
+* Agent EPs: EPs integrated into the agent, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
 
-* Gateway EPs: EPs deployed in the inbound communication paths between users/systems and agents, and the outbound communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.
+* Gateway EPs: EPs deployed in the communication paths between agents and models, tools, and other agents. They inspect and control requests and responses passing through the gateway.
 
 * Host EPs: EPs running on the hosts or endpoints where agents execute. They monitor and control agent-related processes, command execution, file access, and other system operations.
 
 Each category provides audit records within its observation and intervention scope. Their coverage may overlap, but no single EP necessarily observes the entire interaction chain.
 
 
-# Agent Client EP
+# Agent EP
 
-Agent Client EPs use client-provided hooks to observe critical agent events, enforce controls where supported, and generate audit records.
+Agent EPs use agent-provided hooks to observe critical agent events, enforce controls where supported, and generate audit records.
 
-## Summary of Agent Client EP Hooks
+## Summary of Agent EP Hooks
 
-The following table lists selected hook points and representative implementations, ordered by the agent's workflow sequence.
+The following table lists commonly adopted agent hooks and representative implementations.
 
+The hooks cover critical events, including session lifecycle management, prompt handling, model requests and responses, subagent management, tool invocation and results, command execution, and file operations.
 ~~~
 +--------------------------+----------------------------------------+
 | Name                     | Examples                               |
@@ -294,11 +304,11 @@ The following table lists selected hook points and representative implementation
 +--------------------------+----------------------------------------+
 Note: Hooks for which consensus has not been reached are omitted.
 ~~~
-*Table 1. Agent Client EP Hooks and Examples*
+*Table 1. Agent EP Hooks and Examples*
 
 ## Critical Events and Corresponding Audit Record Schema
 
-For each event in Table 1, this section describes observable information, supported interventions, and REQUIRED or OPTIONAL audit record claims.
+The events and audit record claims in this section are derived from commonly adopted agent hooks documented by Claude Code {{ClaudeCodeHooks}}, Cursor {{CursorHooks}}, GitHub Copilot {{CopilotHooks}}, Qwen Code {{QwenCodeHooks}}, Gemini CLI {{GeminiCLIHooks}}, Hermes Agent {{HermesHooks}}, and OpenClaw {{OpenClawHooks}}. For each event, this section describes the observable information, supported interventions, and corresponding REQUIRED or OPTIONAL audit record claims.
 
 The following claims apply to all events:
 * `session_id`: REQUIRED. A string identifying the current session.
@@ -440,104 +450,50 @@ Hook failures can affect security enforcement and audit coverage. Two common han
 
 Based on existing implementation practices listed in Table 1, the choice depends on the hook's purpose and the consequences of failure:
 
-* Security-critical hooks SHOULD fail closed: Any hook involved in input defense, permission validation, pre-execution interception of sensitive operations, or subagent spawning that could lead to privilege escalation MUST block subsequent operations if it fails. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure. Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.
+* Security-critical hooks SHOULD fail closed: Any hook involved in input defense, permission validation, pre-execution interception of sensitive operations, or subagent spawning that could lead to privilege escalation MUST block subsequent operations if it fails. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure.
+  * Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.
 
-* Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations. Typical events includes Session Start, After Model Response, Before / After Context Compaction, Subagent Completion, After tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.
+* Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations.
+  * Typical events includes Session Start, After Model Response, Before / After Context Compaction, Subagent Completion, After tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.
 
 
 # Gateway EP
-Gateway EPs proxy requests and responses between clients and agents, and between agents and models, tools or other agents. They observe traffic passing through them, apply controls before forwarding, and generate audit records.
+Gateway EPs proxy requests and responses between agents and external models, tools, or other agents. They inspect traffic, apply access controls and content policies, and generate corresponding audit records.
 
 ##  Critical Events and Corresponding Audit Record Schema
 
-1. **Before Inbound Request Forwarding:** Expose the destination agent and incoming request. Allow permitting or denying forwarding and modifying request content.
+The following events and audit record claims are derived from access logging and audit practices in Agentgateway {{AgentgatewayLogs}}, Kong AI Gateway {{KongAILogs}}, Envoy Gateway {{EnvoyAccessLogs}}, and LiteLLM {{LiteLLMLogs}}.
 
-* `request_id`: REQUIRED. A string identifying this inbound request to the destination agent.
-* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this inbound request.
-* `agent`: REQUIRED. A string identifying the destination agent by its configured name or identifier.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this request before forwarding.
-* `reason`: OPTIONAL. A string explaining why this request was blocked or modified.
-* `request_body`: OPTIONAL. The incoming request content.
+1. **Before Request Fowarding:** Expose request information, including the caller, destination, protocol, and operation. Allow permitting or denying request forwarding and modifying request content.
 
-2. **Before Model Request Forwarding:** Expose the requested model and model input. Allow permitting or denying forwarding and modifying request content.
-
-* `request_id`: REQUIRED. A string identifying this model request. Separate model requests within the same agent workflow use different identifiers.
-* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this model request.
-* `model`: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested model or configured model alias.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the model service.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this model request before forwarding.
-* `reason`: OPTIONAL. A string explaining why this model request was blocked or modified.
-* `request_body`: OPTIONAL. The model request content, including messages and supplied parameters.
-
-3. **Before Model Response Forwarding:** Expose the model response. Allow permitting or denying forwarding and modifying the response content.
-
-* `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding model request.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this model response to the caller.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.
-* `reason`: OPTIONAL. A string explaining why this model response was blocked or modified.
-* `response_body`: OPTIONAL. The model response content.
-* `error`: OPTIONAL. Error information reported for the model call.
-* `usage`: OPTIONAL. An object containing token usage information.
-* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding model request to receiving the complete model response.
+* `request_id`: REQUIRED. A string identifying the request.
+* `caller`: OPTIONAL. A string identifying the entity initiating the request, such as an authenticated user or agent.
+* `destination`: OPTIONAL. A string identifying the destination of the request, such as a model, tool, agent, or service endpoint.
+* `protocol`: OPTIONAL. A string identifying the protocol, such as "HTTP", "MCP", or "A2A".
+* `operation`: OPTIONAL. A string identifying the requested operation, such as a model operation, MCP method, or A2A method.
+* `action`: OPTIONAL. A string indicating the policy action, such as allow, "deny", "mask", or "reject".
+* `action_reason`: OPTIONAL. A string explaining the policy action.
+* `request_body`: OPTIONAL. The request content.
 
 
-4. **Before Tool Request Forwarding:** Expose the requested tool and supplied arguments. Allow permitting or denying forwarding and modifying tool arguments.
+2. **Before Response Forwarding:**  Expose response information and execution outcomes. Allow permitting or denying response forwarding and modifying response content.
 
-* `request_id`: REQUIRED. A string identifying this tool request. Separate tool requests within the same agent workflow use different identifiers.
-* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this tool request.
-* `tool_name`: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested tool.
-* `arguments`: OPTIONAL. An object containing the supplied tool arguments.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the tool service.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this tool request before forwarding.
-* `reason`: OPTIONAL. A string explaining why this tool request was blocked or modified.
-
-5. **Before Tool Response Forwarding:** Expose the tool response, including reported errors. Allow permitting or denying forwarding and modifying or replacing supported response content.
-
-* `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding tool request.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this tool response to the caller.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this tool response before forwarding.
-* `reason`: OPTIONAL. A string explaining why this tool response was blocked or modified.
-* `result`: OPTIONAL. The returned tool result.
-* `error`: OPTIONAL. Error information reported for the tool call.
-* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding tool request to receiving the complete tool response.
-
-
-6. **Before Outbound Agent Request Forwarding:** Expose the destination agent and outgoing request. Allow permitting or denying forwarding and modifying or redacting supported request content.
-
-* `request_id`: REQUIRED. A string identifying this request to another agent. Separate requests within the same agent workflow use different identifiers.
-* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this outgoing request, rather than an earlier caller merely referenced in the request.
-* `agent`: REQUIRED when identifiable from the request or gateway configuration. A string identifying the destination agent by its configured name or identifier.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this outgoing agent request before forwarding.
-* `reason`: OPTIONAL. A string explaining why this outgoing agent request was blocked or modified.
-* `request_body`: OPTIONAL. The outgoing agent request content.
-
-7. **Before Outbound Agent Response Forwarding:** Expose the called agent's response. Allow permitting or denying forwarding and modifying or redacting supported response content.
-
-* `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding outbound agent request.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.
-* `reason`: OPTIONAL. A string explaining why this agent response was blocked or modified.
-* `response_body`: OPTIONAL. The returned agent response content.
-* `error`: OPTIONAL. Error information reported by the destination agent or its service.
-* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding outbound agent request until it received the complete agent response.
-
-8. **Before Inbound Response Forwarding:** Expose the agent response to the inbound request. Allow permitting or denying forwarding and modifying response content.
-
-* `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding inbound request.
-* `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.
-* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.
-* `reason`: OPTIONAL. A string explaining why this agent response was blocked or modified.
-* `response_body`: OPTIONAL. The agent response content.
-* `error`: OPTIONAL. Error information reported by the destination agent or its service.
-* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding inbound request until it received the complete agent response.
+* `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding request.
+* `status`: OPTIONAL. A string or integer indicating the outcome of the request, such as an HTTP status code, an RPC error code, or an A2A task state.
+* `action`: OPTIONAL. A string indicating the action taken by the gateway, such as "allow", "deny", "mask", or "reject".
+* `action_reason`: OPTIONAL. A string explaining the policy action.
+* `response_body`: OPTIONAL. The response content.
+* `error`: OPTIONAL.  A string describing an error encountered during request forwarding or response forwarding.
+* `duration`: REQUIRED.  A numeric value representing the elapsed time from receiving the corresponding request to receiving the complete response.
+* `usage`: OPTIONAL. An object containing resource usage information, such as input and output token counts.
 
 
 # Host EP
 Host EPs use operating-system hooks to observe operations performed by agent-related processes, enforce controls where supported, and generate audit records.
 
 ## Summary of Host EP Hooks
+
+The hooks in Table 2 cover major host-level activities, including process lifecycle management, file operations, network operations, access to other processes, and memory protection changes.
 ~~~
 +----------------------+------------------------------------------+
 | Name                 | Examples                                 |
@@ -612,9 +568,11 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 
 ## Critical Event and Corresponding Audit Record Schema
 
+The events and audit record claims in this section are derived from operating system hook interfaces and event data structures provided by Linux Security Modules (LSM) {{LinuxLSM}}, Windows kernel callbacks and filtering mechanisms {{WindowsKernelHooks}}, and Apple Endpoint Security {{AppleEndpointSecurity}}.
+
 The following claims apply to all events:
 * `process_id`: REQUIRED. An integer identifying the current process.
-
+ 
 In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.
 
 1. **Process Creation:** Expose the identifiers of the newly created process and its parent. Allow denying process creation.
@@ -644,9 +602,6 @@ In addition to the common claim above, each event defines its own audit record c
 * `target_process_id`: REQUIRED. An integer identifying the target process, or the process owning the target thread.
 
 6. **Process Exit:** Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.
-
-
-
 
 
 
