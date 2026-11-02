@@ -35,6 +35,7 @@ author:
 normative:
  RFC2119:
  RFC8174:
+ RFC3198:
 
 informative:
   ClaudeCodeHooks:
@@ -77,6 +78,10 @@ informative:
     title: "Overview of Endpoint Detection and Response"
     target: https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response
 
+  AUDIT-CHARTER:
+  title: "Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter"
+  target: "https://datatracker.ietf.org/doc/bofreq-mirjak-audit/"
+
 
 
 
@@ -100,6 +105,9 @@ This document considers three categories of EPs: Agent Client EPs, Gateway EPs, 
 # Conventions and Definitions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
+
+The definitions in this document are based on the Policy Enforcement Point (PEP) definition in {{RFC3198}} and the audit record concepts described in the proposed AUDIT Working Group Charter {{AUDIT-CHARTER}}.
+
 
 Enforcement Point (EP): A logical entity or network element that observe agent activities, enforces security controls, and generates corresponding audit records.
 
