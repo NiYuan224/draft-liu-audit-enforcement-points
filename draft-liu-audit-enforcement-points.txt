@@ -5,7 +5,7 @@
 Agent Use of Delegation and Interaction Traceability           C. P. Liu
 Internet-Draft                                                     Y. Ni
 Intended status: Informational                                    Huawei
-Expires: 5 May 2027                                      1 November 2026
+Expires: 6 May 2027                                      2 November 2026
 
 
                      Enforcement Points for Agents
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 May 2027.
+   This Internet-Draft will expire on 6 May 2027.
 
 Copyright Notice
 
@@ -76,13 +76,13 @@ Table of Contents
    3.  Agent Workflows and Enforcement Points
    4.  Agent Client EP
      4.1.  Summary of Agent Client EP Hooks
-     4.2.  Critical Events and Corresponding Audit Record Claims
+     4.2.  Critical Events and Corresponding Audit Record Schema
      4.3.  Hook Failure Handling
    5.  Gateway EP
-     5.1.  Critical Events and Corresponding Audit Record Claims
+     5.1.  Critical Events and Corresponding Audit Record Schema
    6.  Host EP
      6.1.  Summary of Host EP Hooks
-     6.2.  Critical Event and Corresponding Audit Record Claims
+     6.2.  Critical Event and Corresponding Audit Record Schema
    7.  Security Considerations
    8.  IANA Considerations
    9.  References
@@ -348,7 +348,7 @@ Table of Contents
 
    _Table 1.  Agent Client EP Hooks and Examples_
 
-4.2.  Critical Events and Corresponding Audit Record Claims
+4.2.  Critical Events and Corresponding Audit Record Schema
 
    For each event in Table 1, this section describes observable
    information, supported interventions, and REQUIRED or OPTIONAL audit
@@ -356,6 +356,9 @@ Table of Contents
 
    The following claims apply to all events: * session_id: REQUIRED.  A
    string identifying the current session.
+
+   In addition to the common claim above, each event defines its own
+   audit record claims to capture event-specific information.
 
    1.  *Session Start:* Expose session information, including the
        session identifier and source.  Allow setting session-specific
@@ -619,7 +622,7 @@ Table of Contents
    traffic passing through them, apply controls before forwarding, and
    generate audit records.
 
-5.1.  Critical Events and Corresponding Audit Record Claims
+5.1.  Critical Events and Corresponding Audit Record Schema
 
    1.  *Before Inbound Request Forwarding:* Expose the destination agent
        and incoming request.  Allow permitting or denying forwarding and
@@ -932,10 +935,13 @@ Table of Contents
 
    _Table 2.  HOST EP Hooks and Examples_
 
-6.2.  Critical Event and Corresponding Audit Record Claims
+6.2.  Critical Event and Corresponding Audit Record Schema
 
    The following claims apply to all events: * process_id: REQUIRED.  An
    integer identifying the current process.
+
+   In addition to the common claim above, each event defines its own
+   audit record claims to capture event-specific information.
 
    1.  *Process Creation:* Expose the identifiers of the newly created
        process and its parent.  Allow denying process creation.
@@ -976,7 +982,8 @@ Table of Contents
    *  target_process_id: REQUIRED.  An integer identifying the target
       process, or the process owning the target thread.
 
-   1.  *Process Exit:* Expose the identifier of the exiting process.
+   1.  *Process Exit:* Expose the identifier of the exiting process.  No
+       additional event-specific audit record claims are defined.
 
 7.  Security Considerations
 

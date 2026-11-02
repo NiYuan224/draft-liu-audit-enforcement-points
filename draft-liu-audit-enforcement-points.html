@@ -1045,7 +1045,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Liu &amp; Ni</td>
-<td class="center">Expires 5 May 2027</td>
+<td class="center">Expires 6 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1058,12 +1058,12 @@ svg {
 <dd class="internet-draft">draft-liu-audit-enforcement-points-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-11-01" class="published">1 November 2026</time>
+<time datetime="2026-11-02" class="published">2 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-05">5 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-06">6 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1117,7 +1117,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1162,7 +1162,7 @@ svg {
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-summary-of-agent-client-ep-" class="internal xref">Summary of Agent Client EP Hooks</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
-                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-critical-events-and-corresp" class="internal xref">Critical Events and Corresponding Audit Record Claims</a></p>
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-critical-events-and-corresp" class="internal xref">Critical Events and Corresponding Audit Record Schema</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
                 <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-hook-failure-handling" class="internal xref">Hook Failure Handling</a></p>
@@ -1173,7 +1173,7 @@ svg {
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-gateway-ep" class="internal xref">Gateway EP</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-critical-events-and-correspo" class="internal xref">Critical Events and Corresponding Audit Record Claims</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-critical-events-and-correspo" class="internal xref">Critical Events and Corresponding Audit Record Schema</a></p>
 </li>
             </ul>
 </li>
@@ -1184,7 +1184,7 @@ svg {
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-summary-of-host-ep-hooks" class="internal xref">Summary of Host EP Hooks</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-critical-event-and-correspo" class="internal xref">Critical Event and Corresponding Audit Record Claims</a></p>
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-critical-event-and-correspo" class="internal xref">Critical Event and Corresponding Audit Record Schema</a></p>
 </li>
             </ul>
 </li>
@@ -1452,251 +1452,252 @@ Note: Hooks for which consensus has not been reached are omitted.
 <p id="section-4.1-3"><em>Table 1. Agent Client EP Hooks and Examples</em><a href="#section-4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="critical-events-and-corresponding-audit-record-claims">
+<div id="critical-events-and-corresponding-audit-record-schema">
 <section id="section-4.2">
         <h3 id="name-critical-events-and-corresp">
-<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-critical-events-and-corresp" class="section-name selfRef">Critical Events and Corresponding Audit Record Claims</a>
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-critical-events-and-corresp" class="section-name selfRef">Critical Events and Corresponding Audit Record Schema</a>
         </h3>
 <p id="section-4.2-1">For each event in Table 1, this section describes observable information, supported interventions, and REQUIRED or OPTIONAL audit record claims.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.2-2">The following claims apply to all events:
 * <code>session_id</code>: REQUIRED. A string identifying the current session.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-3">
-<li id="section-4.2-3.1">
-            <p id="section-4.2-3.1.1"><strong>Session Start:</strong> Expose session information, including the session identifier and source. Allow setting session-specific environment variables or injecting initial security context.
-* <code>source</code>: OPTIONAL. A string indicating how the session started, such as "startup" or "resume".<a href="#section-4.2-3.1.1" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-4">
+<li id="section-4.2-4.1">
+            <p id="section-4.2-4.1.1"><strong>Session Start:</strong> Expose session information, including the session identifier and source. Allow setting session-specific environment variables or injecting initial security context.
+* <code>source</code>: OPTIONAL. A string indicating how the session started, such as "startup" or "resume".<a href="#section-4.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-3.2">
-            <p id="section-4.2-3.2.1"><strong>Before Prompt Submit:</strong> Expose the submitted prompt and associated session information. Allow inspecting, modifying, or blocking the prompt before agent processing.
-* <code>prompt</code>: REQUIRED. A string containing the submitted user prompt.<a href="#section-4.2-3.2.1" class="pilcrow">¶</a></p>
+          <li id="section-4.2-4.2">
+            <p id="section-4.2-4.2.1"><strong>Before Prompt Submit:</strong> Expose the submitted prompt and associated session information. Allow inspecting, modifying, or blocking the prompt before agent processing.
+* <code>prompt</code>: REQUIRED. A string containing the submitted user prompt.<a href="#section-4.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-3.3">
-            <p id="section-4.2-3.3.1"><strong>Prompt Expansion:</strong> Expose prompt and command information during prompt expansion. Allow adding context or blocking expansion or submission.
+          <li id="section-4.2-4.3">
+            <p id="section-4.2-4.3.1"><strong>Prompt Expansion:</strong> Expose prompt and command information during prompt expansion. Allow adding context or blocking expansion or submission.
 * <code>command_name</code>: REQUIRED. A string identifying the command being expanded.
 * <code>command_args</code>: OPTIONAL. A string containing argument text after the command name.
-* <code>prompt</code>: OPTIONAL. A string containing the original input or expanded prompt, depending on the implementation.<a href="#section-4.2-3.3.1" class="pilcrow">¶</a></p>
+* <code>prompt</code>: OPTIONAL. A string containing the original input or expanded prompt, depending on the implementation.<a href="#section-4.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-3.4">
-            <p id="section-4.2-3.4.1"><strong>Before Model Request:</strong> Expose model request information, including the selected model, provider, and request messages. Allow modifying or blocking model requests before invocation.
+          <li id="section-4.2-4.4">
+            <p id="section-4.2-4.4.1"><strong>Before Model Request:</strong> Expose model request information, including the selected model, provider, and request messages. Allow modifying or blocking model requests before invocation.
 * <code>model</code>: REQUIRED. A string identifying the model selected for the request.
 * <code>provider</code>: OPTIONAL. A string identifying the model provider.
-* <code>messages</code>: OPTIONAL. An array of message objects included in the model request.<a href="#section-4.2-3.4.1" class="pilcrow">¶</a></p>
+* <code>messages</code>: OPTIONAL. An array of message objects included in the model request.<a href="#section-4.2-4.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-3.5">
-            <p id="section-4.2-3.5.1"><strong>After Model Response:</strong> Expose generated content, response metadata, and token usage. Allow modifying, replacing, or blocking the response before subsequent processing.
+          <li id="section-4.2-4.5">
+            <p id="section-4.2-4.5.1"><strong>After Model Response:</strong> Expose generated content, response metadata, and token usage. Allow modifying, replacing, or blocking the response before subsequent processing.
 * <code>model</code>: REQUIRED. A string identifying the model associated with the request.
 * <code>response</code>: OPTIONAL. An object containing the model response information exposed by the hook.
 * <code>finish_reason</code>: OPTIONAL. A string indicating why response generation ended.
-* <code>usage</code>: OPTIONAL. An object containing token usage information.<a href="#section-4.2-3.5.1" class="pilcrow">¶</a></p>
+* <code>usage</code>: OPTIONAL. An object containing token usage information.<a href="#section-4.2-4.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-3.6">
-            <p id="section-4.2-3.6.1"><strong>Before Context Compaction:</strong> Expose session information and the compaction trigger. Allow blocking compaction.
-* <code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically (<code>"auto"</code>) or manually (<code>"manual"</code>).<a href="#section-4.2-3.6.1" class="pilcrow">¶</a></p>
+          <li id="section-4.2-4.6">
+            <p id="section-4.2-4.6.1"><strong>Before Context Compaction:</strong> Expose session information and the compaction trigger. Allow blocking compaction.
+* <code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically (<code>"auto"</code>) or manually (<code>"manual"</code>).<a href="#section-4.2-4.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-3.7">
-            <p id="section-4.2-3.7.1"><strong>After Context Compaction:</strong> Expose session information, the compaction trigger, and the generated summary.<a href="#section-4.2-3.7.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<ul class="normal">
-<li class="normal" id="section-4.2-4.1">
-            <p id="section-4.2-4.1.1"><code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically (<code>"auto"</code>) or manually (<code>"manual"</code>).<a href="#section-4.2-4.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.2-4.2">
-            <p id="section-4.2-4.2.1"><code>compact_summary</code>: OPTIONAL. A string containing the conversation summary generated by compaction.<a href="#section-4.2-4.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-5">
-<li id="section-4.2-5.1">
-            <p id="section-4.2-5.1.1"><strong>Subagent Start:</strong> Expose session information and the subagent identifier and type. Allow injecting additional context or blocking subagent creation.<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
+          <li id="section-4.2-4.7">
+            <p id="section-4.2-4.7.1"><strong>After Context Compaction:</strong> Expose session information, the compaction trigger, and the generated summary.<a href="#section-4.2-4.7.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-6.1">
-            <p id="section-4.2-6.1.1"><code>agent_id</code>: REQUIRED. A string identifying the subagent.<a href="#section-4.2-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-5.1">
+            <p id="section-4.2-5.1.1"><code>trigger</code>: REQUIRED. A string indicating whether compaction was triggered automatically (<code>"auto"</code>) or manually (<code>"manual"</code>).<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-6.2">
-            <p id="section-4.2-6.2.1"><code>agent_type</code>: REQUIRED. A string indicating the subagent type.<a href="#section-4.2-6.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-5.2">
+            <p id="section-4.2-5.2.1"><code>compact_summary</code>: OPTIONAL. A string containing the conversation summary generated by compaction.<a href="#section-4.2-5.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-7">
-<li id="section-4.2-7.1">
-            <p id="section-4.2-7.1.1"><strong>Subagent Completion:</strong> Expose subagent information and its final response. Allow requesting continued execution.<a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-6">
+<li id="section-4.2-6.1">
+            <p id="section-4.2-6.1.1"><strong>Subagent Start:</strong> Expose session information and the subagent identifier and type. Allow injecting additional context or blocking subagent creation.<a href="#section-4.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-8.1">
-            <p id="section-4.2-8.1.1"><code>agent_id</code>: REQUIRED. A string identifying the subagent.<a href="#section-4.2-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-7.1">
+            <p id="section-4.2-7.1.1"><code>agent_id</code>: REQUIRED. A string identifying the subagent.<a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-8.2">
-            <p id="section-4.2-8.2.1"><code>agent_type</code>: REQUIRED. A string indicating the subagent type.<a href="#section-4.2-8.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.2-8.3">
-            <p id="section-4.2-8.3.1"><code>last_assistant_message</code>: OPTIONAL. A string containing the subagent's last message.<a href="#section-4.2-8.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-7.2">
+            <p id="section-4.2-7.2.1"><code>agent_type</code>: REQUIRED. A string indicating the subagent type.<a href="#section-4.2-7.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-9">
-<li id="section-4.2-9.1">
-            <p id="section-4.2-9.1.1"><strong>Before Tool Use:</strong> Expose the tool name, invocation arguments, and tool call identifier. Allow approving, denying, or modifying tool invocations before execution.<a href="#section-4.2-9.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-8">
+<li id="section-4.2-8.1">
+            <p id="section-4.2-8.1.1"><strong>Subagent Completion:</strong> Expose subagent information and its final response. Allow requesting continued execution.<a href="#section-4.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-10.1">
-            <p id="section-4.2-10.1.1"><code>tool_name</code>: REQUIRED. A string identifying the tool to be invoked.<a href="#section-4.2-10.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-9.1">
+            <p id="section-4.2-9.1.1"><code>agent_id</code>: REQUIRED. A string identifying the subagent.<a href="#section-4.2-9.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-10.2">
-            <p id="section-4.2-10.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-10.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-9.2">
+            <p id="section-4.2-9.2.1"><code>agent_type</code>: REQUIRED. A string indicating the subagent type.<a href="#section-4.2-9.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-10.3">
-            <p id="section-4.2-10.3.1"><code>tool_use_id</code>: OPTIONAL. A string identifying the tool invocation.<a href="#section-4.2-10.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-9.3">
+            <p id="section-4.2-9.3.1"><code>last_assistant_message</code>: OPTIONAL. A string containing the subagent's last message.<a href="#section-4.2-9.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-11">
-<li id="section-4.2-11.1">
-            <p id="section-4.2-11.1.1"><strong>Permission Request:</strong> Expose the tool name and invocation arguments associated with a permission request. Allow approving or denying the requested operation.<a href="#section-4.2-11.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-10">
+<li id="section-4.2-10.1">
+            <p id="section-4.2-10.1.1"><strong>Before Tool Use:</strong> Expose the tool name, invocation arguments, and tool call identifier. Allow approving, denying, or modifying tool invocations before execution.<a href="#section-4.2-10.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-12.1">
-            <p id="section-4.2-12.1.1"><code>tool_name</code>: REQUIRED. A string identifying the tool requesting permission.<a href="#section-4.2-12.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-11.1">
+            <p id="section-4.2-11.1.1"><code>tool_name</code>: REQUIRED. A string identifying the tool to be invoked.<a href="#section-4.2-11.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-12.2">
-            <p id="section-4.2-12.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-12.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-11.2">
+            <p id="section-4.2-11.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-11.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.2-11.3">
+            <p id="section-4.2-11.3.1"><code>tool_use_id</code>: OPTIONAL. A string identifying the tool invocation.<a href="#section-4.2-11.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-13">
-<li id="section-4.2-13.1">
-            <p id="section-4.2-13.1.1"><strong>Permission Denied:</strong> Expose the tool name, invocation arguments, and reason for a denied operation.<a href="#section-4.2-13.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-12">
+<li id="section-4.2-12.1">
+            <p id="section-4.2-12.1.1"><strong>Permission Request:</strong> Expose the tool name and invocation arguments associated with a permission request. Allow approving or denying the requested operation.<a href="#section-4.2-12.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-14.1">
-            <p id="section-4.2-14.1.1"><code>tool_name</code>: REQUIRED. A string identifying the tool whose invocation was denied.<a href="#section-4.2-14.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-13.1">
+            <p id="section-4.2-13.1.1"><code>tool_name</code>: REQUIRED. A string identifying the tool requesting permission.<a href="#section-4.2-13.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-14.2">
-            <p id="section-4.2-14.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-14.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.2-14.3">
-            <p id="section-4.2-14.3.1"><code>reason</code>: OPTIONAL. A string indicating why the invocation was denied.<a href="#section-4.2-14.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-13.2">
+            <p id="section-4.2-13.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-13.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-15">
-<li id="section-4.2-15.1">
-            <p id="section-4.2-15.1.1"><strong>After Tool Use:</strong> Expose the tool name, invocation arguments, and execution result. Allow modifying or withholding the result before subsequent model processing.<a href="#section-4.2-15.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-14">
+<li id="section-4.2-14.1">
+            <p id="section-4.2-14.1.1"><strong>Permission Denied:</strong> Expose the tool name, invocation arguments, and reason for a denied operation.<a href="#section-4.2-14.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-16.1">
-            <p id="section-4.2-16.1.1"><code>tool_name</code>: REQUIRED. A string identifying the invoked tool.<a href="#section-4.2-16.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-15.1">
+            <p id="section-4.2-15.1.1"><code>tool_name</code>: REQUIRED. A string identifying the tool whose invocation was denied.<a href="#section-4.2-15.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-16.2">
-            <p id="section-4.2-16.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-16.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-15.2">
+            <p id="section-4.2-15.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-15.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-16.3">
-            <p id="section-4.2-16.3.1"><code>tool_response</code>: OPTIONAL. The tool execution result. Depending on the tool, this may be a string containing file content, an object containing command output and exit status, or an array of query results.<a href="#section-4.2-16.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-15.3">
+            <p id="section-4.2-15.3.1"><code>reason</code>: OPTIONAL. A string indicating why the invocation was denied.<a href="#section-4.2-15.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-17">
-<li id="section-4.2-17.1">
-            <p id="section-4.2-17.1.1"><strong>Tool Batch Completion:</strong> Expose the tool calls in a completed batch, including their arguments and results.
+<ol start="1" type="1" class="normal type-1" id="section-4.2-16">
+<li id="section-4.2-16.1">
+            <p id="section-4.2-16.1.1"><strong>After Tool Use:</strong> Expose the tool name, invocation arguments, and execution result. Allow modifying or withholding the result before subsequent model processing.<a href="#section-4.2-16.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<ul class="normal">
+<li class="normal" id="section-4.2-17.1">
+            <p id="section-4.2-17.1.1"><code>tool_name</code>: REQUIRED. A string identifying the invoked tool.<a href="#section-4.2-17.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.2-17.2">
+            <p id="section-4.2-17.2.1"><code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-17.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.2-17.3">
+            <p id="section-4.2-17.3.1"><code>tool_response</code>: OPTIONAL. The tool execution result. Depending on the tool, this may be a string containing file content, an object containing command output and exit status, or an array of query results.<a href="#section-4.2-17.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-18">
+<li id="section-4.2-18.1">
+            <p id="section-4.2-18.1.1"><strong>Tool Batch Completion:</strong> Expose the tool calls in a completed batch, including their arguments and results.
 * <code>tool_calls</code>: REQUIRED. An array of objects describing the tool calls in the batch. Each object contains:
   * <code>tool_name</code>: REQUIRED. A string identifying the invoked tool.
   * <code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.
   * <code>tool_use_id</code>: REQUIRED. A string identifying the tool invocation.
-  * <code>tool_response</code>: OPTIONAL. The tool execution result, represented as a string, array, or object depending on the implementation.<a href="#section-4.2-17.1.1" class="pilcrow">¶</a></p>
+  * <code>tool_response</code>: OPTIONAL. The tool execution result, represented as a string, array, or object depending on the implementation.<a href="#section-4.2-18.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-17.2">
-            <p id="section-4.2-17.2.1"><strong>Post Tool Use Failure:</strong> Expose the tool name, invocation arguments, and error information for a failed tool invocation.
+          <li id="section-4.2-18.2">
+            <p id="section-4.2-18.2.1"><strong>Post Tool Use Failure:</strong> Expose the tool name, invocation arguments, and error information for a failed tool invocation.
 * <code>tool_name</code>: REQUIRED. A string identifying the tool whose invocation failed.
 * <code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.
 * <code>error</code>: REQUIRED. A string describing the tool invocation failure.
-* <code>is_interrupt</code>: OPTIONAL. A boolean indicating whether the failure was caused by user interruption.<a href="#section-4.2-17.2.1" class="pilcrow">¶</a></p>
+* <code>is_interrupt</code>: OPTIONAL. A boolean indicating whether the failure was caused by user interruption.<a href="#section-4.2-18.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-17.3">
-            <p id="section-4.2-17.3.1"><strong>Before MCP Execution:</strong> Expose the MCP server name, tool name, and invocation arguments. Allow approving or denying MCP tool execution before invocation.
+          <li id="section-4.2-18.3">
+            <p id="section-4.2-18.3.1"><strong>Before MCP Execution:</strong> Expose the MCP server name, tool name, and invocation arguments. Allow approving or denying MCP tool execution before invocation.
 * <code>mcp_server_name</code>: REQUIRED. A string identifying the MCP server in the client's configuration.
 * <code>tool_name</code>: REQUIRED. A string identifying the MCP tool to be invoked.
-* <code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-17.3.1" class="pilcrow">¶</a></p>
+* <code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.<a href="#section-4.2-18.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-17.4">
-            <p id="section-4.2-17.4.1"><strong>After MCP Execution:</strong> Expose the MCP server name, tool name, invocation arguments, and execution result. Allow modifying or replacing the result before subsequent processing.
+          <li id="section-4.2-18.4">
+            <p id="section-4.2-18.4.1"><strong>After MCP Execution:</strong> Expose the MCP server name, tool name, invocation arguments, and execution result. Allow modifying or replacing the result before subsequent processing.
 * <code>mcp_server_name</code>: REQUIRED. A string identifying the MCP server in the client's configuration.
 * <code>tool_name</code>: REQUIRED. A string identifying the invoked MCP tool.
 * <code>tool_input</code>: REQUIRED. An object containing the tool's input parameters.
-* <code>tool_response</code>: OPTIONAL. The tool execution result, represented as a string, object, or array depending on the tool.<a href="#section-4.2-17.4.1" class="pilcrow">¶</a></p>
+* <code>tool_response</code>: OPTIONAL. The tool execution result, represented as a string, object, or array depending on the tool.<a href="#section-4.2-18.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-17.5">
-            <p id="section-4.2-17.5.1"><strong>Before Command Execution:</strong> Expose the command and working directory. Allow permitting, denying, or requesting user confirmation before command execution.
+          <li id="section-4.2-18.5">
+            <p id="section-4.2-18.5.1"><strong>Before Command Execution:</strong> Expose the command and working directory. Allow permitting, denying, or requesting user confirmation before command execution.
 * <code>command</code>: REQUIRED. A string containing the command to be executed.
-* <code>cwd</code>: OPTIONAL. A string specifying the current working directory.<a href="#section-4.2-17.5.1" class="pilcrow">¶</a></p>
+* <code>cwd</code>: OPTIONAL. A string specifying the current working directory.<a href="#section-4.2-18.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-4.2-17.6">
-            <p id="section-4.2-17.6.1"><strong>After Command Execution:</strong> Expose the executed command and captured output.<a href="#section-4.2-17.6.1" class="pilcrow">¶</a></p>
+          <li id="section-4.2-18.6">
+            <p id="section-4.2-18.6.1"><strong>After Command Execution:</strong> Expose the executed command and captured output.<a href="#section-4.2-18.6.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-18.1">
-            <p id="section-4.2-18.1.1"><code>command</code>: REQUIRED. A string containing the executed command.<a href="#section-4.2-18.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-19.1">
+            <p id="section-4.2-19.1.1"><code>command</code>: REQUIRED. A string containing the executed command.<a href="#section-4.2-19.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-18.2">
-            <p id="section-4.2-18.2.1"><code>output</code>: OPTIONAL. A string containing the captured command output.<a href="#section-4.2-18.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-19.2">
+            <p id="section-4.2-19.2.1"><code>output</code>: OPTIONAL. A string containing the captured command output.<a href="#section-4.2-19.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-19">
-<li id="section-4.2-19.1">
-            <p id="section-4.2-19.1.1"><strong>Before File Access:</strong> Expose file access information, including the file path and requested file content. Allow permitting or denying file access before the content is provided to the agent.<a href="#section-4.2-19.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-20">
+<li id="section-4.2-20.1">
+            <p id="section-4.2-20.1.1"><strong>Before File Access:</strong> Expose file access information, including the file path and requested file content. Allow permitting or denying file access before the content is provided to the agent.<a href="#section-4.2-20.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-20.1">
-            <p id="section-4.2-20.1.1"><code>file_path</code>: REQUIRED. A string specifying the path of the file being accessed.<a href="#section-4.2-20.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-21.1">
+            <p id="section-4.2-21.1.1"><code>file_path</code>: REQUIRED. A string specifying the path of the file being accessed.<a href="#section-4.2-21.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-20.2">
-            <p id="section-4.2-20.2.1"><code>requested_content</code>: OPTIONAL. A string or object containing the content of the file requested by the agent.<a href="#section-4.2-20.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-21.2">
+            <p id="section-4.2-21.2.1"><code>requested_content</code>: OPTIONAL. A string or object containing the content of the file requested by the agent.<a href="#section-4.2-21.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-21">
-<li id="section-4.2-21.1">
-            <p id="section-4.2-21.1.1"><strong>After File Modification:</strong> Expose file modification information, including the file path and changes made, such as the original and modified text.<a href="#section-4.2-21.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-22">
+<li id="section-4.2-22.1">
+            <p id="section-4.2-22.1.1"><strong>After File Modification:</strong> Expose file modification information, including the file path and changes made, such as the original and modified text.<a href="#section-4.2-22.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-22.1">
-            <p id="section-4.2-22.1.1"><code>file_path</code>: REQUIRED. A string specifying the path of the modified file.<a href="#section-4.2-22.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-23.1">
+            <p id="section-4.2-23.1.1"><code>file_path</code>: REQUIRED. A string specifying the path of the modified file.<a href="#section-4.2-23.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-22.2">
-            <p id="section-4.2-22.2.1"><code>edits</code>: REQUIRED. An array of objects describing the specific changes made, where each object contains:<a href="#section-4.2-22.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-23.2">
+            <p id="section-4.2-23.2.1"><code>edits</code>: REQUIRED. An array of objects describing the specific changes made, where each object contains:<a href="#section-4.2-23.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.2-22.2.2.1">
-                <p id="section-4.2-22.2.2.1.1"><code>old_string</code>: REQUIRED. A string containing the original text segment before modification.<a href="#section-4.2-22.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-23.2.2.1">
+                <p id="section-4.2-23.2.2.1.1"><code>old_string</code>: REQUIRED. A string containing the original text segment before modification.<a href="#section-4.2-23.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-4.2-22.2.2.2">
-                <p id="section-4.2-22.2.2.2.1"><code>new_string</code>: REQUIRED. A string containing the replacement text segment after modification.<a href="#section-4.2-22.2.2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-4.2-23.2.2.2">
+                <p id="section-4.2-23.2.2.2.1"><code>new_string</code>: REQUIRED. A string containing the replacement text segment after modification.<a href="#section-4.2-23.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-23">
-<li id="section-4.2-23.1">
-            <p id="section-4.2-23.1.1"><strong>Agent Completion:</strong> Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.<a href="#section-4.2-23.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-24">
+<li id="section-4.2-24.1">
+            <p id="section-4.2-24.1.1"><strong>Agent Completion:</strong> Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.<a href="#section-4.2-24.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-4.2-24.1">
-            <p id="section-4.2-24.1.1"><code>stop_reason</code>: REQUIRED. A string specifying why the agent intends to stop (e.g., "end_turn", "task_completed", "max_tokens", "user_interrupt").<a href="#section-4.2-24.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-25.1">
+            <p id="section-4.2-25.1.1"><code>stop_reason</code>: REQUIRED. A string specifying why the agent intends to stop (e.g., "end_turn", "task_completed", "max_tokens", "user_interrupt").<a href="#section-4.2-25.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-24.2">
-            <p id="section-4.2-24.2.1"><code>last_assistant_message</code>: OPTIONAL. A string or message object containing the final answer, summary, or response text generated by the agent prior to stopping.<a href="#section-4.2-24.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-25.2">
+            <p id="section-4.2-25.2.1"><code>last_assistant_message</code>: OPTIONAL. A string or message object containing the final answer, summary, or response text generated by the agent prior to stopping.<a href="#section-4.2-25.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-24.3">
-            <p id="section-4.2-24.3.1"><code>stop_hook_active</code>: OPTIONAL. A boolean indicating whether this stop event was triggered during a re-entrant evaluation loop, used to prevent infinite hook recursion.<a href="#section-4.2-24.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-25.3">
+            <p id="section-4.2-25.3.1"><code>stop_hook_active</code>: OPTIONAL. A boolean indicating whether this stop event was triggered during a re-entrant evaluation loop, used to prevent infinite hook recursion.<a href="#section-4.2-25.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-4.2-25">
-<li id="section-4.2-25.1">
-            <p id="section-4.2-25.1.1"><strong>Session End:</strong> Expose session termination information, including the session identifier, termination reason, and session duration.
+<ol start="1" type="1" class="normal type-1" id="section-4.2-26">
+<li id="section-4.2-26.1">
+            <p id="section-4.2-26.1.1"><strong>Session End:</strong> Expose session termination information, including the session identifier, termination reason, and session duration.
 * <code>session_id</code>: REQUIRED. A string identifying the closed session.
 * <code>reason</code>: REQUIRED. A string indicating the precise cause of session termination (e.g., "user_exit", "clear_context", "timeout", "auth_logout", "fatal_error").
 * <code>session_duration</code>: OPTIONAL. A numeric value representing the total active runtime of the session.
-* <code>total_token_usage</code>: OPTIONAL. An object capturing cumulative token consumption across the session.<a href="#section-4.2-25.1.1" class="pilcrow">¶</a></p>
+* <code>total_token_usage</code>: OPTIONAL. An object capturing cumulative token consumption across the session.<a href="#section-4.2-26.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 </section>
@@ -1734,10 +1735,10 @@ Note: Hooks for which consensus has not been reached are omitted.
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-gateway-ep" class="section-name selfRef">Gateway EP</a>
       </h2>
 <p id="section-5-1">Gateway EPs proxy requests and responses between clients and agents, and between agents and models, tools or other agents. They observe traffic passing through them, apply controls before forwarding, and generate audit records.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<div id="critical-events-and-corresponding-audit-record-claims-1">
+<div id="critical-events-and-corresponding-audit-record-schema-1">
 <section id="section-5.1">
         <h3 id="name-critical-events-and-correspo">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-critical-events-and-correspo" class="section-name selfRef">Critical Events and Corresponding Audit Record Claims</a>
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-critical-events-and-correspo" class="section-name selfRef">Critical Events and Corresponding Audit Record Schema</a>
         </h3>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-1">
 <li id="section-5.1-1.1">
@@ -2068,75 +2069,76 @@ Note: Hooks for which consensus has not been reached are omitted.
 <p id="section-6.1-2"><em>Table 2.  HOST EP Hooks and Examples</em><a href="#section-6.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="critical-event-and-corresponding-audit-record-claims">
+<div id="critical-event-and-corresponding-audit-record-schema">
 <section id="section-6.2">
         <h3 id="name-critical-event-and-correspo">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-critical-event-and-correspo" class="section-name selfRef">Critical Event and Corresponding Audit Record Claims</a>
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-critical-event-and-correspo" class="section-name selfRef">Critical Event and Corresponding Audit Record Schema</a>
         </h3>
 <p id="section-6.2-1">The following claims apply to all events:
 * <code>process_id</code>: REQUIRED. An integer identifying the current process.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-2">
-<li id="section-6.2-2.1">
-            <p id="section-6.2-2.1.1"><strong>Process Creation:</strong> Expose the identifiers of the newly created process and its parent. Allow denying process creation.<a href="#section-6.2-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-3">
+<li id="section-6.2-3.1">
+            <p id="section-6.2-3.1.1"><strong>Process Creation:</strong> Expose the identifiers of the newly created process and its parent. Allow denying process creation.<a href="#section-6.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-3.1">
-            <p id="section-6.2-3.1.1"><code>parent_process_id</code>: REQUIRED. An integer identifying its parent process.<a href="#section-6.2-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-4.1">
+            <p id="section-6.2-4.1.1"><code>parent_process_id</code>: REQUIRED. An integer identifying its parent process.<a href="#section-6.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-4">
-<li id="section-6.2-4.1">
-            <p id="section-6.2-4.1.1"><strong>Before Program Execution:</strong> Expose the process identifier and the program to be executed. Allow permitting or denying program execution.<a href="#section-6.2-4.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-5">
+<li id="section-6.2-5.1">
+            <p id="section-6.2-5.1.1"><strong>Before Program Execution:</strong> Expose the process identifier and the program to be executed. Allow permitting or denying program execution.<a href="#section-6.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-5.1">
-            <p id="section-6.2-5.1.1"><code>executable_path</code>: OPTIONAL. A string specifying the executable path.<a href="#section-6.2-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-6.1">
+            <p id="section-6.2-6.1.1"><code>executable_path</code>: OPTIONAL. A string specifying the executable path.<a href="#section-6.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-6">
-<li id="section-6.2-6.1">
-            <p id="section-6.2-6.1.1"><strong>Before File Access:</strong> Expose the requested file operation and the target file. Allow permitting or denying the operation.<a href="#section-6.2-6.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-7">
+<li id="section-6.2-7.1">
+            <p id="section-6.2-7.1.1"><strong>Before File Access:</strong> Expose the requested file operation and the target file. Allow permitting or denying the operation.<a href="#section-6.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-7.1">
-            <p id="section-6.2-7.1.1"><code>operation</code>: REQUIRED. A string with the value "open" or "read".<a href="#section-6.2-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-8.1">
+            <p id="section-6.2-8.1.1"><code>operation</code>: REQUIRED. A string with the value "open" or "read".<a href="#section-6.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.2-7.2">
-            <p id="section-6.2-7.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path.<a href="#section-6.2-7.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.2-8.2">
+            <p id="section-6.2-8.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path.<a href="#section-6.2-8.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-8">
-<li id="section-6.2-8.1">
-            <p id="section-6.2-8.1.1"><strong>Before File Modification:</strong> Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation.<a href="#section-6.2-8.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-9">
+<li id="section-6.2-9.1">
+            <p id="section-6.2-9.1.1"><strong>Before File Modification:</strong> Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation.<a href="#section-6.2-9.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-9.1">
-            <p id="section-6.2-9.1.1"><code>operation</code>: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".<a href="#section-6.2-9.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-10.1">
+            <p id="section-6.2-10.1.1"><code>operation</code>: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".<a href="#section-6.2-10.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.2-9.2">
-            <p id="section-6.2-9.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.<a href="#section-6.2-9.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.2-10.2">
+            <p id="section-6.2-10.2.1"><code>file_path</code>: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.<a href="#section-6.2-10.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.2-9.3">
-            <p id="section-6.2-9.3.1"><code>destination_path</code>: OPTIONAL. A string specifying the destination path for a rename operation.<a href="#section-6.2-9.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.2-10.3">
+            <p id="section-6.2-10.3.1"><code>destination_path</code>: OPTIONAL. A string specifying the destination path for a rename operation.<a href="#section-6.2-10.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-10">
-<li id="section-6.2-10.1">
-            <p id="section-6.2-10.1.1"><strong>Before Access to Another Process:</strong> Expose the identity of the process being accessed. Allow permitting or denying access.<a href="#section-6.2-10.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-11">
+<li id="section-6.2-11.1">
+            <p id="section-6.2-11.1.1"><strong>Before Access to Another Process:</strong> Expose the identity of the process being accessed. Allow permitting or denying access.<a href="#section-6.2-11.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-6.2-11.1">
-            <p id="section-6.2-11.1.1"><code>target_process_id</code>: REQUIRED. An integer identifying the target process, or the process owning the target thread.<a href="#section-6.2-11.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-12.1">
+            <p id="section-6.2-12.1.1"><code>target_process_id</code>: REQUIRED. An integer identifying the target process, or the process owning the target thread.<a href="#section-6.2-12.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<ol start="1" type="1" class="normal type-1" id="section-6.2-12">
-<li id="section-6.2-12.1">
-            <p id="section-6.2-12.1.1"><strong>Process Exit:</strong> Expose the identifier of the exiting process.<a href="#section-6.2-12.1.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-13">
+<li id="section-6.2-13.1">
+            <p id="section-6.2-13.1.1"><strong>Process Exit:</strong> Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.<a href="#section-6.2-13.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 </section>
