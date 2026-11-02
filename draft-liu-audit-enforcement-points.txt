@@ -676,7 +676,7 @@ Table of Contents
       messages and supplied parameters.
 
    1.  *Before Model Response Forwarding:* Expose the model response.
-       Allow permitting or denying forwarding and modifying or response
+       Allow permitting or denying forwarding and modifying the response
        content.
 
    *  request_id: REQUIRED.  A string matching the identifier recorded
@@ -688,7 +688,7 @@ Table of Contents
    *  modified: OPTIONAL.  A boolean indicating whether the gateway
       modified this model response before forwarding.
 
-   *  reason: OPTIONAL.  A string explaining why this model request was
+   *  reason: OPTIONAL.  A string explaining why this model response was
       blocked or modified.
 
    *  response_body: OPTIONAL.  The model response content.
@@ -697,8 +697,9 @@ Table of Contents
 
    *  usage: OPTIONAL.  An object containing token usage information.
 
-   *  duration: OPTIONAL.  A numeric value representing the elapsed time
-      between receiving the model request and receiving this response.
+   *  duration: OPTIONAL.  A numeric value representing the elapsed
+      time, in milliseconds, from forwarding the corresponding model
+      request to receiving the complete model response.
 
    1.  *Before Tool Request Forwarding:* Expose the requested tool and
        supplied arguments.  Allow permitting or denying forwarding and
@@ -747,9 +748,8 @@ Table of Contents
    *  error: OPTIONAL.  Error information reported for the tool call.
 
    *  duration: OPTIONAL.  A numeric value representing the elapsed
-      time, in milliseconds, from when the gateway received the
-      corresponding tool request until it received the complete tool
-      response.
+      time, in milliseconds, from forwarding the corresponding tool
+      request to receiving the complete tool response.
 
    1.  *Before Outbound Agent Request Forwarding:* Expose the
        destination agent and outgoing request.  Allow permitting or
@@ -797,7 +797,8 @@ Table of Contents
 
    *  response_body: OPTIONAL.  The returned agent response content.
 
-   *  error: OPTIONAL.  Error information reported for the agent call.
+   *  error: OPTIONAL.  Error information reported by the destination
+      agent or its service.
 
    *  duration: OPTIONAL.  A numeric value representing the elapsed
       time, in milliseconds, from when the gateway received the
@@ -822,8 +823,8 @@ Table of Contents
 
    *  response_body: OPTIONAL.  The agent response content.
 
-   *  error: OPTIONAL.  Error information reported for the agent
-      request.
+   *  error: OPTIONAL.  Error information reported by the destination
+      agent or its service.
 
    *  duration: OPTIONAL.  A numeric value representing the elapsed
       time, in milliseconds, from when the gateway received the

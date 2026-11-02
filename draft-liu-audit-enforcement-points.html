@@ -1798,7 +1798,7 @@ Note: Hooks for which consensus has not been reached are omitted.
         </ul>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-5">
 <li id="section-5.1-5.1">
-            <p id="section-5.1-5.1.1"><strong>Before Model Response Forwarding:</strong> Expose the model response. Allow permitting or denying forwarding and modifying or response content.<a href="#section-5.1-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-5.1.1"><strong>Before Model Response Forwarding:</strong> Expose the model response. Allow permitting or denying forwarding and modifying the response content.<a href="#section-5.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
@@ -1812,7 +1812,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-6.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.<a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.4">
-            <p id="section-5.1-6.4.1"><code>reason</code>: OPTIONAL. A string explaining why this model request was blocked or modified.<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.4.1"><code>reason</code>: OPTIONAL. A string explaining why this model response was blocked or modified.<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.5">
             <p id="section-5.1-6.5.1"><code>response_body</code>: OPTIONAL. The model response content.<a href="#section-5.1-6.5.1" class="pilcrow">¶</a></p>
@@ -1824,7 +1824,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-6.7.1"><code>usage</code>: OPTIONAL. An object containing token usage information.<a href="#section-5.1-6.7.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.8">
-            <p id="section-5.1-6.8.1"><code>duration</code>: OPTIONAL.  A numeric value representing the elapsed time between receiving the model request and receiving this response.<a href="#section-5.1-6.8.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.8.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding model request to receiving the complete model response.<a href="#section-5.1-6.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-7">
@@ -1880,7 +1880,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-10.6.1"><code>error</code>: OPTIONAL. Error information reported for the tool call.<a href="#section-5.1-10.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-10.7">
-            <p id="section-5.1-10.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding tool request until it received the complete tool response.<a href="#section-5.1-10.7.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-10.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding tool request to receiving the complete tool response.<a href="#section-5.1-10.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-11">
@@ -1933,7 +1933,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-14.5.1"><code>response_body</code>: OPTIONAL. The returned agent response content.<a href="#section-5.1-14.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.6">
-            <p id="section-5.1-14.6.1"><code>error</code>: OPTIONAL. Error information reported for the agent call.<a href="#section-5.1-14.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-14.6.1"><code>error</code>: OPTIONAL. Error information reported by the destination agent or its service.<a href="#section-5.1-14.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.7">
             <p id="section-5.1-14.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding outbound agent request until it received the complete agent response.<a href="#section-5.1-14.7.1" class="pilcrow">¶</a></p>
@@ -1961,7 +1961,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-16.5.1"><code>response_body</code>: OPTIONAL. The agent response content.<a href="#section-5.1-16.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.6">
-            <p id="section-5.1-16.6.1"><code>error</code>: OPTIONAL. Error information reported for the agent request.<a href="#section-5.1-16.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-16.6.1"><code>error</code>: OPTIONAL. Error information reported by the destination agent or its service.<a href="#section-5.1-16.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.7">
             <p id="section-5.1-16.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding inbound request until it received the complete agent response.<a href="#section-5.1-16.7.1" class="pilcrow">¶</a></p>
