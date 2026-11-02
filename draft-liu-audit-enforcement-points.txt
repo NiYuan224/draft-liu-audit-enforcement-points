@@ -107,7 +107,7 @@ Table of Contents
    [ClaudeCodeHooks][CursorHooks][HooksSecurity]; gateways inspect
    requests and responses and record access decisions and content
    filtering results[LiteLLMLogging]; Endpoint Detection and Response
-   (EDR) monitors process execution, file access, and network
+   (EDR) systems monitor process execution, file access, and network
    connections[DefenderEDR].
 
    This document considers three categories of EPs: Agent Client EPs,
