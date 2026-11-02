@@ -79,8 +79,8 @@ informative:
     target: https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response
 
   AUDIT-CHARTER:
-  title: "Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter"
-  target: "https://datatracker.ietf.org/doc/bofreq-mirjak-audit/"
+    title: "Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter"
+    target: "https://datatracker.ietf.org/doc/bofreq-mirjak-audit/"
 
 
 
