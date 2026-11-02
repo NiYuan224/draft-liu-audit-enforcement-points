@@ -688,9 +688,8 @@ Table of Contents
    *  modified: OPTIONAL.  A boolean indicating whether the gateway
       modified this model response before forwarding.
 
-   *  reason: REQUIRED when decision is "deny" or modified is true;
-      otherwise OPTIONAL.  A string explaining why this model response
-      was blocked or modified.
+   *  reason: OPTIONAL.  A string explaining why this model request was
+      blocked or modified.
 
    *  response_body: OPTIONAL.  The model response content.
 
@@ -721,7 +720,7 @@ Table of Contents
    *  decision: REQUIRED.  A string indicating "allow" or "deny" for
       forwarding this request to the tool service.
 
-   *  modified: REQUIRED.  A boolean indicating whether the gateway
+   *  modified: OPTIONAL.  A boolean indicating whether the gateway
       modified this tool request before forwarding.
 
    *  reason: OPTIONAL.  A string explaining why this tool request was

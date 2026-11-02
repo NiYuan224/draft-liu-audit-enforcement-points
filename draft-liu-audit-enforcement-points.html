@@ -1812,7 +1812,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-6.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.<a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.4">
-            <p id="section-5.1-6.4.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this model response was blocked or modified.<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.4.1"><code>reason</code>: OPTIONAL. A string explaining why this model request was blocked or modified.<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.5">
             <p id="section-5.1-6.5.1"><code>response_body</code>: OPTIONAL. The model response content.<a href="#section-5.1-6.5.1" class="pilcrow">¶</a></p>
@@ -1849,7 +1849,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-8.5.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the tool service.<a href="#section-5.1-8.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-8.6">
-            <p id="section-5.1-8.6.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this tool request before forwarding.<a href="#section-5.1-8.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-8.6.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this tool request before forwarding.<a href="#section-5.1-8.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-8.7">
             <p id="section-5.1-8.7.1"><code>reason</code>: OPTIONAL. A string explaining why this tool request was blocked or modified.<a href="#section-5.1-8.7.1" class="pilcrow">¶</a></p>
