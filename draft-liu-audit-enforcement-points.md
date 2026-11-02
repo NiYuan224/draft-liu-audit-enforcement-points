@@ -467,7 +467,7 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 * `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding model request.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this model response to the caller.
 * `modified`: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this model response was blocked or modified.
+* `reason`: OPTIONAL. A string explaining why this model request was blocked or modified.
 * `response_body`: OPTIONAL. The model response content.
 * `error`: OPTIONAL. Error information reported for the model call.
 * `usage`: OPTIONAL. An object containing token usage information.
@@ -481,7 +481,7 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 * `tool_name`: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested tool.
 * `arguments`: OPTIONAL. An object containing the supplied tool arguments.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the tool service.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this tool request before forwarding.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this tool request before forwarding.
 * `reason`: OPTIONAL. A string explaining why this tool request was blocked or modified.
 
 5. **Before Tool Response Forwarding:** Expose the tool response, including reported errors. Allow permitting or denying forwarding and modifying or replacing supported response content.
