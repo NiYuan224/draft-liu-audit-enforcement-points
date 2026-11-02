@@ -1750,7 +1750,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-2.1.1"><code>request_id</code>: REQUIRED. A string identifying this inbound request to the destination agent.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1"><code>caller_id</code>: REQUIRED for successfully authenticated requests. A string identifying the principal authenticated by the gateway for this inbound request.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this inbound request.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.3">
             <p id="section-5.1-2.3.1"><code>agent</code>: REQUIRED. A string identifying the destination agent by its configured name or identifier.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
@@ -1759,10 +1759,10 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-2.4.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.5">
-            <p id="section-5.1-2.5.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this request before forwarding.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.5.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this request before forwarding.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.6">
-            <p id="section-5.1-2.6.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this request was blocked or modified.<a href="#section-5.1-2.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.6.1"><code>reason</code>: OPTIONAL. A string explaining why this request was blocked or modified.<a href="#section-5.1-2.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.7">
             <p id="section-5.1-2.7.1"><code>request_body</code>: OPTIONAL. The incoming request content.<a href="#section-5.1-2.7.1" class="pilcrow">¶</a></p>
@@ -1778,7 +1778,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-4.1.1"><code>request_id</code>: REQUIRED. A string identifying this model request. Separate model requests within the same agent workflow use different identifiers.<a href="#section-5.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-4.2">
-            <p id="section-5.1-4.2.1"><code>caller_id</code>: REQUIRED for successfully authenticated requests. A string identifying the agent authenticated by the gateway for this model request.<a href="#section-5.1-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-4.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this model request.<a href="#section-5.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-4.3">
             <p id="section-5.1-4.3.1"><code>model</code>: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested model or configured model alias.<a href="#section-5.1-4.3.1" class="pilcrow">¶</a></p>
@@ -1787,10 +1787,10 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-4.4.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the model service.<a href="#section-5.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-4.5">
-            <p id="section-5.1-4.5.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this model request before forwarding.<a href="#section-5.1-4.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-4.5.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this model request before forwarding.<a href="#section-5.1-4.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-4.6">
-            <p id="section-5.1-4.6.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this model request was blocked or modified.<a href="#section-5.1-4.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-4.6.1"><code>reason</code>: OPTIONAL. A string explaining why this model request was blocked or modified.<a href="#section-5.1-4.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-4.7">
             <p id="section-5.1-4.7.1"><code>request_body</code>: OPTIONAL. The model request content, including messages and supplied parameters.<a href="#section-5.1-4.7.1" class="pilcrow">¶</a></p>
@@ -1806,28 +1806,25 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-6.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding model request.<a href="#section-5.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.2">
-            <p id="section-5.1-6.2.1"><code>caller_id</code>: REQUIRED when the corresponding model request was successfully authenticated. A string identifying the principal authenticated for that request.<a href="#section-5.1-6.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this model response to the caller.<a href="#section-5.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.3">
-            <p id="section-5.1-6.3.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this model response to the caller.<a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.<a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.4">
-            <p id="section-5.1-6.4.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this model response before forwarding.<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.4.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this model response was blocked or modified.<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.5">
-            <p id="section-5.1-6.5.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this model response was blocked or modified.<a href="#section-5.1-6.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.5.1"><code>response_body</code>: OPTIONAL. The model response content.<a href="#section-5.1-6.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.6">
-            <p id="section-5.1-6.6.1"><code>response_body</code>: OPTIONAL. The model response content.<a href="#section-5.1-6.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.6.1"><code>error</code>: OPTIONAL. Error information reported for the model call.<a href="#section-5.1-6.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.7">
-            <p id="section-5.1-6.7.1"><code>error</code>: OPTIONAL. Error information reported for the model call.<a href="#section-5.1-6.7.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.7.1"><code>usage</code>: OPTIONAL. An object containing token usage information.<a href="#section-5.1-6.7.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-6.8">
-            <p id="section-5.1-6.8.1"><code>usage</code>: OPTIONAL. An object containing token usage information.<a href="#section-5.1-6.8.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-6.9">
-            <p id="section-5.1-6.9.1"><code>duration</code>: OPTIONAL.  A numeric value representing the elapsed time between receiving the model request and receiving this response.<a href="#section-5.1-6.9.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-6.8.1"><code>duration</code>: OPTIONAL.  A numeric value representing the elapsed time between receiving the model request and receiving this response.<a href="#section-5.1-6.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-7">
@@ -1840,7 +1837,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-8.1.1"><code>request_id</code>: REQUIRED. A string identifying this tool request. Separate tool requests within the same agent workflow use different identifiers.<a href="#section-5.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-8.2">
-            <p id="section-5.1-8.2.1"><code>caller_id</code>: REQUIRED for successfully authenticated requests. A string identifying the principal authenticated by the gateway for this tool request.<a href="#section-5.1-8.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-8.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this tool request.<a href="#section-5.1-8.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-8.3">
             <p id="section-5.1-8.3.1"><code>tool_name</code>: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested tool.<a href="#section-5.1-8.3.1" class="pilcrow">¶</a></p>
@@ -1855,7 +1852,7 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-8.6.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this tool request before forwarding.<a href="#section-5.1-8.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-8.7">
-            <p id="section-5.1-8.7.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this tool request was blocked or modified.<a href="#section-5.1-8.7.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-8.7.1"><code>reason</code>: OPTIONAL. A string explaining why this tool request was blocked or modified.<a href="#section-5.1-8.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-9">
@@ -1868,25 +1865,22 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-10.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding tool request.<a href="#section-5.1-10.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-10.2">
-            <p id="section-5.1-10.2.1"><code>caller_id</code>: REQUIRED when the corresponding tool request was successfully authenticated. A string identifying the principal authenticated for that request.<a href="#section-5.1-10.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-10.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this tool response to the caller.<a href="#section-5.1-10.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-10.3">
-            <p id="section-5.1-10.3.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this tool response to the caller.<a href="#section-5.1-10.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-10.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this tool response before forwarding.<a href="#section-5.1-10.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-10.4">
-            <p id="section-5.1-10.4.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this tool response before forwarding.<a href="#section-5.1-10.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-10.4.1"><code>reason</code>: OPTIONAL. A string explaining why this tool response was blocked or modified.<a href="#section-5.1-10.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-10.5">
-            <p id="section-5.1-10.5.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this tool response was blocked or modified.<a href="#section-5.1-10.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-10.5.1"><code>result</code>: OPTIONAL. The returned tool result.<a href="#section-5.1-10.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-10.6">
-            <p id="section-5.1-10.6.1"><code>result</code>: OPTIONAL. The returned tool result.<a href="#section-5.1-10.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-10.6.1"><code>error</code>: OPTIONAL. Error information reported for the tool call.<a href="#section-5.1-10.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-10.7">
-            <p id="section-5.1-10.7.1"><code>error</code>: OPTIONAL. Error information reported for the tool call.<a href="#section-5.1-10.7.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-10.8">
-            <p id="section-5.1-10.8.1"><code>duration</code>: OPTIONAL.  A numeric value representing the elapsed time between receiving the tool request and receiving this response.<a href="#section-5.1-10.8.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-10.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding tool request until it received the complete tool response.<a href="#section-5.1-10.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-11">
@@ -1899,19 +1893,19 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-12.1.1"><code>request_id</code>: REQUIRED. A string identifying this request to another agent. Separate requests within the same agent workflow use different identifiers.<a href="#section-5.1-12.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-12.2">
-            <p id="section-5.1-12.2.1"><code>caller_id</code>: REQUIRED for successfully authenticated requests. A string identifying the principal authenticated by the gateway for this outgoing request, rather than an original user or earlier caller merely referenced in the request.<a href="#section-5.1-12.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-12.2.1"><code>caller_id</code>: OPTIONAL. A string identifying the authenticated caller of this outgoing request, rather than an earlier caller merely referenced in the request.<a href="#section-5.1-12.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-12.3">
-            <p id="section-5.1-12.3.1"><code>agent</code>: REQUIRED. A string identifying the destination agent by its configured name or identifier.<a href="#section-5.1-12.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-12.3.1"><code>agent</code>: REQUIRED when identifiable from the request or gateway configuration. A string identifying the destination agent by its configured name or identifier.<a href="#section-5.1-12.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-12.4">
             <p id="section-5.1-12.4.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.<a href="#section-5.1-12.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-12.5">
-            <p id="section-5.1-12.5.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this outgoing agent request before forwarding.<a href="#section-5.1-12.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-12.5.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this outgoing agent request before forwarding.<a href="#section-5.1-12.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-12.6">
-            <p id="section-5.1-12.6.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this outgoing agent request was blocked or modified.<a href="#section-5.1-12.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-12.6.1"><code>reason</code>: OPTIONAL. A string explaining why this outgoing agent request was blocked or modified.<a href="#section-5.1-12.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-12.7">
             <p id="section-5.1-12.7.1"><code>request_body</code>: OPTIONAL. The outgoing agent request content.<a href="#section-5.1-12.7.1" class="pilcrow">¶</a></p>
@@ -1927,25 +1921,22 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-14.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding outbound agent request.<a href="#section-5.1-14.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.2">
-            <p id="section-5.1-14.2.1"><code>caller_id</code>: REQUIRED when the corresponding outbound agent request was successfully authenticated. A string identifying the principal authenticated for that request, not the responding agent.<a href="#section-5.1-14.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-14.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.<a href="#section-5.1-14.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.3">
-            <p id="section-5.1-14.3.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.<a href="#section-5.1-14.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-14.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.<a href="#section-5.1-14.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.4">
-            <p id="section-5.1-14.4.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this agent response before forwarding.<a href="#section-5.1-14.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-14.4.1"><code>reason</code>: OPTIONAL. A string explaining why this agent response was blocked or modified.<a href="#section-5.1-14.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.5">
-            <p id="section-5.1-14.5.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this agent response was blocked or modified.<a href="#section-5.1-14.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-14.5.1"><code>response_body</code>: OPTIONAL. The returned agent response content.<a href="#section-5.1-14.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.6">
-            <p id="section-5.1-14.6.1"><code>response_body</code>: OPTIONAL. The returned agent response content.<a href="#section-5.1-14.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-14.6.1"><code>error</code>: OPTIONAL. Error information reported for the agent call.<a href="#section-5.1-14.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-14.7">
-            <p id="section-5.1-14.7.1"><code>error</code>: OPTIONAL. Error information reported for the agent call.<a href="#section-5.1-14.7.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-14.8">
-            <p id="section-5.1-14.8.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding outbound agent request until it received the complete agent response.<a href="#section-5.1-14.8.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-14.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding outbound agent request until it received the complete agent response.<a href="#section-5.1-14.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-15">
@@ -1958,25 +1949,22 @@ Note: Hooks for which consensus has not been reached are omitted.
             <p id="section-5.1-16.1.1"><code>request_id</code>: REQUIRED. A string matching the identifier recorded for the corresponding inbound request.<a href="#section-5.1-16.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.2">
-            <p id="section-5.1-16.2.1"><code>caller_id</code>: REQUIRED when the corresponding inbound request was successfully authenticated. A string identifying the caller authenticated by the gateway for that request.<a href="#section-5.1-16.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-16.2.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.<a href="#section-5.1-16.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.3">
-            <p id="section-5.1-16.3.1"><code>decision</code>: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.<a href="#section-5.1-16.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-16.3.1"><code>modified</code>: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.<a href="#section-5.1-16.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.4">
-            <p id="section-5.1-16.4.1"><code>modified</code>: REQUIRED. A boolean indicating whether the gateway modified this agent response before forwarding.<a href="#section-5.1-16.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-16.4.1"><code>reason</code>: OPTIONAL. A string explaining why this agent response was blocked or modified.<a href="#section-5.1-16.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.5">
-            <p id="section-5.1-16.5.1"><code>reason</code>: REQUIRED when <code>decision</code> is "deny" or <code>modified</code> is true; otherwise OPTIONAL. A string explaining why this agent response was blocked or modified.<a href="#section-5.1-16.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-16.5.1"><code>response_body</code>: OPTIONAL. The agent response content.<a href="#section-5.1-16.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.6">
-            <p id="section-5.1-16.6.1"><code>response_body</code>: OPTIONAL. The agent response content.<a href="#section-5.1-16.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-16.6.1"><code>error</code>: OPTIONAL. Error information reported for the agent request.<a href="#section-5.1-16.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-16.7">
-            <p id="section-5.1-16.7.1"><code>error</code>: OPTIONAL. Error information reported for the agent request.<a href="#section-5.1-16.7.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-16.8">
-            <p id="section-5.1-16.8.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding inbound request until it received the complete agent response.<a href="#section-5.1-16.8.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-16.7.1"><code>duration</code>: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding inbound request until it received the complete agent response.<a href="#section-5.1-16.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
