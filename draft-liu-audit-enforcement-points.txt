@@ -88,7 +88,6 @@ Table of Contents
    9.  References
      9.1.  Normative References
      9.2.  Informative References
-   Acknowledgments
    Authors' Addresses
 
 1.  Introduction
@@ -102,8 +101,8 @@ Table of Contents
    records.
 
    To support runtime monitoring and auditing, industry solutions record
-   events at the agent client, gateway, and host layers: agent hooks
-   expose agent lifecycle events and tool calls
+   events at the agent, gateway, and host layers: agent hooks expose
+   agent lifecycle events and tool calls
    [ClaudeCodeHooks][CursorHooks][HooksSecurity]; gateways inspect
    requests and responses and record access decisions and content
    filtering results[LiteLLMLogs]; Endpoint Detection and Response (EDR)
@@ -130,8 +129,8 @@ Table of Contents
    [AUDIT-CHARTER].
 
    Enforcement Point (EP): A logical entity or network element that
-   observes agent activities, enforces security controls, and generates
-   corresponding audit records.
+   observes agent activities and generates corresponding audit records,
+   and may enforce security controls where supported.
 
    Audit Record: A record of the observable behavior of agents,
    including user intent, agent or tool interactions, invoked or
@@ -313,8 +312,7 @@ Table of Contents
    on_session_finalize | | | OpenClaw: session_end | | | Qwen Code:
    SessionEnd |
    +--------------------------+----------------------------------------+
-   Note: Hooks for which consensus has not been reached are omitted. ~~~
-   _Table 1.  Agent EP Hooks and Examples_
+   ~~~ _Table 1.  Agent EP Hooks and Examples_
 
 4.2.  Critical Events and Corresponding Audit Record Schema
 
@@ -516,13 +514,13 @@ Table of Contents
    *  file_path: REQUIRED.  A string specifying the path of the modified
       file.
 
-   *  edits: REQUIRED.  An array of objects describing the specific
-      changes made, where each object contains:
+   *  edits: OPTIONAL.  An array of objects describing the specific
+      changes made, when available.  Each object contains:
 
-      -  old_string: REQUIRED.  A string containing the original text
+      -  old_string: OPTIONAL.  A string containing the original text
          segment before modification.
 
-      -  new_string: REQUIRED.  A string containing the replacement text
+      -  new_string: OPTIONAL.  A string containing the replacement text
          segment after modification.
 
    1.  *Agent Completion:* Expose agent completion information,
@@ -530,7 +528,7 @@ Table of Contents
        response.  Allow requesting additional processing or continued
        execution before the agent terminates.
 
-   *  stop_reason: REQUIRED.  A string specifying why the agent intends
+   *  stop_reason: OPTIONAL.  A string specifying why the agent intends
       to stop (e.g., "end_turn", "task_completed", "max_tokens",
       "user_interrupt").
 
@@ -545,7 +543,7 @@ Table of Contents
    1.  *Session End:* Expose session termination information, including
        the session identifier, termination reason, and session duration.
        * session_id: REQUIRED.  A string identifying the closed session.
-       * reason: REQUIRED.  A string indicating the precise cause of
+       * reason: OPTIONAL.  A string indicating the precise cause of
        session termination (e.g., "user_exit", "clear_context",
        "timeout", "auth_logout", "fatal_error"). * session_duration:
        OPTIONAL.  A numeric value representing the total active runtime
@@ -571,18 +569,19 @@ Table of Contents
    *  Security-critical hooks SHOULD fail closed: Any hook involved in
       input defense, permission validation, pre-execution interception
       of sensitive operations, or subagent spawning that could lead to
-      privilege escalation MUST block subsequent operations if it fails.
-      Failure to perform required checks may lead to unauthorized
-      operations or sensitive information exposure.
+      privilege escalation SHOULD block subsequent operations if it
+      fails.  Failure to perform required checks may lead to
+      unauthorized operations or sensitive information exposure.
 
       -  Typical events include Before Prompt Submit, Before Model
          Request, Subagent Start, Before Tool Use, Before MCP Execution,
          Before Command Execution, Before File Access, Permission
          Request, etc.
 
-   *  Observation-only hooks SHOULD generally fail open: These include
+   *  Observation-only hooks SHOULD generally fail open when their
+      failure does not affect required security checks.  These include
       hooks used only for session lifecycle monitoring, invocation
-      completion logging, context compaction monitoring, command
+      completion logging, context compaction monitoring, and command
       execution result collection.  Failure to collect audit information
       should not normally interrupt legitimate operations.
 
@@ -615,7 +614,7 @@ Table of Contents
    *  caller: OPTIONAL.  A string identifying the entity initiating the
       request, such as an authenticated user or agent.
 
-   *  destination: OPTIONAL.  A string identifying the destination of
+   *  destination: REQUIRED.  A string identifying the destination of
       the request, such as a model, tool, agent, or service endpoint.
 
    *  protocol: OPTIONAL.  A string identifying the protocol, such as
@@ -633,7 +632,8 @@ Table of Contents
 
    1.  *Before Response Forwarding:* Expose response information and
        execution outcomes.  Allow permitting or denying response
-       forwarding and modifying response content.
+       forwarding and modifying response content where supported by the
+       gateway.
 
    *  request_id: REQUIRED.  A string matching the identifier recorded
       for the corresponding request.
@@ -709,9 +709,9 @@ Table of Contents
    /V6 | | | Windows WFP: classifyFn | | |
    FWPM_LAYER_ALE_AUTH_LISTEN_V4/V6 |
    +----------------------+------------------------------------------+ |
-   Before Access to | Linux LSM: ptrace_access_check | | Another
-   Process | Windows: POB_PRE_OPERATION_CALLBACK | | | (process/thread
-   handles) | | | macOS: ES_EVENT_TYPE_AUTH_GET_TASK |
+   Before Process Access| Linux LSM: ptrace_access_check | | | Windows:
+   POB_PRE_OPERATION_CALLBACK | | | (process/thread handles) | | |
+   macOS: ES_EVENT_TYPE_AUTH_GET_TASK |
    +----------------------+------------------------------------------+ |
    Before Memory | Linux LSM: file_mprotect | | Protection Change |
    macOS: ES_EVENT_TYPE_AUTH_MPROTECT |
@@ -731,7 +731,7 @@ Table of Contents
    Security [AppleEndpointSecurity].
 
    The following claims apply to all events: * process_id: REQUIRED.  An
-   integer identifying the process associated with the event.
+   integer identifying the current process.
 
    In addition to the common claim above, each event defines its own
    audit record claims to capture event-specific information.
@@ -752,7 +752,8 @@ Table of Contents
    1.  *Before File Access:* Expose the requested file operation and the
        target file.  Allow permitting or denying the operation.
 
-   *  operation: REQUIRED.  A string with the value "open" or "read".
+   *  operation: REQUIRED.  A string identifying the requested file
+      access operation, such as "open" or "read".
 
    *  file_path: OPTIONAL.  A string specifying the target file path.
 
@@ -769,8 +770,8 @@ Table of Contents
    *  destination_path: OPTIONAL.  A string specifying the destination
       path for a rename operation.
 
-   1.  *After File Operation:* Expose information about the completed
-       file operation and the affected file.
+   *  operation: REQUIRED.  A string identifying the requested file
+      access operation, such as "open" or "read".
 
    *  operation: OPTIONAL.  A string identifying the completed file
       operation.
@@ -792,8 +793,10 @@ Table of Contents
    *  remote_endpoint: OPTIONAL.  A string identifying the remote
       network endpoint.
 
-   1.  *Before Access to Another Process:* Expose the identity of the
-       process being accessed.  Allow permitting or denying access.
+   1.  *Before Process Access:* Expose requests to access another
+       process, including the identity of the target process.  Allow
+       permitting or denying access where supported by the operating
+       system.
 
    *  target_process_id: REQUIRED.  An integer identifying the target
       process, or the process owning the target thread.
@@ -916,10 +919,6 @@ Table of Contents
               "Windows Kernel Callbacks and Filtering Mechanisms", n.d.,
               <https://learn.microsoft.com/en-us/windows-
               hardware/drivers/ddi/>.
-
-Acknowledgments
-
-   TODO acknowledge.
 
 Authors' Addresses
 
