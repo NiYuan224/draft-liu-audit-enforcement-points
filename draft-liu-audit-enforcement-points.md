@@ -445,29 +445,28 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 1. **Before Inbound Request Forwarding:** Expose the destination agent and incoming request. Allow permitting or denying forwarding and modifying request content.
 
 * `request_id`: REQUIRED. A string identifying this inbound request to the destination agent.
-* `caller_id`: REQUIRED for successfully authenticated requests. A string identifying the principal authenticated by the gateway for this inbound request.
+* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this inbound request.
 * `agent`: REQUIRED. A string identifying the destination agent by its configured name or identifier.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this request before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this request was blocked or modified.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this request before forwarding.
+* `reason`: OPTIONAL. A string explaining why this request was blocked or modified.
 * `request_body`: OPTIONAL. The incoming request content.
 
 2. **Before Model Request Forwarding:** Expose the requested model and model input. Allow permitting or denying forwarding and modifying request content.
 
 * `request_id`: REQUIRED. A string identifying this model request. Separate model requests within the same agent workflow use different identifiers.
-* `caller_id`: REQUIRED for successfully authenticated requests. A string identifying the agent authenticated by the gateway for this model request.
+* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this model request.
 * `model`: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested model or configured model alias.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the model service.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this model request before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this model request was blocked or modified.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this model request before forwarding.
+* `reason`: OPTIONAL. A string explaining why this model request was blocked or modified.
 * `request_body`: OPTIONAL. The model request content, including messages and supplied parameters.
 
 3. **Before Model Response Forwarding:** Expose the model response. Allow permitting or denying forwarding and modifying or response content.
 
 * `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding model request.
-* `caller_id`: REQUIRED when the corresponding model request was successfully authenticated. A string identifying the principal authenticated for that request.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this model response to the caller.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this model response before forwarding.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.
 * `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this model response was blocked or modified.
 * `response_body`: OPTIONAL. The model response content.
 * `error`: OPTIONAL. Error information reported for the model call.
@@ -478,42 +477,40 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 4. **Before Tool Request Forwarding:** Expose the requested tool and supplied arguments. Allow permitting or denying forwarding and modifying tool arguments.
 
 * `request_id`: REQUIRED. A string identifying this tool request. Separate tool requests within the same agent workflow use different identifiers.
-* `caller_id`: REQUIRED for successfully authenticated requests. A string identifying the principal authenticated by the gateway for this tool request.
+* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this tool request.
 * `tool_name`: REQUIRED when identifiable from the request or gateway configuration. A string identifying the requested tool.
 * `arguments`: OPTIONAL. An object containing the supplied tool arguments.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the tool service.
 * `modified`: REQUIRED. A boolean indicating whether the gateway modified this tool request before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this tool request was blocked or modified.
-
+* `reason`: OPTIONAL. A string explaining why this tool request was blocked or modified.
 
 5. **Before Tool Response Forwarding:** Expose the tool response, including reported errors. Allow permitting or denying forwarding and modifying or replacing supported response content.
 
 * `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding tool request.
-* `caller_id`: REQUIRED when the corresponding tool request was successfully authenticated. A string identifying the principal authenticated for that request.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this tool response to the caller.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this tool response before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this tool response was blocked or modified.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this tool response before forwarding.
+* `reason`: OPTIONAL. A string explaining why this tool response was blocked or modified.
 * `result`: OPTIONAL. The returned tool result.
 * `error`: OPTIONAL. Error information reported for the tool call.
-* `duration`: OPTIONAL.  A numeric value representing the elapsed time between receiving the tool request and receiving this response.
+* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding tool request until it received the complete tool response.
+
 
 6. **Before Outbound Agent Request Forwarding:** Expose the destination agent and outgoing request. Allow permitting or denying forwarding and modifying or redacting supported request content.
 
 * `request_id`: REQUIRED. A string identifying this request to another agent. Separate requests within the same agent workflow use different identifiers.
-* `caller_id`: REQUIRED for successfully authenticated requests. A string identifying the principal authenticated by the gateway for this outgoing request, rather than an original user or earlier caller merely referenced in the request.
-* `agent`: REQUIRED. A string identifying the destination agent by its configured name or identifier.
+* `caller_id`: OPTIONAL. A string identifying the authenticated caller of this outgoing request, rather than an earlier caller merely referenced in the request.
+* `agent`: REQUIRED when identifiable from the request or gateway configuration. A string identifying the destination agent by its configured name or identifier.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this request to the destination agent.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this outgoing agent request before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this outgoing agent request was blocked or modified.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this outgoing agent request before forwarding.
+* `reason`: OPTIONAL. A string explaining why this outgoing agent request was blocked or modified.
 * `request_body`: OPTIONAL. The outgoing agent request content.
 
 7. **Before Outbound Agent Response Forwarding:** Expose the called agent's response. Allow permitting or denying forwarding and modifying or redacting supported response content.
 
 * `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding outbound agent request.
-* `caller_id`: REQUIRED when the corresponding outbound agent request was successfully authenticated. A string identifying the principal authenticated for that request, not the responding agent.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this agent response before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this agent response was blocked or modified.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.
+* `reason`: OPTIONAL. A string explaining why this agent response was blocked or modified.
 * `response_body`: OPTIONAL. The returned agent response content.
 * `error`: OPTIONAL. Error information reported for the agent call.
 * `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding outbound agent request until it received the complete agent response.
@@ -521,13 +518,13 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 8. **Before Inbound Response Forwarding:** Expose the agent response to the inbound request. Allow permitting or denying forwarding and modifying response content.
 
 * `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding inbound request.
-* `caller_id`: REQUIRED when the corresponding inbound request was successfully authenticated. A string identifying the caller authenticated by the gateway for that request.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this agent response to the caller.
-* `modified`: REQUIRED. A boolean indicating whether the gateway modified this agent response before forwarding.
-* `reason`: REQUIRED when `decision` is "deny" or `modified` is true; otherwise OPTIONAL. A string explaining why this agent response was blocked or modified.
+* `modified`: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.
+* `reason`: OPTIONAL. A string explaining why this agent response was blocked or modified.
 * `response_body`: OPTIONAL. The agent response content.
 * `error`: OPTIONAL. Error information reported for the agent request.
 * `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding inbound request until it received the complete agent response.
+
 
 # Host EP
 Host EPs use operating-system hooks to observe operations performed by agent-related processes, enforce controls where supported, and generate audit records.
