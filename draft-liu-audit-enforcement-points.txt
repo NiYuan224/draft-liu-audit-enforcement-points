@@ -124,6 +124,11 @@ Table of Contents
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+   The definitions in this document are based on the Policy Enforcement
+   Point (PEP) definition in [RFC3198] and the audit record concepts
+   described in the proposed AUDIT Working Group Charter
+   [AUDIT-CHARTER].
+
    Enforcement Point (EP): A logical entity or network element that
    observe agent activities, enforces security controls, and generates
    corresponding audit records.
@@ -978,11 +983,22 @@ Table of Contents
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
+   [RFC3198]  Westerinen, A., Schnizlein, J., Strassner, J., Scherling,
+              M., Quinn, B., Herzog, S., Huynh, A., Carlson, M., Perry,
+              J., and S. Waldbusser, "Terminology for Policy-Based
+              Management", RFC 3198, DOI 10.17487/RFC3198, November
+              2001, <https://www.rfc-editor.org/rfc/rfc3198>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
 9.2.  Informative References
+
+   [AUDIT-CHARTER]
+              "Agent Use of Delegation and Interaction Traceability
+              (AUDIT) Working Group Charter", n.d.,
+              <https://datatracker.ietf.org/doc/bofreq-mirjak-audit/>.
 
    [ClaudeCodeHooks]
               "Claude Code Hooks", n.d.,

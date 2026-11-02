@@ -1231,9 +1231,10 @@ svg {
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
       </h2>
 <p id="section-2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">Enforcement Point (EP): A logical entity or network element that observe agent activities, enforces security controls, and generates corresponding audit records.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">Audit Record: A record of the observable behavior of agents, including user intent, agent or tool interactions, invoked or declined actions, exchanged data, and resulting outcomes across trust boundaries.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">Hook: A mechanism exposed by software or an operating system at a defined execution point to enable observation and, where supported, intervention.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-2">The definitions in this document are based on the Policy Enforcement Point (PEP) definition in <span>[<a href="#RFC3198" class="cite xref">RFC3198</a>]</span> and the audit record concepts described in the proposed AUDIT Working Group Charter <span>[<a href="#AUDIT-CHARTER" class="cite xref">AUDIT-CHARTER</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">Enforcement Point (EP): A logical entity or network element that observe agent activities, enforces security controls, and generates corresponding audit records.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Audit Record: A record of the observable behavior of agents, including user intent, agent or tool interactions, invoked or declined actions, exchanged data, and resulting outcomes across trust boundaries.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">Hook: A mechanism exposed by software or an operating system at a defined execution point to enable observation and, where supported, intervention.<a href="#section-2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="agent-workflows-and-enforcement-points">
@@ -2164,6 +2165,10 @@ Note: Hooks for which consensus has not been reached are omitted.
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC3198">[RFC3198]</dt>
+        <dd>
+<span class="refAuthor">Westerinen, A.</span>, <span class="refAuthor">Schnizlein, J.</span>, <span class="refAuthor">Strassner, J.</span>, <span class="refAuthor">Scherling, M.</span>, <span class="refAuthor">Quinn, B.</span>, <span class="refAuthor">Herzog, S.</span>, <span class="refAuthor">Huynh, A.</span>, <span class="refAuthor">Carlson, M.</span>, <span class="refAuthor">Perry, J.</span>, and <span class="refAuthor">S. Waldbusser</span>, <span class="refTitle">"Terminology for Policy-Based Management"</span>, <span class="seriesInfo">RFC 3198</span>, <span class="seriesInfo">DOI 10.17487/RFC3198</span>, <time datetime="2001-11" class="refDate">November 2001</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3198">https://www.rfc-editor.org/rfc/rfc3198</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
@@ -2177,6 +2182,10 @@ Note: Hooks for which consensus has not been reached are omitted.
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="AUDIT-CHARTER">[AUDIT-CHARTER]</dt>
+        <dd>
+<span class="refTitle">"Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter"</span>, <span>n.d.</span>, <span>&lt;<a href="https://datatracker.ietf.org/doc/bofreq-mirjak-audit/">https://datatracker.ietf.org/doc/bofreq-mirjak-audit/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="ClaudeCodeHooks">[ClaudeCodeHooks]</dt>
         <dd>
 <span class="refTitle">"Claude Code Hooks"</span>, <span>n.d.</span>, <span>&lt;<a href="https://code.claude.com/docs/en/hooks">https://code.claude.com/docs/en/hooks</a>&gt;</span>. </dd>
