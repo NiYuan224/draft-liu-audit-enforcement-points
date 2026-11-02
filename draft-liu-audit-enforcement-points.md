@@ -462,16 +462,16 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 * `reason`: OPTIONAL. A string explaining why this model request was blocked or modified.
 * `request_body`: OPTIONAL. The model request content, including messages and supplied parameters.
 
-3. **Before Model Response Forwarding:** Expose the model response. Allow permitting or denying forwarding and modifying or response content.
+3. **Before Model Response Forwarding:** Expose the model response. Allow permitting or denying forwarding and modifying the response content.
 
 * `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding model request.
 * `decision`: REQUIRED. A string indicating "allow" or "deny" for forwarding this model response to the caller.
 * `modified`: OPTIONAL. A boolean indicating whether the gateway modified this model response before forwarding.
-* `reason`: OPTIONAL. A string explaining why this model request was blocked or modified.
+* `reason`: OPTIONAL. A string explaining why this model response was blocked or modified.
 * `response_body`: OPTIONAL. The model response content.
 * `error`: OPTIONAL. Error information reported for the model call.
 * `usage`: OPTIONAL. An object containing token usage information.
-* `duration`: OPTIONAL.  A numeric value representing the elapsed time between receiving the model request and receiving this response.
+* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding model request to receiving the complete model response.
 
 
 4. **Before Tool Request Forwarding:** Expose the requested tool and supplied arguments. Allow permitting or denying forwarding and modifying tool arguments.
@@ -492,7 +492,7 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 * `reason`: OPTIONAL. A string explaining why this tool response was blocked or modified.
 * `result`: OPTIONAL. The returned tool result.
 * `error`: OPTIONAL. Error information reported for the tool call.
-* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding tool request until it received the complete tool response.
+* `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from forwarding the corresponding tool request to receiving the complete tool response.
 
 
 6. **Before Outbound Agent Request Forwarding:** Expose the destination agent and outgoing request. Allow permitting or denying forwarding and modifying or redacting supported request content.
@@ -512,7 +512,7 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 * `modified`: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.
 * `reason`: OPTIONAL. A string explaining why this agent response was blocked or modified.
 * `response_body`: OPTIONAL. The returned agent response content.
-* `error`: OPTIONAL. Error information reported for the agent call.
+* `error`: OPTIONAL. Error information reported by the destination agent or its service.
 * `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding outbound agent request until it received the complete agent response.
 
 8. **Before Inbound Response Forwarding:** Expose the agent response to the inbound request. Allow permitting or denying forwarding and modifying response content.
@@ -522,7 +522,7 @@ Gateway EPs proxy requests and responses between clients and agents, and between
 * `modified`: OPTIONAL. A boolean indicating whether the gateway modified this agent response before forwarding.
 * `reason`: OPTIONAL. A string explaining why this agent response was blocked or modified.
 * `response_body`: OPTIONAL. The agent response content.
-* `error`: OPTIONAL. Error information reported for the agent request.
+* `error`: OPTIONAL. Error information reported by the destination agent or its service.
 * `duration`: OPTIONAL. A numeric value representing the elapsed time, in milliseconds, from when the gateway received the corresponding inbound request until it received the complete agent response.
 
 
