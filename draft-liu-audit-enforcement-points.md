@@ -3,7 +3,7 @@ title: "Enforcement Points for Agents"
 abbrev: "Enforcement Points for Agents"
 category: info
 
-docname: draft-liu-audit-enforcement-points-00
+docname: draft-liu-audit-enforcement-points-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -11,7 +11,7 @@ consensus: true
 v: 3
 area: "Security"
 workgroup: "Agent Use of Delegation and Interaction Traceability"
-keyword: 
+keyword:
   - "AI agents"
   - "Agent auditing"
   - "Enforcement points"
@@ -427,11 +427,11 @@ In addition to the common claim above, each event defines its own audit record c
  * `tool_calls`: REQUIRED. An array of objects describing the tool calls in the batch. Each object contains:
 
    * `tool_name`: REQUIRED. A string identifying the invoked tool.
-  
+
    * `tool_input`: REQUIRED. An object containing the tool's input parameters.
-  
+
    * `tool_use_id`: REQUIRED. A string identifying the tool invocation.
-  
+
    * `tool_response`: OPTIONAL. The tool execution result, represented as a string, array, or object depending on the implementation.
 
 15\. **Post Tool Use Failure:** Expose the tool name, invocation arguments, and error information for a failed tool invocation.
@@ -488,7 +488,7 @@ In addition to the common claim above, each event defines its own audit record c
  * `edits`: OPTIONAL. An array of objects describing the specific changes made, when available. Each object contains:
 
    * `old_string`: OPTIONAL. A string containing the original text segment before modification.
-  
+
    * `new_string`: OPTIONAL. A string containing the replacement text segment after modification.
 
 22\. **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.
@@ -525,7 +525,7 @@ Based on existing implementation practices listed in Table 1, the choice depends
   * Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.
 
 * Observation-only hooks SHOULD generally fail open when their failure does not affect required security checks. These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, and command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations.
-  
+
   * Typical events include Session Start, After Model Response, Before and After Context Compaction, Subagent Completion, After Tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.
 
 
