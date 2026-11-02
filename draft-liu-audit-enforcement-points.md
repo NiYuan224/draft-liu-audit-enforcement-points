@@ -93,7 +93,7 @@ Agent auditing relies on distributed enforcement points (EPs) to observe and int
 
 Agents increasingly act on behalf of users across multiple services and administrative domains. Auditing their activities requires runtime information, primarily provided by enforcement points (EPs) that observe and, where supported, intervene in agent activities. These EPs are distributed across the interaction chain, each covering a different set of activities and providing corresponding audit records.
 
-To support runtime monitoring and auditing, industry solutions record events at the client, gateway, and host layers: client hooks expose agent lifecycle events and tool calls {{ClaudeCodeHooks}}{{CursorHooks}}{{HooksSecurity}}; gateways inspect requests and responses and record access decisions and content filtering results{{LiteLLMLogging}}; EDRs monitor process execution, file access, and network connections{{DefenderEDR}}.
+To support runtime monitoring and auditing, industry solutions record events at the agent client, gateway, and host layers: client hooks expose agent lifecycle events and tool calls {{ClaudeCodeHooks}}{{CursorHooks}}{{HooksSecurity}}; gateways inspect requests and responses and record access decisions and content filtering results{{LiteLLMLogging}}; Endpoint Detection and Response (EDR) monitors process execution, file access, and network connections{{DefenderEDR}}.
 
 This document considers three categories of EPs: Agent Client EPs, Gateway EPs, and Host EPs. For each category, it describes the audit information EPs can provide, providing a basis for identifying the records across participating domains and understanding the coverage of the available evidence.
 
