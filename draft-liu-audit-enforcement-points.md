@@ -606,7 +606,7 @@ In addition to the common claim above, each event defines its own audit record c
 * `file_path`: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.
 * `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
 
-* `operation`: REQUIRED. A string identifying the requested file access operation, such as "open" or "read".
+5. **After File Operation:** Expose information about the completed file operation and the affected file.
 
 * `operation`: OPTIONAL. A string identifying the completed file operation.
 * `file_path`: OPTIONAL. A string specifying the path of the affected file, or the source path for a rename operation.
