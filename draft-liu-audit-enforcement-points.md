@@ -94,14 +94,24 @@ informative:
     title: "Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter"
     target: "https://datatracker.ietf.org/doc/bofreq-mirjak-audit/"
 
+  LinuxLSM:
+    title: "Linux Security Modules: General Security Hooks for Linux"
+    target: "https://docs.kernel.org/security/lsm.html"
 
+  WindowsKernelHooks:
+    title: "Windows Kernel Callbacks and Filtering Mechanisms"
+    target: "https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/"
+
+  AppleEndpointSecurity:
+    title: "Endpoint Security Event Types"
+    target: "https://developer.apple.com/documentation/endpointsecurity/es_event_type_t"
 
 
 
 
 --- abstract
 
-Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent , Gateway, and Host EPs by detailing their coverage and audit data. This helps to define the specific capabilities of different EPs and evaluate the overall evidence coverage.
+Agent auditing relies on distributed enforcement points (EPs) to observe and intervene in agent activities. This document analyzes Agent, Gateway, and Host EPs by detailing their coverage and audit data. This provides a basis for understanding the capabilities of different EPs and evaluating overall audit evidence coverage.
 
 --- middle
 
@@ -121,7 +131,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 The definitions in this document are based on the Policy Enforcement Point (PEP) definition in {{RFC3198}} and the audit record concepts described in the proposed AUDIT Working Group Charter {{AUDIT-CHARTER}}.
 
 
-Enforcement Point (EP): A logical entity or network element that observe agent activities, enforces security controls, and generates corresponding audit records.
+Enforcement Point (EP): A logical entity or network element that observes agent activities, enforces security controls, and generates corresponding audit records.
 
 Audit Record: A record of the observable behavior of agents, including user intent, agent or tool interactions, invoked or declined actions, exchanged data, and resulting outcomes across trust boundaries.
 
@@ -132,8 +142,8 @@ Hook: A mechanism exposed by software or an operating system at a defined execut
 Figure 1 illustrates a typical agent workflow and the locations of the three EP categories. The interactions shown are illustrative and may occur in different sequences and multiple times depending on the agent workflow.
 
 ~~~
-                           +-----------+                            
-                           |           |                            
+                           +-----------+
+                           |           |
 +------------------+ (1)   |           |        +------------------+
 |                  +-------+           +-------->       LLM        |
 |                  <-------+           +--------+                  |
@@ -148,9 +158,9 @@ Figure 1 illustrates a typical agent workflow and the locations of the three EP 
 +------------------+ (6)   |           |        +------------------+
 |   Host(Host EP)  |       |           |        |  Host (Host EP)  |
 +------------------+       |           |        +------------------+
-                           |           |                            
-                           |           |                            
-                           +-----------+                                                                      
+                           |           |
+                           |           |
+                           +-----------+
 ~~~
 
 *Figure 1. Agent Workflow and EPs*
@@ -158,11 +168,11 @@ Figure 1 illustrates a typical agent workflow and the locations of the three EP 
 1. The Agent provides context to the LLM.
 2. The LLM returns output to the Agent to support the selection of subsequent actions.
 3. The Agent invokes one or more tools.
-4. The tools return results to the Agent. 
+4. The tools return results to the Agent.
 5. The Agent delegates tasks to or exchanges requests with other agents.
 6. Other Agents return responses or task execution results to the Agent.
 
-EPs provide visibility into and control over the above agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent Client EPs, Gateway EPs, and Host EPs.
+EPs provide visibility into and control over the above agent activities. They may be located within the agent, at communication gateways, or on the host where the agent runs. Accordingly, EPs are classified into three categories: Agent EPs, Gateway EPs, and Host EPs.
 
 * Agent EPs: EPs integrated into the agent, using hooks to observe and control agent activities, such as user interactions, model requests, tool calls, and host operations.
 
@@ -252,7 +262,7 @@ The hooks cover critical events, including session lifecycle management, prompt 
 | Permission Denied        | Claude Code: `PermissionDenied`        |
 |                          | Qwen Code: `PermissionDenied`          |
 +--------------------------+----------------------------------------+
-| After tool Use           | Claude Code: `PostToolUse`             |
+| After Tool Use           | Claude Code: `PostToolUse`             |
 |                          | Cursor: `postToolUse`                  |
 |                          | Gemini CLI: `AfterTool`                |
 |                          | GitHub Copilot: `postToolUse`          |
@@ -339,11 +349,11 @@ In addition to the common claim above, each event defines its own audit record c
 
 
 6. **Before Context Compaction:** Expose session information and the compaction trigger. Allow blocking compaction.
-* `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically (`"auto"`) or manually (`"manual"`).
+* `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").
 
 7. **After Context Compaction:** Expose session information, the compaction trigger, and the generated summary.
 
-* `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically (`"auto"`) or manually (`"manual"`).
+* `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").
 * `compact_summary`: OPTIONAL. A string containing the conversation summary generated by compaction.
 
 8.  **Subagent Start:** Expose session information and the subagent identifier and type. Allow injecting additional context or blocking subagent creation.
@@ -454,24 +464,24 @@ Based on existing implementation practices listed in Table 1, the choice depends
   * Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.
 
 * Observation-only hooks SHOULD generally fail open: These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations.
-  * Typical events includes Session Start, After Model Response, Before / After Context Compaction, Subagent Completion, After tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.
+  * Typical events include Session Start, After Model Response, Before and After Context Compaction, Subagent Completion, After Tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.
 
 
 # Gateway EP
 Gateway EPs proxy requests and responses between agents and external models, tools, or other agents. They inspect traffic, apply access controls and content policies, and generate corresponding audit records.
 
-##  Critical Events and Corresponding Audit Record Schema
+## Critical Events and Corresponding Audit Record Schema
 
 The following events and audit record claims are derived from access logging and audit practices in Agentgateway {{AgentgatewayLogs}}, Kong AI Gateway {{KongAILogs}}, Envoy Gateway {{EnvoyAccessLogs}}, and LiteLLM {{LiteLLMLogs}}.
 
-1. **Before Request Fowarding:** Expose request information, including the caller, destination, protocol, and operation. Allow permitting or denying request forwarding and modifying request content.
+1. **Before Request Forwarding:** Expose request information, including the caller, destination, protocol, and operation. Allow permitting or denying request forwarding and modifying request content.
 
 * `request_id`: REQUIRED. A string identifying the request.
 * `caller`: OPTIONAL. A string identifying the entity initiating the request, such as an authenticated user or agent.
 * `destination`: OPTIONAL. A string identifying the destination of the request, such as a model, tool, agent, or service endpoint.
 * `protocol`: OPTIONAL. A string identifying the protocol, such as "HTTP", "MCP", or "A2A".
 * `operation`: OPTIONAL. A string identifying the requested operation, such as a model operation, MCP method, or A2A method.
-* `action`: OPTIONAL. A string indicating the policy action, such as allow, "deny", "mask", or "reject".
+* `action`: OPTIONAL. A string indicating the policy action, such as "allow", "deny", "mask", or "reject".
 * `action_reason`: OPTIONAL. A string explaining the policy action.
 * `request_body`: OPTIONAL. The request content.
 
@@ -483,8 +493,8 @@ The following events and audit record claims are derived from access logging and
 * `action`: OPTIONAL. A string indicating the action taken by the gateway, such as "allow", "deny", "mask", or "reject".
 * `action_reason`: OPTIONAL. A string explaining the policy action.
 * `response_body`: OPTIONAL. The response content.
-* `error`: OPTIONAL.  A string describing an error encountered during request forwarding or response forwarding.
-* `duration`: REQUIRED.  A numeric value representing the elapsed time from receiving the corresponding request to receiving the complete response.
+* `error`: OPTIONAL. A string describing an error encountered during request forwarding or response forwarding.
+* `duration`: REQUIRED. A numeric value representing the elapsed time from receiving the corresponding request to receiving the complete response.
 * `usage`: OPTIONAL. An object containing resource usage information, such as input and output token counts.
 
 
@@ -566,16 +576,16 @@ The hooks in Table 2 cover major host-level activities, including process lifecy
 ~~~
 *Table 2.  HOST EP Hooks and Examples*
 
-## Critical Event and Corresponding Audit Record Schema
+## Critical Events and Corresponding Audit Record Schema
 
 The events and audit record claims in this section are derived from operating system hook interfaces and event data structures provided by Linux Security Modules (LSM) {{LinuxLSM}}, Windows kernel callbacks and filtering mechanisms {{WindowsKernelHooks}}, and Apple Endpoint Security {{AppleEndpointSecurity}}.
 
 The following claims apply to all events:
-* `process_id`: REQUIRED. An integer identifying the current process.
- 
+* `process_id`: REQUIRED. An integer identifying the process associated with the event.
+
 In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.
 
-1. **Process Creation:** Expose the identifiers of the newly created process and its parent. Allow denying process creation.
+1. **Process Creation:** Expose the identifiers of the newly created process and its parent.
 
 
 * `parent_process_id`: REQUIRED. An integer identifying its parent process.
@@ -597,11 +607,29 @@ In addition to the common claim above, each event defines its own audit record c
 * `file_path`: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.
 * `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
 
-5. **Before Access to Another Process:** Expose the identity of the process being accessed. Allow permitting or denying access.
+5. **After File Operation:** Expose information about the completed file operation and the affected file.
+
+* `operation`: OPTIONAL. A string identifying the completed file operation.
+* `file_path`: OPTIONAL. A string specifying the path of the affected file, or the source path for a rename operation.
+* `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
+
+6. **Before Network Operation:** Expose the local and remote network endpoints involved in the requested network operation. Allow permitting or denying the operation where supported by the operating system.
+
+* `local_endpoint`: OPTIONAL. A string identifying the local network endpoint.
+* `remote_endpoint`: OPTIONAL. A string identifying the remote network endpoint.
+
+7. **Before Access to Another Process:** Expose the identity of the process being accessed. Allow permitting or denying access.
 
 * `target_process_id`: REQUIRED. An integer identifying the target process, or the process owning the target thread.
 
-6. **Process Exit:** Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.
+8. **Before Memory Protection Change:** Expose the requested memory protection change, including the affected address range and protection attributes. Allow permitting or denying the change where supported by the operating system.
+
+* `address`: OPTIONAL. An integer identifying the starting virtual memory address of the affected range.
+* `size`: OPTIONAL. An integer specifying the size of the affected memory range.
+* `protection`: OPTIONAL. An integer identifying the memory protection attributes to be applied to the affected range.
+
+
+9. **Process Exit:** Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.
 
 
 
