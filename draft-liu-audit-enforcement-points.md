@@ -1,9 +1,9 @@
 ---
 title: "Enforcement Points for Agents"
-abbrev: "draft-liu-audit-enforcement-points"
+abbrev: "Enforcement Points for Agents"
 category: info
 
-docname: draft-liu-audit-enforcement-points-latest
+docname: draft-liu-audit-enforcement-points-00
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -11,11 +11,15 @@ consensus: true
 v: 3
 area: "Security"
 workgroup: "Agent Use of Delegation and Interaction Traceability"
-keyword:
+keyword: 
+  - "AI agents"
+  - "Agent auditing"
+  - "Enforcement points"
+  - "Audit records"
 
 venue:
   group: "Agent Use of Delegation and Interaction Traceability"
-  type: "Working Group"
+  type: "BOF"
   mail: "audit@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/audit"
   github: "NiYuan224/draft-liu-audit-enforcement-points"
@@ -91,8 +95,8 @@ informative:
     target: https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response
 
   AUDIT-CHARTER:
-    title: "Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter"
-    target: "https://datatracker.ietf.org/doc/bofreq-mirjak-audit/"
+    title: "Agent Use of Delegation and Interaction Traceability (AUDIT) Working Group Charter, Work in Progress,"
+    target: "https://github.com/mirjak/audit-bof-preparation/blob/main/audit-charter.md"
 
   LinuxLSM:
     title: "Linux Security Modules: General Security Hooks for Linux"
@@ -192,6 +196,7 @@ Agent EPs use agent-provided hooks to observe critical agent events, enforce con
 The following table lists commonly adopted agent hooks and representative implementations.
 
 The hooks cover critical events, including session lifecycle management, prompt handling, model requests and responses, subagent management, tool invocation and results, command execution, and file operations.
+
 ~~~
 +--------------------------+----------------------------------------+
 | Name                     | Examples                               |
@@ -313,6 +318,7 @@ The hooks cover critical events, including session lifecycle management, prompt 
 |                          | Qwen Code: `SessionEnd`                |
 +--------------------------+----------------------------------------+
 ~~~
+
 *Table 1. Agent EP Hooks and Examples*
 
 ## Critical Events and Corresponding Audit Record Schema
@@ -320,134 +326,189 @@ The hooks cover critical events, including session lifecycle management, prompt 
 The events and audit record claims in this section are derived from commonly adopted agent hooks documented by Claude Code {{ClaudeCodeHooks}}, Cursor {{CursorHooks}}, GitHub Copilot {{CopilotHooks}}, Qwen Code {{QwenCodeHooks}}, Gemini CLI {{GeminiCLIHooks}}, Hermes Agent {{HermesHooks}}, and OpenClaw {{OpenClawHooks}}. For each event, this section describes the observable information, supported interventions, and corresponding REQUIRED or OPTIONAL audit record claims.
 
 The following claims apply to all events:
-* `session_id`: REQUIRED. A string identifying the current session.
+
+  * `session_id`: REQUIRED. A string identifying the current session.
 
 In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.
 
-1. **Session Start:** Expose session information, including the session identifier and source. Allow setting session-specific environment variables or injecting initial security context.
-* `source`: OPTIONAL. A string indicating how the session started, such as "startup" or "resume".
+1\. **Session Start:** Expose session information, including the session identifier and source. Allow setting session-specific environment variables or injecting initial security context.
 
-2. **Before Prompt Submit:** Expose the submitted prompt and associated session information. Allow inspecting, modifying, or blocking the prompt before agent processing.
-* `prompt`: REQUIRED. A string containing the submitted user prompt.
+ * `source`: OPTIONAL. A string indicating how the session started, such as "startup" or "resume".
 
-3. **Prompt Expansion:** Expose prompt and command information during prompt expansion. Allow adding context or blocking expansion or submission.
-* `command_name`: REQUIRED. A string identifying the command being expanded.
-* `command_args`: OPTIONAL. A string containing argument text after the command name.
-* `prompt`: OPTIONAL. A string containing the original input or expanded prompt, depending on the implementation.
+2\. **Before Prompt Submit:** Expose the submitted prompt and associated session information. Allow inspecting, modifying, or blocking the prompt before agent processing.
 
-4. **Before Model Request:** Expose model request information, including the selected model, provider, and request messages. Allow modifying or blocking model requests before invocation.
-* `model`: REQUIRED. A string identifying the model selected for the request.
-* `provider`: OPTIONAL. A string identifying the model provider.
-* `messages`: OPTIONAL. An array of message objects included in the model request.
+ * `prompt`: REQUIRED. A string containing the submitted user prompt.
 
-5. **After Model Response:** Expose generated content, response metadata, and token usage. Allow modifying, replacing, or blocking the response before subsequent processing.
-* `model`: REQUIRED. A string identifying the model associated with the request.
-* `response`: OPTIONAL. An object containing the model response information exposed by the hook.
-* `finish_reason`: OPTIONAL. A string indicating why response generation ended.
-* `usage`: OPTIONAL. An object containing token usage information.
+3\. **Prompt Expansion:** Expose prompt and command information during prompt expansion. Allow adding context or blocking expansion or submission.
 
+ * `command_name`: REQUIRED. A string identifying the command being expanded.
 
-6. **Before Context Compaction:** Expose session information and the compaction trigger. Allow blocking compaction.
-* `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").
+ * `command_args`: OPTIONAL. A string containing argument text after the command name.
 
-7. **After Context Compaction:** Expose session information, the compaction trigger, and the generated summary.
+ * `prompt`: OPTIONAL. A string containing the original input or expanded prompt, depending on the implementation.
 
-* `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").
-* `compact_summary`: OPTIONAL. A string containing the conversation summary generated by compaction.
+4\. **Before Model Request:** Expose model request information, including the selected model, provider, and request messages. Allow modifying or blocking model requests before invocation.
 
-8.  **Subagent Start:** Expose session information and the subagent identifier and type. Allow injecting additional context or blocking subagent creation.
+ * `model`: REQUIRED. A string identifying the model selected for the request.
 
-* `agent_id`: REQUIRED. A string identifying the subagent.
-* `agent_type`: REQUIRED. A string indicating the subagent type.
+ * `provider`: OPTIONAL. A string identifying the model provider.
 
-9. **Subagent Completion:** Expose subagent information and its final response. Allow requesting continued execution.
+ * `messages`: OPTIONAL. An array of message objects included in the model request.
 
-* `agent_id`: REQUIRED. A string identifying the subagent.
-* `agent_type`: REQUIRED. A string indicating the subagent type.
-* `last_assistant_message`: OPTIONAL. A string containing the subagent's last message.
+5\. **After Model Response:** Expose generated content, response metadata, and token usage. Allow modifying, replacing, or blocking the response before subsequent processing.
+
+ * `model`: REQUIRED. A string identifying the model associated with the request.
+
+ * `response`: OPTIONAL. An object containing the model response information exposed by the hook.
+
+ * `finish_reason`: OPTIONAL. A string indicating why response generation ended.
+
+ * `usage`: OPTIONAL. An object containing token usage information.
 
 
-10. **Before Tool Use:** Expose the tool name, invocation arguments, and tool call identifier. Allow approving, denying, or modifying tool invocations before execution.
+6\. **Before Context Compaction:** Expose session information and the compaction trigger. Allow blocking compaction.
 
-* `tool_name`: REQUIRED. A string identifying the tool to be invoked.
-* `tool_input`: REQUIRED. An object containing the tool's input parameters.
-* `tool_use_id`: OPTIONAL. A string identifying the tool invocation.
+ * `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").
 
-11. **Permission Request:** Expose the tool name and invocation arguments associated with a permission request. Allow approving or denying the requested operation.
+7\. **After Context Compaction:** Expose session information, the compaction trigger, and the generated summary.
 
-* `tool_name`: REQUIRED. A string identifying the tool requesting permission.
-* `tool_input`: REQUIRED. An object containing the tool's input parameters.
+ * `trigger`: REQUIRED. A string indicating whether compaction was triggered automatically ("auto") or manually ("manual").
 
+ * `compact_summary`: OPTIONAL. A string containing the conversation summary generated by compaction.
 
-12. **Permission Denied:** Expose the tool name, invocation arguments, and reason for a denied operation.
+8\. **Subagent Start:** Expose session information and the subagent identifier and type. Allow injecting additional context or blocking subagent creation.
 
-* `tool_name`: REQUIRED. A string identifying the tool whose invocation was denied.
-* `tool_input`: REQUIRED. An object containing the tool's input parameters.
-* `reason`: OPTIONAL. A string indicating why the invocation was denied.
+ * `agent_id`: REQUIRED. A string identifying the subagent.
 
-13. **After Tool Use:** Expose the tool name, invocation arguments, and execution result. Allow modifying or withholding the result before subsequent model processing.
+ * `agent_type`: REQUIRED. A string indicating the subagent type.
 
-* `tool_name`: REQUIRED. A string identifying the invoked tool.
-* `tool_input`: REQUIRED. An object containing the tool's input parameters.
-* `tool_response`: OPTIONAL. The tool execution result. Depending on the tool, this may be a string containing file content, an object containing command output and exit status, or an array of query results.
+9\. **Subagent Completion:** Expose subagent information and its final response. Allow requesting continued execution.
 
-14. **Tool Batch Completion:** Expose the tool calls in a completed batch, including their arguments and results.
-* `tool_calls`: REQUIRED. An array of objects describing the tool calls in the batch. Each object contains:
-  * `tool_name`: REQUIRED. A string identifying the invoked tool.
-  * `tool_input`: REQUIRED. An object containing the tool's input parameters.
-  * `tool_use_id`: REQUIRED. A string identifying the tool invocation.
-  * `tool_response`: OPTIONAL. The tool execution result, represented as a string, array, or object depending on the implementation.
+ * `agent_id`: REQUIRED. A string identifying the subagent.
 
-15. **Post Tool Use Failure:** Expose the tool name, invocation arguments, and error information for a failed tool invocation.
-* `tool_name`: REQUIRED. A string identifying the tool whose invocation failed.
-* `tool_input`: REQUIRED. An object containing the tool's input parameters.
-* `error`: REQUIRED. A string describing the tool invocation failure.
-* `is_interrupt`: OPTIONAL. A boolean indicating whether the failure was caused by user interruption.
+ * `agent_type`: REQUIRED. A string indicating the subagent type.
 
-16. **Before MCP Execution:** Expose the MCP server name, tool name, and invocation arguments. Allow approving or denying MCP tool execution before invocation.
-* `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
-* `tool_name`: REQUIRED. A string identifying the MCP tool to be invoked.
-* `tool_input`: REQUIRED. An object containing the tool's input parameters.
+ * `last_assistant_message`: OPTIONAL. A string containing the subagent's last message.
 
 
-17. **After MCP Execution:** Expose the MCP server name, tool name, invocation arguments, and execution result. Allow modifying or replacing the result before subsequent processing.
-* `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
-* `tool_name`: REQUIRED. A string identifying the invoked MCP tool.
-* `tool_input`: REQUIRED. An object containing the tool's input parameters.
-* `tool_response`: OPTIONAL. The tool execution result, represented as a string, object, or array depending on the tool.
+10\. **Before Tool Use:** Expose the tool name, invocation arguments, and tool call identifier. Allow approving, denying, or modifying tool invocations before execution.
 
-18. **Before Command Execution:** Expose the command and working directory. Allow permitting, denying, or requesting user confirmation before command execution.
-* `command`: REQUIRED. A string containing the command to be executed.
-* `cwd`: OPTIONAL. A string specifying the current working directory.
+ * `tool_name`: REQUIRED. A string identifying the tool to be invoked.
 
-19. **After Command Execution:** Expose the executed command and captured output.
+ * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 
-* `command`: REQUIRED. A string containing the executed command.
-* `output`: OPTIONAL. A string containing the captured command output.
+ * `tool_use_id`: OPTIONAL. A string identifying the tool invocation.
 
-20. **Before File Access:** Expose file access information, including the file path and requested file content. Allow permitting or denying file access before the content is provided to the agent.
+11\. **Permission Request:** Expose the tool name and invocation arguments associated with a permission request. Allow approving or denying the requested operation.
 
-* `file_path`: REQUIRED. A string specifying the path of the file being accessed.
-* `requested_content`: OPTIONAL. A string or object containing the content of the file requested by the agent.
+ * `tool_name`: REQUIRED. A string identifying the tool requesting permission.
 
-21. **After File Modification:** Expose file modification information, including the file path and changes made, such as the original and modified text.
+ * `tool_input`: REQUIRED. An object containing the tool's input parameters.
 
-* `file_path`: REQUIRED. A string specifying the path of the modified file.
-* `edits`: OPTIONAL. An array of objects describing the specific changes made, when available. Each object contains:
-  * `old_string`: OPTIONAL. A string containing the original text segment before modification.
-  * `new_string`: OPTIONAL. A string containing the replacement text segment after modification.
 
-22. **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.
+12\. **Permission Denied:** Expose the tool name, invocation arguments, and reason for a denied operation.
 
-* `stop_reason`: OPTIONAL. A string specifying why the agent intends to stop (e.g., "end_turn", "task_completed", "max_tokens", "user_interrupt").
-* `last_assistant_message`: OPTIONAL. A string or message object containing the final answer, summary, or response text generated by the agent prior to stopping.
-* `stop_hook_active`: OPTIONAL. A boolean indicating whether this stop event was triggered during a re-entrant evaluation loop, used to prevent infinite hook recursion.
+ * `tool_name`: REQUIRED. A string identifying the tool whose invocation was denied.
 
-23. **Session End:** Expose session termination information, including the session identifier, termination reason, and session duration.
-* `session_id`: REQUIRED. A string identifying the closed session.
-* `reason`: OPTIONAL. A string indicating the precise cause of session termination (e.g., "user_exit", "clear_context", "timeout", "auth_logout", "fatal_error").
-* `session_duration`: OPTIONAL. A numeric value representing the total active runtime of the session.
-* `total_token_usage`: OPTIONAL. An object capturing cumulative token consumption across the session.
+ * `tool_input`: REQUIRED. An object containing the tool's input parameters.
+
+ * `reason`: OPTIONAL. A string indicating why the invocation was denied.
+
+13\. **After Tool Use:** Expose the tool name, invocation arguments, and execution result. Allow modifying or withholding the result before subsequent model processing.
+
+ * `tool_name`: REQUIRED. A string identifying the invoked tool.
+
+ * `tool_input`: REQUIRED. An object containing the tool's input parameters.
+
+ * `tool_response`: OPTIONAL. The tool execution result. Depending on the tool, this may be a string containing file content, an object containing command output and exit status, or an array of query results.
+
+14\. **Tool Batch Completion:** Expose the tool calls in a completed batch, including their arguments and results.
+
+ * `tool_calls`: REQUIRED. An array of objects describing the tool calls in the batch. Each object contains:
+
+   * `tool_name`: REQUIRED. A string identifying the invoked tool.
+  
+   * `tool_input`: REQUIRED. An object containing the tool's input parameters.
+  
+   * `tool_use_id`: REQUIRED. A string identifying the tool invocation.
+  
+   * `tool_response`: OPTIONAL. The tool execution result, represented as a string, array, or object depending on the implementation.
+
+15\. **Post Tool Use Failure:** Expose the tool name, invocation arguments, and error information for a failed tool invocation.
+
+ * `tool_name`: REQUIRED. A string identifying the tool whose invocation failed.
+
+ * `tool_input`: REQUIRED. An object containing the tool's input parameters.
+
+ * `error`: REQUIRED. A string describing the tool invocation failure.
+
+ * `is_interrupt`: OPTIONAL. A boolean indicating whether the failure was caused by user interruption.
+
+16\. **Before MCP Execution:** Expose the MCP server name, tool name, and invocation arguments. Allow approving or denying MCP tool execution before invocation.
+
+ * `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
+
+ * `tool_name`: REQUIRED. A string identifying the MCP tool to be invoked.
+
+ * `tool_input`: REQUIRED. An object containing the tool's input parameters.
+
+
+17\. **After MCP Execution:** Expose the MCP server name, tool name, invocation arguments, and execution result. Allow modifying or replacing the result before subsequent processing.
+
+ * `mcp_server_name`: REQUIRED. A string identifying the MCP server in the client's configuration.
+
+ * `tool_name`: REQUIRED. A string identifying the invoked MCP tool.
+
+ * `tool_input`: REQUIRED. An object containing the tool's input parameters.
+
+ * `tool_response`: OPTIONAL. The tool execution result, represented as a string, object, or array depending on the tool.
+
+18\. **Before Command Execution:** Expose the command and working directory. Allow permitting, denying, or requesting user confirmation before command execution.
+
+ * `command`: REQUIRED. A string containing the command to be executed.
+
+ * `cwd`: OPTIONAL. A string specifying the current working directory.
+
+19\. **After Command Execution:** Expose the executed command and captured output.
+
+ * `command`: REQUIRED. A string containing the executed command.
+
+ * `output`: OPTIONAL. A string containing the captured command output.
+
+20\. **Before File Access:** Expose file access information, including the file path and requested file content. Allow permitting or denying file access before the content is provided to the agent.
+
+ * `file_path`: REQUIRED. A string specifying the path of the file being accessed.
+
+ * `requested_content`: OPTIONAL. A string or object containing the content of the file requested by the agent.
+
+21\. **After File Modification:** Expose file modification information, including the file path and changes made, such as the original and modified text.
+
+ * `file_path`: REQUIRED. A string specifying the path of the modified file.
+
+ * `edits`: OPTIONAL. An array of objects describing the specific changes made, when available. Each object contains:
+
+   * `old_string`: OPTIONAL. A string containing the original text segment before modification.
+  
+   * `new_string`: OPTIONAL. A string containing the replacement text segment after modification.
+
+22\. **Agent Completion:** Expose agent completion information, including the completion status, stop reason, and final assistant response. Allow requesting additional processing or continued execution before the agent terminates.
+
+
+ * `stop_reason`: OPTIONAL. A string specifying why the agent intends to stop (e.g., "end_turn", "task_completed", "max_tokens", "user_interrupt").
+
+ * `last_assistant_message`: OPTIONAL. A string or message object containing the final answer, summary, or response text generated by the agent prior to stopping.
+
+ * `stop_hook_active`: OPTIONAL. A boolean indicating whether this stop event was triggered during a re-entrant evaluation loop, used to prevent infinite hook recursion.
+
+23\. **Session End:** Expose session termination information, including the session identifier, termination reason, and session duration.
+
+ * `session_id`: REQUIRED. A string identifying the closed session.
+
+ * `reason`: OPTIONAL. A string indicating the precise cause of session termination (e.g., "user_exit", "clear_context", "timeout", "auth_logout", "fatal_error").
+
+ * `session_duration`: OPTIONAL. A numeric value representing the total active runtime of the session.
+
+ * `total_token_usage`: OPTIONAL. An object capturing cumulative token consumption across the session.
 
 ## Hook Failure Handling
 
@@ -460,9 +521,11 @@ Hook failures can affect security enforcement and audit coverage. Two common han
 Based on existing implementation practices listed in Table 1, the choice depends on the hook's purpose and the consequences of failure:
 
 * Security-critical hooks SHOULD fail closed: Any hook involved in input defense, permission validation, pre-execution interception of sensitive operations, or subagent spawning that could lead to privilege escalation SHOULD block subsequent operations if it fails. Failure to perform required checks may lead to unauthorized operations or sensitive information exposure.
+
   * Typical events include Before Prompt Submit, Before Model Request, Subagent Start, Before Tool Use, Before MCP Execution, Before Command Execution, Before File Access, Permission Request, etc.
 
 * Observation-only hooks SHOULD generally fail open when their failure does not affect required security checks. These include hooks used only for session lifecycle monitoring, invocation completion logging, context compaction monitoring, and command execution result collection. Failure to collect audit information should not normally interrupt legitimate operations.
+  
   * Typical events include Session Start, After Model Response, Before and After Context Compaction, Subagent Completion, After Tool Use, After MCP Execution, After Command Execution, Tool Batch Completion, Post Tool Use Failure, etc.
 
 
@@ -473,28 +536,42 @@ Gateway EPs proxy requests and responses between agents and external models, too
 
 The following events and audit record claims are derived from access logging and audit practices in Agentgateway {{AgentgatewayLogs}}, Kong AI Gateway {{KongAILogs}}, Envoy Gateway {{EnvoyAccessLogs}}, and LiteLLM {{LiteLLMLogs}}.
 
-1. **Before Request Forwarding:** Expose request information, including the caller, destination, protocol, and operation. Allow permitting or denying request forwarding and modifying request content.
+1\. **Before Request Forwarding:** Expose request information, including the caller, destination, protocol, and operation. Allow permitting or denying request forwarding and modifying request content.
 
-* `request_id`: REQUIRED. A string identifying the request.
-* `caller`: OPTIONAL. A string identifying the entity initiating the request, such as an authenticated user or agent.
-* `destination`: REQUIRED. A string identifying the destination of the request, such as a model, tool, agent, or service endpoint.
-* `protocol`: OPTIONAL. A string identifying the protocol, such as "HTTP", "MCP", or "A2A".
-* `operation`: OPTIONAL. A string identifying the requested operation, such as a model operation, MCP method, or A2A method.
-* `action`: OPTIONAL. A string indicating the policy action, such as "allow", "deny", "mask", or "reject".
-* `action_reason`: OPTIONAL. A string explaining the policy action.
-* `request_body`: OPTIONAL. The request content.
+ * `request_id`: REQUIRED. A string identifying the request.
+
+ * `caller`: OPTIONAL. A string identifying the entity initiating the request, such as an authenticated user or agent.
+
+ * `destination`: REQUIRED. A string identifying the destination of the request, such as a model, tool, agent, or service endpoint.
+
+ * `protocol`: OPTIONAL. A string identifying the protocol, such as "HTTP", "MCP", or "A2A".
+
+ * `operation`: OPTIONAL. A string identifying the requested operation, such as a model operation, MCP method, or A2A method.
+
+ * `action`: OPTIONAL. A string indicating the policy action, such as "allow", "deny", "mask", or "reject".
+
+ * `action_reason`: OPTIONAL. A string explaining the policy action.
+
+ * `request_body`: OPTIONAL. The request content.
 
 
-2. **Before Response Forwarding:** Expose response information and execution outcomes. Allow permitting or denying response forwarding and modifying response content where supported by the gateway.
+2\. **Before Response Forwarding:** Expose response information and execution outcomes. Allow permitting or denying response forwarding and modifying response content where supported by the gateway.
 
-* `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding request.
-* `status`: OPTIONAL. A string or integer indicating the outcome of the request, such as an HTTP status code, an RPC error code, or an A2A task state.
-* `action`: OPTIONAL. A string indicating the action taken by the gateway, such as "allow", "deny", "mask", or "reject".
-* `action_reason`: OPTIONAL. A string explaining the policy action.
-* `response_body`: OPTIONAL. The response content.
-* `error`: OPTIONAL. A string describing an error encountered during request forwarding or response forwarding.
-* `duration`: REQUIRED. A numeric value representing the elapsed time from receiving the corresponding request to receiving the complete response.
-* `usage`: OPTIONAL. An object containing resource usage information, such as input and output token counts.
+ * `request_id`: REQUIRED. A string matching the identifier recorded for the corresponding request.
+
+ * `status`: OPTIONAL. A string or integer indicating the outcome of the request, such as an HTTP status code, an RPC error code, or an A2A task state.
+
+ * `action`: OPTIONAL. A string indicating the action taken by the gateway, such as "allow", "deny", "mask", or "reject".
+
+ * `action_reason`: OPTIONAL. A string explaining the policy action.
+
+ * `response_body`: OPTIONAL. The response content.
+
+ * `error`: OPTIONAL. A string describing an error encountered during request forwarding or response forwarding.
+
+ * `duration`: REQUIRED. A numeric value representing the elapsed time from receiving the corresponding request to receiving the complete response.
+
+ * `usage`: OPTIONAL. An object containing resource usage information, such as input and output token counts.
 
 
 # Host EP
@@ -503,6 +580,7 @@ Host EPs use operating-system hooks to observe operations performed by agent-rel
 ## Summary of Host EP Hooks
 
 The hooks in Table 2 cover major host-level activities, including process lifecycle management, file operations, network operations, access to other processes, and memory protection changes.
+
 ~~~
 +----------------------+------------------------------------------+
 | Name                 | Examples                                 |
@@ -573,6 +651,7 @@ The hooks in Table 2 cover major host-level activities, including process lifecy
 |                      | macOS: ES_EVENT_TYPE_NOTIFY_EXIT         |
 +----------------------+------------------------------------------+
 ~~~
+
 *Table 2.  HOST EP Hooks and Examples*
 
 ## Critical Events and Corresponding Audit Record Schema
@@ -580,55 +659,64 @@ The hooks in Table 2 cover major host-level activities, including process lifecy
 The events and audit record claims in this section are derived from operating system hook interfaces and event data structures provided by Linux Security Modules (LSM) {{LinuxLSM}}, Windows kernel callbacks and filtering mechanisms {{WindowsKernelHooks}}, and Apple Endpoint Security {{AppleEndpointSecurity}}.
 
 The following claims apply to all events:
-* `process_id`: REQUIRED. An integer identifying the current process.
+
+  * `process_id`: REQUIRED. An integer identifying the current process.
 
 In addition to the common claim above, each event defines its own audit record claims to capture event-specific information.
 
-1. **Process Creation:** Expose the identifiers of the newly created process and its parent.
+1\. **Process Creation:** Expose the identifiers of the newly created process and its parent.
 
 
-* `parent_process_id`: REQUIRED. An integer identifying its parent process.
+ * `parent_process_id`: REQUIRED. An integer identifying its parent process.
 
-2. **Before Program Execution:** Expose the process identifier and the program to be executed. Allow permitting or denying program execution.
+2\. **Before Program Execution:** Expose the process identifier and the program to be executed. Allow permitting or denying program execution.
 
-* `executable_path`: OPTIONAL. A string specifying the executable path.
+ * `executable_path`: OPTIONAL. A string specifying the executable path.
 
-3. **Before File Access:** Expose the requested file operation and the target file. Allow permitting or denying the operation.
-
-
-* `operation`: REQUIRED. A string identifying the requested file access operation, such as "open" or "read".
-* `file_path`: OPTIONAL. A string specifying the target file path.
-
-4. **Before File Modification:** Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation.
+3\. **Before File Access:** Expose the requested file operation and the target file. Allow permitting or denying the operation.
 
 
-* `operation`: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".
-* `file_path`: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.
-* `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
+ * `operation`: REQUIRED. A string identifying the requested file access operation, such as "open" or "read".
 
-5. **After File Operation:** Expose information about the completed file operation and the affected file.
+ * `file_path`: OPTIONAL. A string specifying the target file path.
 
-* `operation`: OPTIONAL. A string identifying the completed file operation.
-* `file_path`: OPTIONAL. A string specifying the path of the affected file, or the source path for a rename operation.
-* `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
-
-6. **Before Network Operation:** Expose the local and remote network endpoints involved in the requested network operation. Allow permitting or denying the operation where supported by the operating system.
-
-* `local_endpoint`: OPTIONAL. A string identifying the local network endpoint.
-* `remote_endpoint`: OPTIONAL. A string identifying the remote network endpoint.
-
-7. **Before Process Access:** Expose requests to access another process, including the identity of the target process. Allow permitting or denying access where supported by the operating system.
-
-* `target_process_id`: REQUIRED. An integer identifying the target process, or the process owning the target thread.
-
-8. **Before Memory Protection Change:** Expose the requested memory protection change, including the affected address range and protection attributes. Allow permitting or denying the change where supported by the operating system.
-
-* `address`: OPTIONAL. An integer identifying the starting virtual memory address of the affected range.
-* `size`: OPTIONAL. An integer specifying the size of the affected memory range.
-* `protection`: OPTIONAL. An integer identifying the memory protection attributes to be applied to the affected range.
+4\. **Before File Modification:** Expose the requested file modification, such as writing, deletion, or renaming, and the target file path. Allow permitting or denying the operation.
 
 
-9. **Process Exit:** Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.
+ * `operation`: REQUIRED. A string identifying the requested operation, such as "write", "unlink", or "rename".
+
+ * `file_path`: OPTIONAL. A string specifying the target file path, or the source file path for a rename operation.
+
+ * `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
+
+5\. **After File Operation:** Expose information about the completed file operation and the affected file.
+
+ * `operation`: OPTIONAL. A string identifying the completed file operation.
+
+ * `file_path`: OPTIONAL. A string specifying the path of the affected file, or the source path for a rename operation.
+
+ * `destination_path`: OPTIONAL. A string specifying the destination path for a rename operation.
+
+6\. **Before Network Operation:** Expose the local and remote network endpoints involved in the requested network operation. Allow permitting or denying the operation where supported by the operating system.
+
+ * `local_endpoint`: OPTIONAL. A string identifying the local network endpoint.
+
+ * `remote_endpoint`: OPTIONAL. A string identifying the remote network endpoint.
+
+7\. **Before Process Access:** Expose requests to access another process, including the identity of the target process. Allow permitting or denying access where supported by the operating system.
+
+ * `target_process_id`: REQUIRED. An integer identifying the target process, or the process owning the target thread.
+
+8\. **Before Memory Protection Change:** Expose the requested memory protection change, including the affected address range and protection attributes. Allow permitting or denying the change where supported by the operating system.
+
+ * `address`: OPTIONAL. An integer identifying the starting virtual memory address of the affected range.
+
+ * `size`: OPTIONAL. An integer specifying the size of the affected memory range.
+
+ * `protection`: OPTIONAL. An integer identifying the memory protection attributes to be applied to the affected range.
+
+
+9\. **Process Exit:** Expose the identifier of the exiting process. No additional event-specific audit record claims are defined.
 
 
 
